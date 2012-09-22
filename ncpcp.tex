@@ -1,0 +1,76 @@
+\documentclass[draft]{article}
+
+% Package `amsthm` and `thmtools` must come before package `hyperref`.
+\usepackage{amsthm}
+\usepackage{thmtools}
+% Package `hyperref` must come before package `complexity`.
+\usepackage[pdftitle={Restricted probabilistically checkable proofs}, pdfauthor={Jeffrey Finkelstein}]{hyperref}
+\usepackage{complexity}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\declaretheorem[numberwithin=section]{theorem}
+\declaretheorem[numberlike=theorem, style=definition]{definition}
+
+%% Arguments:
+%%  1. Complexity class of the verifier
+%%  2. Completeness probability
+%%  3. Soundness probability
+%%  4. Randomness
+%%  5. Number of queries
+\newcommand{\PCPcs}[5]{\PCP^{#1}_{#2, #3}\left[#4, #5\right]}
+\newcommand{\lglg}{\lg\lg}
+
+\title{Restricted probabilistically checkable proofs}
+\author{Jef{}frey~Finkelstein}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{definition}
+  A \emph{\PCP{} verifier} is a probabilistic Turing machine which has sequential access to an input string $x$, sequential access to a random string $\rho$, and \emph{nonadaptive} random access (that is, arbitrary access) to a proof string $\pi$.
+\end{definition}
+
+\begin{definition}
+  A language $L$ has a $(a \cdot r(n), b \cdot q(n))$-\emph{$\PCP_{c(n), s(n)}$ verifier} if there exists a \PCP{} verifier $V$ such that $V$ uses at most $a \cdot r(n)$ bits of the random string $\rho$, $V$ makes at most $b \cdot q(n)$ \emph{nonadaptive} queries to bits of the proof $\pi$, and the following conditions hold
+  \begin{enumerate}
+  \item if $x \in L$, then 
+    \begin{equation*}
+      \exists \pi \in \Sigma^{a \cdot r(n) + \lg{b \cdot q(n)}} \colon \Pr_{\rho \in \Sigma^{a \cdot r(n)}}{\left[V(x, \pi; \rho) \textnormal{ accepts}\right]} >= c(n),
+    \end{equation*}
+    and
+  \item if $x \notin L$, then
+    \begin{equation*}
+      \forall \pi \in \Sigma^{a \cdot r(n) + \lg{b \cdot q(n)}} \colon \Pr_{\rho \in \Sigma^{a \cdot r(n)}}{\left[V(x, \pi; \rho) \textnormal{ accepts}\right]} < s(n),
+    \end{equation*}
+  \end{enumerate}
+  for some natural numbers $a$ and $b$.
+\end{definition}
+
+A verifier which uses $q$ adaptive random access queries to the proof string can be simulated by a verifier which uses $2^q$ nonadaptive random access queries to the proof string.
+The total number of queried bits of the proof string for an \emph{adaptive} $(a \cdot r(n), b \cdot q(n))$-\PCP{} verifier is $a \cdot r(n) + b \cdot q(n)$ and for a \emph{nonadaptive} \PCP{} verifier, $a \cdot r(n) + \lg{b \cdot q(n)}$.
+In this work, we will consider only nonadaptive \PCP{} verifiers; for nonadaptive \PCP{} verifiers there are $2^{a \cdot r(n) + \lg{b \cdot q(n)}}$ possible proof strings, or more simply $2^{a \cdot r(n)} \cdot b \cdot q(n)$.
+
+\begin{definition}
+  Let $\PCPcs{\mathcal{C}}{c(n)}{s(n)}{a \cdot r(n)}{b \cdot q(n)}$ be the class of all languages $L$ such that $L$ has a $(a \cdot r(n), b \cdot q(n))$-$\PCP_{c(n), s(n)}$ verifier $V$ computable by a $\mathcal{C}$ algorithm.
+
+  More generally,
+  \begin{equation*}
+    \PCPcs{\mathcal{C}}{c(n)}{s{n}}{\mathcal{F}(n)}{\mathcal{G}(n)} = \bigcup_{f \in \mathcal{C}, g \in \mathcal{G}}{\PCPcs{\mathcal{C}}{c(n)}{s(n)}{f(n)}{g(n)}},
+    \end{equation*}
+  and therefore
+  \begin{equation*}
+    \PCPcs{\mathcal{C}}{c(n)}{s{n}}{O(r(n))}{O(q(n))} = \bigcup_{a \in \mathbb{N}, b \in \mathbb{N}}{\PCPcs{\mathcal{C}}{c(n)}{s(n)}{a \cdot r(n)}{b \cdot q(n)}}.
+    \end{equation*}
+\end{definition}
+
+The class in which we are interested is $\PCPcs{\NC}{1}{\frac{1}{2}}{a \lglg{n}}{b \lg n}$; we abbreviate this class $\PCP[a \lglg n, b \lg n]$.
+
+The celebrated ``PCP Theorem'' can be stated as follows
+
+\begin{theorem}
+  $\NP = \PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$.
+\end{theorem}
+
+\end{document}
