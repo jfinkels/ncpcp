@@ -91,7 +91,7 @@ In the following definitions, let $q$ be a fixed natural number greater than 1.
 \begin{definition}
   For all natural numbers $a$ and $b$, a language $L$ has a $(a \cdot r(n), b \cdot q(n))$-\emph{$\PCP_{c(n), s(n)}$ verifier} if there exists a \PCP{} verifier $V$ such that $V$ uses at most $a \cdot r(n)$ bits of the random string $\rho$, $V$ makes at most $b \cdot q(n)$ \emph{nonadaptive} queries to bits of the proof $\pi$, and the following conditions hold
   \begin{enumerate}
-  \item if $x \in L$, then 
+  \item if $x \in L$, then
     \begin{equation*}
       \exists \pi \in \Sigma^{a \cdot r(n) + \lg{b \cdot q(n)}} \colon \Pr_{\rho \in \Sigma^{a \cdot r(n)}}{\left[V(x, \pi; \rho) \textnormal{ accepts}\right]} >= c(n),
     \end{equation*}
@@ -179,28 +179,76 @@ In order to utilize the proof techniques from the \NP{} version of the \PCP{} Th
 \begin{proposition}[\cite{wolf94}]\label{prop:nnc}
   \mbox{}
   \begin{enumerate}
+  \item $\NNC^k(\lg n) = \NC^k$ for all $k \in \mathbb{N}$.
   \item $\NNC(\lg n) = \NC$.
   \item $\NNC(\poly) = \NP$.
   \end{enumerate}
 \end{proposition}
 
 Following the proof of \autoref{lem:pcpinnp}, we can show the following inclusion.
-\begin{proposition}\label{lem:pcpinnnc}
-  $\PCPcs{\NC^k}{1}{\frac{1}{2}}{r \lg \lg n}{O(\lg^j n)} \subseteq \NNC^k(\lg^{j + r} n)$ for all constants $r$, $k$, and $j$.
+\begin{proposition}\label{prop:pcpinnnc}
+  For all $j \in \mathbb{N}$ with $j \geq 1$, for all $k \in \mathbb{N}$ with $k \geq 1$ (\textbf{TODO can this be k = 1?}), and for all positive rationals $q$ and $r$,
+  \begin{equation*}
+    \PCPcs{\NC^k}{1}{\frac{1}{2}}{r \lg n}{2^{q \lg^j n}} \subseteq \NNC^k(\lg^j n).
+  \end{equation*}
 \end{proposition}
 \begin{proof}
-  Let $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{r \lg \lg n)}{O(\lg^j n)}$, so there exists an $\NC^k$ \PCP{} verifier $V$ subject to the appropriate restrictions.
-  Construct an $\NNC^k(\lg^{j + r} n)$ algorithm as follows.
+  Let $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{r \lg n}{2^{q \lg^j n}}$.
+  Let $V$ be the \PCP{} verifier for $L$ which, on input $x$ of length $n$, proof string $\pi$, and random string $\rho$, makes exactly $2^{q \lg^j n}$ (nonadaptive) queries to the proof string and uses exactly $r \lg n$ random bits, and which satisfies
+  \begin{enumerate}
+  \item if $x \in L$, then
+    \begin{equation*}
+      \exists \pi \in \Sigma^{r \lg n + \lg{2^{q \lg^j n}}} \colon \Pr_{\rho \in \Sigma^{r \lg n}}{\left[V(x, \pi; \rho) \textnormal{ accepts}\right]} = 1,
+    \end{equation*}
+    and
+  \item if $x \notin L$, then
+    \begin{equation*}
+      \forall \pi \in \Sigma^{r \lg n + \lg{2^{q \lg^j n}}} \colon \Pr_{\rho \in \Sigma^{r \lg n}}{\left[V(x, \pi; \rho) \textnormal{ accepts}\right]} < \frac{1}{2}.
+    \end{equation*}
+  \end{enumerate}
+  Our goal is to construct a $\NNC^k(\lg^j n)$ machine which accepts $x$ if and only if $x \in L$ by simulating the \PCP{} verifier $V$.
 
-  \textbf{TODO fill me in}
+  Define the $\NNC^k(\lg^j n)$ machine $M$ as follows on input $x$ of length $n$:
+  \begin{enumerate}
+  \item Guess a proof string $\pi$ of length $r \lg n + \lg{2^{q \lg^j n}}$.
+  \item For each $\rho$ of length $r \lg n$ \emph{in parallel}, simulate $V(x, \pi; \rho)$ and let $b_\rho$ be its output bit.
+  \item Let
+    \begin{equation*}
+      B = \sum_{\rho \in \Sigma^{r \lg n}}{b_\rho},
+    \end{equation*}
+    and let
+    \begin{equation*}
+      B_0 = \frac{1}{2} 2^{r \lg n}.
+    \end{equation*}
+  \item Accept if and only if $B \geq B_0$.
+  \end{enumerate}
+
+  First we show that $M$ can be implemented on a polynomial number of processors with parallel running time $\lg^k n$ and with at most $O(\lg^j n)$ nondeterministic gates.
+  $M$ uses exactly $r \lg n + \lg{2^{q \lg^j n}}$ nondeterministic gates (all in the first step), or more simply, $r \lg n + q \lg^j n$, which is in $O(\lg^j n)$ for all $j \geq 1$.
+  In step 2, $M$ runs $2^{r \lg n}$, or more simply $n^r$ (a polynomial in $n$), instances of $V$ in parallel; the parallel running time of $V$ itself is $O(\lg^k)$, so the parallel running time of this step in $M$ is the same.
+  In step 3, $M$ computes the sum of $2^{r \lg n}$ numbers, or more simply $n^r$ numbers (each a single bit, so the total size of $B$ is $\lg n^r$, which equals $r \lg n$), and computes the value of $\frac{1}{2} 2^{r \lg n}$, or $\frac{1}{2} n^r$.
+  The sum of $n^r$ numbers can be computed by an \NC{} circuit of size $O(n^r)$ and depth $O(\lg n)$ \cite[Theorem~2.6.1]{savage98}.
+
+  Now we show the correctness of $M$.
+  If $x \in L$, then all instances of $V$ accept, so $B = 1 \geq \frac{1}{2} n^r = B_0$, and hence $M$ accepts.
+  If $x \notin L$, then less than half of the instances of $V$ accept, so $B < \frac{1}{2} n^r = B_0$, and hence $M$ rejects.
+  Therefore we have shown that $M$ is a correct algorithm for $L$ which uses a polynomial number of processors, has $O(\lg^k n)$ running time, and uses $O(\lg^j n)$ nondeterministic gates.
+  This concludes the proof.
 \end{proof}
+
+\begin{corollary}
+  For all $k \in \mathbb{N}$ with $k \geq 1$,
+  \begin{enumerate}
+  \item $\PCPcs{\NC^k}{1}{\frac{1}{2}}{0}{0} = \PCPcs{\NC^k}{1}{\frac{1}{2}}{O(\lg n)}{O(\poly)} = \NNC^k(\lg n) = \NC^k$,
+  \item $\PCPcs{\NC^k}{1}{\frac{1}{2}}{O(\lg n)}{2^{O(\polylog)}} \subseteq \NNC^k(\polylog)$.
+  \end{enumerate}
+\end{corollary}
 
 \begin{corollary}
   \mbox{}
   \begin{enumerate}
-  \item $\PCPcs{\NC}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(\polylog)} \subseteq \NNC(\polylog) = \NP$.
-  \item $\PCPcs{\NC^k}{1}{\frac{1}{2}}{0}{O(\lg n)} \subseteq \NNC(\lg n) = \NC$ for all $k \in \mathbb{N}$.
-  \item $\PCPcs{\NC^k}{1}{\frac{1}{2}}{r \lg \lg n}{O(1)} \subseteq \NNC(\lg n) = \NC$ for all $k \in \mathbb{N}$.
+  \item $\PCPcs{\NC}{1}{\frac{1}{2}}{0}{0} = \PCPcs{\NC}{1}{\frac{1}{2}}{O(\lg n)}{O(\poly)} = \NC$,
+  \item $\PCPcs{\NC}{1}{\frac{1}{2}}{O(\lg n)}{2^{O(\polylog)}} \subseteq \NNC(\polylog)$.
   \end{enumerate}
 \end{corollary}
 
