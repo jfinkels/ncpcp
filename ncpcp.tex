@@ -181,7 +181,7 @@ In order to utilize the proof techniques from the \NP{} version of the \PCP{} Th
   \begin{enumerate}
   \item $\NNC^k(\lg n) = \NC^k$ for all $k \in \mathbb{N}$.
   \item $\NNC(\lg n) = \NC$.
-  \item $\NNC(\poly) = \NP$.
+  \item $\NNC(\poly) = \NP$, and specifically $\NP \subseteq \NNC^1(\poly)$.
   \end{enumerate}
 \end{proposition}
 
@@ -259,6 +259,22 @@ Since we will be interested only in the subclasses of $\NNC(\polylog)$, there mu
   \item $\PCPcs{\NC}{1}{\frac{1}{2}}{\lg \lg n}{O(1)} = \NNC(\lg n) = \NC$, and
   \item $\PCPcs{\NC}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(\polylog)} \subseteq \NNC(\polylog)$.
   \end{enumerate}
+\end{corollary}
+
+\begin{lemma}[{{\cite[Lemma~3.2.8]{wolf90}}}]
+  For all $k, j \in \mathbb{Q}$ with $k \geq 1$ and $j \geq 1$, we have $\NNC^k(\lg^j n) \subseteq \DSPACE(\lg^{\max(k, j)} n)$.
+\end{lemma}
+
+\begin{corollary}
+  For all $j \in \mathbb{N}$ with $j \geq 1$, for all $k \in \mathbb{N}$ with $k \geq 1$, and for all positive rationals $q$ and $r$,
+  \begin{equation*}
+    \PCPcs{\NC^k}{1}{\frac{1}{2}}{r \lg \lg n}{q \lg^j n} \subseteq \DSPACE(\lg^{\max(k, r + j)} n).
+  \end{equation*}
+
+  Furthermore,
+  \begin{equation*}
+    \PCPcs{\NC}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(\polylog)} \subseteq \polyL.
+  \end{equation*}
 \end{corollary}
 
 \bibliographystyle{plain}
