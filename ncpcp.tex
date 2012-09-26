@@ -208,9 +208,9 @@ Following the proof of \autoref{lem:pcpinnp}, we can show the following inclusio
       \Pr_{\rho \in \Sigma^{r \lg \lg n}}{\left[V(x, \pi; \rho) \textnormal{ accepts}\right]} < \frac{1}{2}.
     \end{equation*}
   \end{enumerate}
-  Our goal is to construct a $\NNC^k(\lg^j n)$ machine which accepts $x$ if and only if $x \in L$ by simulating the \PCP{} verifier $V$.
+  Our goal is to construct a $\NNC^k(\lg^{r + j} n)$ machine which accepts $x$ if and only if $x \in L$ by simulating the \PCP{} verifier $V$.
 
-  Define the $\NNC^k(\lg^j n)$ machine $M$ as follows on input $x$ of length $n$:
+  Define the $\NNC^k(\lg^{r + j} n)$ machine $M$ as follows on input $x$ of length $n$:
   \begin{enumerate}
   \item Guess a proof string $\pi$ of length $2^{r \lg \lg n} \cdot q \lg^j n$.
   \item For each $\rho$ of length $r \lg \lg n$ \emph{in parallel}, simulate $V(x, \pi; \rho)$ and let $b_\rho$ be its output bit.
@@ -247,9 +247,8 @@ Since we will be interested only in the subclasses of $\NNC(\polylog)$, there mu
   For all $k \in \mathbb{N}$ with $k \geq 1$,
   \begin{enumerate}
   \item $\PCPcs{\NC^k}{1}{\frac{1}{2}}{0}{O(\lg n)} = \NNC^k(\lg n) = \NC^k$,
-  \item $\PCPcs{\NC^k}{1}{\frac{1}{2}}{\lg \lg n}{O(1)} = \NNC^k(\lg n) = \NC^k$,
-  \item $\PCPcs{\NC^k}{1}{\frac{1}{2}}{0}{O(\polylog)} \subseteq \NNC^k(\polylog)$, and
-  \item $\PCPcs{\NC^k}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(1)} \subseteq \NNC^k(\polylog)$.
+  \item $\PCPcs{\NC^k}{1}{\frac{1}{2}}{\lg \lg n}{O(1)} = \NNC^k(\lg n) = \NC^k$, and
+  \item $\PCPcs{\NC^k}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(\polylog)} \subseteq \NNC^k(\polylog)$.
   \end{enumerate}
 \end{corollary}
 
@@ -257,9 +256,8 @@ Since we will be interested only in the subclasses of $\NNC(\polylog)$, there mu
   \mbox{}
   \begin{enumerate}
   \item $\PCPcs{\NC}{1}{\frac{1}{2}}{0}{O(\lg n)} = \NNC(\lg n) = \NC$,
-  \item $\PCPcs{\NC}{1}{\frac{1}{2}}{\lg \lg n}{O(1)} = \NNC(\lg n) = \NC$,
-  \item $\PCPcs{\NC}{1}{\frac{1}{2}}{0}{O(\polylog)} \subseteq \NNC(\polylog)$, and
-  \item $\PCPcs{\NC}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(1)} \subseteq \NNC(\polylog)$.
+  \item $\PCPcs{\NC}{1}{\frac{1}{2}}{\lg \lg n}{O(1)} = \NNC(\lg n) = \NC$, and
+  \item $\PCPcs{\NC}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(\polylog)} \subseteq \NNC(\polylog)$.
   \end{enumerate}
 \end{corollary}
 
