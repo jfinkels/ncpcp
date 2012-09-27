@@ -152,14 +152,41 @@ The hard part uses the following ``inapproximability'' view of the PCP Theorem.
   \item There exists an integer $q$, with $q > 1$, such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is \NP-hard.
   \end{enumerate}
 \end{proposition}
-\begin{proofidea}
+\begin{proof}
   \mbox{}
   \begin{enumerate}
-  \item ($1 \implies 2$) Construct a set of constraints using the Cook-Levin reduction where each constraint is satisfied exactly when the \PCP{} verifier accepts.
+  \item ($1 \implies 2$)
+    Let $L$ be a language in $\NP$, so $L$ is also in $\PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$.
+    Let $V$ be the polynomial time \PCP{} verifier for $L$ which uses $r \lg n$ bits of randomness and queries $q$ bits of the proof string, for some constants $r$ and $q$.
+    Consider the Cook-Levin transformation of the operation of $V$ into a Boolean circuit; the circuit will have input variables representing the bits of the input $x$, the bits of the random string $\rho$, and the bits of the proof string $\pi$.
+    For each fixed input $x$ of length $n$ and each fixed $\rho \in \Sigma^{r \lg n}$, simplify the circuit based on the values (that is, the 0s and 1s) of the variables corresponding to $x$ and the variables corresponding to $\rho$ into a Boolean function (also called a Boolean constraint) which depends only on the bits of the proof string $\pi$.
+    Let $\phi_{x, \rho}$ be that Boolean constraint; note that it depends only on $q$ Boolean variables.
+    Let $U_{\rho}$ be the variables corresponding to the bits of the proof string $\pi$ queried by $V$ on input $\rho$.
+
+    Now we construct a reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}.
+    Define the reduction $f$ by $f(x) = (\Gamma, U, D)$, where
+    \begin{align*}
+      \Gamma & = \{0, 1\}, \\
+      U & = \bigcup_{\rho \in \Sigma^{r \lg n}}{U_\rho}, \text{ and} \\
+      D & = \left\{\phi_{x, \rho}\right\}_{\rho \in \Sigma^{r \lg n}}.
+    \end{align*}
+    $f(x)$ is polynomial time computable (there are $qn^r$ variables in $U$ and $n^r$ constraints in $D$, both polynomials in $n$).
+    By the correctness of the Cook-Levin reduction and by the completeness and soundness of the \PCP{} verifier if $x \in L$ then there exists a $\pi$ such that for all strings $\rho$, we have $V(x, \rho; \pi)$ accepts and hence all the constraints are satisfiable.
+    Furthermore, if $x \notin L$ then for all $\pi$, on less than half of the strings $\rho$ will $V(x, \pi; \rho)$ accept, so less than half of the constraints will be satisfiable.
+    Therefore we have shown a correct polynomial time reduction from an arbitrary language $L$ in \NP{} to \textsc{$\frac{1}{2}$-gap $q$-CSP}.
   \item ($2 \implies 1$)
-    The \PCP{} verifier computes the reduction from an arbitrary \NP{} language to \textsc{$\frac{1}{2}$-gap $q$-CSP}, uses its randomness to select a constraint uniformly at random, then queries the proof string in the corresponding locations, accepting if and only if the proof string reflects a satisfying assignment.
+    Let $L \in \NP$.
+    By hypothesis there exists a (deterministic) polynomial time computable reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}.
+    Construct the \PCP{} verifier as follows.
+    The verifier computes the reduction to produce a set of constraints.
+    It then uses its randomness to choose a constraint uniformly at random.
+    Finally, it checks that the constraint is sastisfied, by querying the proof string at the appropriate locations (the locations corresponding to the $q$ variables in the constraint).
+
+    If $x \in L$ then all constraints are satisfiable, so there exists an assignment such that the verifier will accept on all random choices of the constraint.
+    If $x \notin L$ then less than half of the constraints are satisfiable, so for any assignment the probability that the verifier will select a satisfied constraint is less than half.
+    Therefore we have shown a correct \PCP{} verifier with the appropriate parameters for an arbitrary language in \NP.
   \end{enumerate}
-\end{proofidea}
+\end{proof}
 With this equivalence, we can reduce the problem of showing that $\NP \subseteq \PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$ to the problem of showing that \textsc{$\frac{1}{2}$-gap $q$-CSP} is \NP-hard.
 In \cite{dinur07}, the author solves the latter problem using an almost entirely combinatoric technique (we conjecture that an entirely combinatoric proof exists).
 
