@@ -180,7 +180,7 @@ The hard part uses the following ``inapproximability'' view of the PCP Theorem.
     Construct the \PCP{} verifier as follows.
     The verifier computes the reduction to produce a set of constraints.
     It then uses its randomness to choose a constraint uniformly at random.
-    Finally, it checks that the constraint is sastisfied, by querying the proof string at the appropriate locations (the locations corresponding to the $q$ variables in the constraint).
+    Finally, it checks that the constraint is satisfied, by querying the proof string at the appropriate locations (the locations corresponding to the $q$ variables in the constraint).
 
     If $x \in L$ then all constraints are satisfiable, so there exists an assignment such that the verifier will accept on all random choices of the constraint.
     If $x \notin L$ then less than half of the constraints are satisfiable, so for any assignment the probability that the verifier will select a satisfied constraint is less than half.
