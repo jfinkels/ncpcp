@@ -161,13 +161,13 @@ The hard part uses the following ``inapproximability'' view of the PCP Theorem.
     Consider the Cook-Levin transformation of the operation of $V$ into a Boolean circuit; the circuit will have input variables representing the bits of the input $x$, the bits of the random string $\rho$, and the bits of the proof string $\pi$.
     For each fixed input $x$ of length $n$ and each fixed $\rho \in \Sigma^{r \lg n}$, simplify the circuit based on the values (that is, the 0s and 1s) of the variables corresponding to $x$ and the variables corresponding to $\rho$ into a Boolean function (also called a Boolean constraint) which depends only on the bits of the proof string $\pi$.
     Let $\phi_{x, \rho}$ be that Boolean constraint; note that it depends only on $q$ Boolean variables.
-    Let $U_{\rho}$ be the variables corresponding to the bits of the proof string $\pi$ queried by $V$ on input $\rho$.
+    Let $U_{x, \rho}$ be the variables corresponding to the bits of the proof string $\pi$ queried by $V$ on input $x$ and random string $\rho$.
 
     Now we construct a reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}.
     Define the reduction $f$ by $f(x) = (\Gamma, U, D)$, where
     \begin{align*}
       \Gamma & = \{0, 1\}, \\
-      U & = \bigcup_{\rho \in \Sigma^{r \lg n}}{U_\rho}, \text{ and} \\
+      U & = \bigcup_{\rho \in \Sigma^{r \lg n}}{U_{x, \rho}}, \text{ and} \\
       D & = \left\{\phi_{x, \rho}\right\}_{\rho \in \Sigma^{r \lg n}}.
     \end{align*}
     $f(x)$ is polynomial time computable (there are $qn^r$ variables in $U$ and $n^r$ constraints in $D$, both polynomials in $n$).
