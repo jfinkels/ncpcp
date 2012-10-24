@@ -76,6 +76,16 @@ In the following definitions, let $q$ be a fixed natural number greater than 1.
   \textbf{Question:} Are all constraints $D$ satisfiable?
 \end{definition}
 
+\begin{definition}[\textsc{Maximum $q$-CSP}]
+  \mbox{}
+
+  \textbf{Instance:} finite alphabet $\Gamma$ with $|\Gamma| > 1$, finite set of variables $V$, finite set of $q$-ary constraints $D$.
+
+  \textbf{Solution:} An assignment $\alpha \colon V \to \Gamma$.
+
+  \textbf{Measure:} The number of constraints in $D$ satisfied by $\alpha$.
+\end{definition}
+
 \begin{definition}[\textsc{$\epsilon$-gap $q$-CSP}]
   \mbox{}
 
@@ -145,7 +155,7 @@ The following lemma proves the easy part.
 \end{proof}
 
 The hard part uses the following ``inapproximability'' view of the PCP Theorem.
-\begin{proposition}[{{\cite[Theorem~1.3]{dinur07}}}]
+\begin{proposition}[{{\cite[Theorem~1.3]{dinur07}}}]\label{prop:equivalence}
   The following are equivalent.
   \begin{enumerate}
   \item $\NP \subseteq \PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$.
@@ -213,6 +223,10 @@ In order to utilize the proof techniques from the \NP{} version of the \PCP{} Th
 \end{proposition}
 
 In \cite{wolf94}, the author conjectures that $\NNC(\polylog)$ is incomparable with $\P$ (but like \P, it resides between \NC{} and \NP).
+
+\begin{proposition}
+  If a language $L$ is complete for $\NNC^k(\lg^d n)$ under $\leq_m^{NC^k}$ reductions and $L \in \NC^k$ then $\NNC^k(\lg^d n) = \NC^k$.
+\end{proposition}
 
 Following the proof of \autoref{lem:pcpinnp}, we can show the following inclusion.
 \begin{proposition}\label{prop:pcpinnnc}
@@ -303,6 +317,38 @@ Since we will be interested only in the subclasses of $\NNC(\polylog)$, there mu
     \PCPcs{\NC}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(\polylog)} \subseteq \polyL.
   \end{equation*}
 \end{corollary}
+
+As an analog to \autoref{prop:equivalence}, we can again provide an inapproximability view of the restricted version PCP Theorem.
+
+\begin{proposition}
+  The following are equivalent.
+  \begin{enumerate}
+    \item  $\NNC^k(\lg^d n) \subseteq \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n}{O(1)}$.
+    \item There exists an integer $q$ with $q > 1$ such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for $\NNC^k(\lg^d n)$ under $\leq_m^L$ reductions that produce instances with $O(\lg^d n)$ variables and $\lg^d n$ constraints.
+  \end{enumerate}
+\end{proposition}
+\begin{proof}
+  The proof is the same as the proof of \autoref{prop:equivalence}; the only difference is in the length of the random string $\rho$, and hence the size of the output of the reduction.
+  The reduction in the proof that 1 implies 2 now enumerates (in parallel) each of the $2^{d \lg \lg n}$ possible random strings of length $d \lg \lg n$ instead of $2^{r \lg n}$ possible strings of length $r \lg n$.
+  Similarly, the PCP verifier in the proof that 2 implies 1 requires exactly $d \lg \lg n$ bits of randomness to select one of the $\lg^d n$ constraints uniformly at random.
+\end{proof}
+
+Now in order to prove the restricted version of the PCP Theorem, it suffices to prove that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for $\NNC^k(\lg^d n)$ under the appropriate type of (highly restrictive) reduction.
+This also shows that \textsc{Maximum $q$-CSP}, the optimization problem corresponding to \textsc{$q$-CSP}, is ``hard to approximate'' in the sense that unless $\NNC^k(\lg^d n) = \NC^k$, it is computationally infeasible to compute an $\epsilon$-approximation for an instance of \textsc{$q$-CSP}, for all $\epsilon \leq 2$.
+The key to showing hardness of approximation for an optimization problem whose budget problem is in $\NNC^k(\lg^d n)$ is to exhibit an $\NC^k$ gap-introducing reduction from a decision problem complete for $\NNC^k(\lg^d n)$ to the optimization problem.
+In order to show other optimization problems are hard to approximate, we use a size-restricted gap-preserving reduction.
+
+\begin{definition}
+  Let $P$ and $Q$ be maximization problems with $P = (I_P, S_P, m_p, \max)$ and $Q = (I_Q, S_Q, m_Q, \max)$.
+  There is a \emph{gap-preserving reduction from $P$ to $Q$} if there exists a five-tuple $(f, c_P, c_Q, \alpha, \beta)$ where $f \colon I_P \to I_Q$, $c_P \colon I_P \to \mathbb{Q}^+$, $c_Q \colon I_Q \to \mathbb{Q}^+$, and $\alpha, \beta \in \mathbb{Q}^+$ such that for all $x \in I_P$,
+  \begin{enumerate}
+  \item if $m^*_P(x) \geq c_P(x)$ then $m^*_Q(f(x)) \leq c_Q(f(x))$,
+  \item if $m^*_P(x) < \frac{1}{1 + \alpha} c_P(x)$ then $m^*_Q(f(x)) < \frac{1}{1 + \beta} c_Q(f(x))$, and
+  \item $|f(x)| \leq |x| \lg^k |x|$ for some $k \in \mathbb{N}$ with $k \geq 1$.
+  \end{enumerate}
+\end{definition}
+
+A gap-preserving reduction from \textsc{Maximum $q$-CSP} to any other optimization problem will show that it is also hard to approximate.
 
 \bibliographystyle{plain}
 \bibliography{references}
