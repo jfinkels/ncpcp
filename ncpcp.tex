@@ -339,8 +339,8 @@ As an analog to \autoref{prop:equivalence}, we can provide an inapproximability 
 \end{proposition}
 \begin{proof}
   The proof is the same as the proof of \autoref{prop:equivalence}; the only difference is in the length of the random string $\rho$, and hence the size of the output of the reduction.
-  The reduction in the proof that 1 implies 2 now enumerates (in parallel) each of the $2^{d \lg \lg n}$ possible random strings of length $d \lg \lg n$ instead of $2^{r \lg n}$ possible strings of length $r \lg n$.
-  Similarly, the PCP verifier in the proof that 2 implies 1 requires exactly $d \lg \lg n$ bits of randomness to select one of the $\lg^d n$ constraints uniformly at random.
+  The reduction in the proof that item 1 implies item 2 now enumerates (in parallel) each of the $2^{d \lg \lg n}$ possible random strings of length $d \lg \lg n$ instead of $2^{r \lg n}$ possible strings of length $r \lg n$.
+  Similarly, the PCP verifier in the proof that item 2 implies item 1 requires exactly $d \lg \lg n$ bits of randomness to select one of the $\lg^d n$ constraints uniformly at random.
 \end{proof}
 
 Now in order to prove the restricted version of the PCP Theorem, it suffices to prove that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for $\NNC^k(\lg^d n)$ under the appropriate type of (highly restrictive) reduction.
