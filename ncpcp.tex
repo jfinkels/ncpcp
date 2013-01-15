@@ -352,7 +352,7 @@ In order to show other optimization problems are hard to approximate, we use a s
   Let $P$ and $Q$ be maximization problems with $P = (I_P, S_P, m_p, \max)$ and $Q = (I_Q, S_Q, m_Q, \max)$.
   There is a \emph{gap-preserving reduction from $P$ to $Q$} if there exists a five-tuple $(f, c_P, c_Q, \alpha, \beta)$ where $f \colon I_P \to I_Q$, $c_P \colon I_P \to \mathbb{Q}^+$, $c_Q \colon I_Q \to \mathbb{Q}^+$, and $\alpha, \beta \in \mathbb{Q}^+$ such that for all $x \in I_P$,
   \begin{enumerate}
-  \item if $m^*_P(x) \geq c_P(x)$ then $m^*_Q(f(x)) \leq c_Q(f(x))$,
+  \item if $m^*_P(x) \geq c_P(x)$ then $m^*_Q(f(x)) \geq c_Q(f(x))$,
   \item if $m^*_P(x) < \frac{1}{1 + \alpha} c_P(x)$ then $m^*_Q(f(x)) < \frac{1}{1 + \beta} c_Q(f(x))$, and
   \item $|f(x)| \leq |x| \lg^k |x|$ for some $k \in \mathbb{N}$ with $k \geq 1$.
   \end{enumerate}
