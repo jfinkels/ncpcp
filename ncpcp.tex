@@ -211,7 +211,7 @@ In order to utilize the proof techniques from the \NP{} version of the \PCP{} Th
   A \emph{nondeterministic gate} (or \emph{guess gate}) in a Boolean circuit is a gate with no inputs and one output.
   A language $L$ is in $\NNC(f(n))$ if there exists an \NC{} circuit family $\left\{C_n\right\}_{n \in \mathbb{N}}$, each circuit $C_n$ augmented with $O(f(n))$ nondeterministic guess gates, such that $x \in L$ if and only if $C_n(x)$ accepts.
 
-  Alternatively a language $L$ is in $\NNC(f(n))$ if there exists an \NC{} circuit family $\left\{C_n\right\}_{n \in \mathbb{N}}$ such that $x \in L$ if and only if there exists a witness $\pi$ of length $c \cdot f(x)$ for some constant $c$ such that $C_{n + c \cdot f(x)}(x, \pi)$ outputs 1.
+  Alternatively a language $L$ is in $\NNC(f(n))$ if there exists an \NC{} circuit family $\left\{C_N\right\}_{N \in \mathbb{N}}$ such that for all strings $x$ of length $n$, we have $x \in L$ if and only if there exists a constant $c$ and a witness $\pi$ of length $c \cdot f(n)$ such that $C_{n + c \cdot f(n)}(x, \pi)$ outputs 1.
 \end{definition}
 
 \begin{proposition}[\cite{wolf94}]\label{prop:nnc}
