@@ -225,9 +225,22 @@ In order to utilize the proof techniques from the \NP{} version of the \PCP{} Th
 
 In \cite{wolf94}, the author conjectures that $\NNC(\polylog)$ is incomparable with $\P$ (but like \P, it resides between \NC{} and \NP).
 
+\begin{lemma}[{{\cite[Lemma~3.2.8]{wolf90}}}]\label{lem:dspace}
+  For all $k, j \in \mathbb{Q}$ with $k \geq 1$ and $j \geq 1$, we have $\NNC^k(\lg^j n) \subseteq \DSPACE(\lg^{\max(k, j)} n)$.
+\end{lemma}
+
 \begin{proposition}
-  If a language $L$ is hard for $\NNC^k(\lg^d n)$ under $\leq_m^{NC^k}$ reductions and $L \in \NC^k$ then $\NNC^k(\lg^d n) = \NC^k$.
+  For all integers $k$ and $d$,
+  \begin{enumerate}
+  \item if a language $L$ is hard for $\NNC^k(\lg^d n)$ under $\leq_m^P$ reductions and $L \in \P$ then $\NNC^k(\lg^d n) \subseteq \P$, and
+  \item if a language $L$ is hard for $\P$ under $\leq_m^{NC^k}$ reductions and $L \in \NNC^k$ then $\P \subseteq \NNC^k(\lg^d n)$.
+    Furthermore $\P \subsetneq \polyL$.
+  \end{enumerate}
 \end{proposition}
+\begin{proof}
+  A standard simulation argument proves both statements.
+  Since we have $\NNC^k(\lg^d n) \subseteq \DSPACE(\lg^m)$, where $m = \max(k, d)$, by \autoref{lem:dspace} and $\P \neq \polyL$ (by the Space Hierarchy Theorem), we conclude that $\P \subsetneq \polyL$.
+\end{proof}
 
 Following the proof of \autoref{lem:pcpinnp}, we can show the following inclusion.
 \begin{proposition}\label{prop:pcpinnnc}
@@ -302,10 +315,6 @@ Since we will be interested only in the subclasses of $\NNC(\polylog)$, there mu
   \item $\PCPcs{\NC}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(\polylog)} \subseteq \NNC(\polylog)$.
   \end{enumerate}
 \end{corollary}
-
-\begin{lemma}[{{\cite[Lemma~3.2.8]{wolf90}}}]
-  For all $k, j \in \mathbb{Q}$ with $k \geq 1$ and $j \geq 1$, we have $\NNC^k(\lg^j n) \subseteq \DSPACE(\lg^{\max(k, j)} n)$.
-\end{lemma}
 
 \begin{corollary}
   For all $j \in \mathbb{N}$ with $j \geq 1$, for all $k \in \mathbb{N}$ with $k \geq 1$, and for all positive rationals $q$ and $r$,
