@@ -389,7 +389,17 @@ A gap-preserving reduction from \textsc{Maximum $q$-CSP} to any other optimizati
 
 \section{TODO work in progress}
 
-The following theorem is the $\NC$ analog of \cite[Theorem~9]{fs96}.
+The results in this section are \NC{} analogs of results from \cite{fs96}.
+The first lemma states that $O(\lg \lg n)$ random bits can be simulated with only $\lg \lg n + t$ random bits.
+
+\begin{lemma}[{\cite[Lemma~4]{fs96}}]\label{lem:derandomize}
+  \begin{equation*}
+    \PCPcs{\NC^k}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(1)} \subseteq \PCPcs{\NC^k}{1}{\frac{1}{2}}{\lg \lg n + O(1)}{O(1)}.
+  \end{equation*}
+\end{lemma}
+\begin{proof}
+  TODO copy proof
+\end{proof}
 
 \begin{theorem}
   For all $k \in \mathbb{N}$ with $k \geq 1$ (\textbf{TODO can this be k = 1?}), and for all positive rationals $q$ and $d$, the following are equivalent.
@@ -411,7 +421,7 @@ The following theorem is the $\NC$ analog of \cite[Theorem~9]{fs96}.
 
   For the converse, suppose $L$ is a language in $\NNC^k(\lg^d n)$.
   By hypothesis, $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n}{q}$.
-  By \autoref{lemma4}, there exists a $t$ such that $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{\lg \lg n + t}{q}$.
+  By \autoref{lem:derandomize}, there exists a $t$ such that $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{\lg \lg n + t}{q}$.
   By \autoref{lem:constraints}, there exists an integer $q$ greater than 1 such that $L$ reduces to \textsc{$\frac{1}{2}$-gap $q$-CSP} under a $\leq_m^{NC^k}$ reduction that produces an instance with $O(\lg n)$ variables and $O(\lg n)$ constraints; let $f$ be the function which computes this reduction.
   We construct an $\NC^k$ algorithm for $L$ as follows on input $x$ of length $n$.
   \begin{enumerate}
