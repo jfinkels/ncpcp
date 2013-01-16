@@ -162,9 +162,20 @@ The hard part uses the following ``inapproximability'' view of the PCP Theorem.
   \item There exists an integer $q$, with $q > 1$, such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is \NP-hard.
   \end{enumerate}
 \end{proposition}
+
+Before proving this proposition, we provide one part of it as a separate lemma, because it will be of use in later theorems.
+
+\begin{lemma} \label{lem:constraints}
+  \mbox{}
+  \begin{enumerate}
+  \item If $L \in \PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$ then there is a $\leq_m^P$ reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}, for some integer $q$ greater than 1.
+  \item
+    For all non-negative integers $d$ and $t$, if $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n + t)}{O(1)}$ then there is a $\leq_m^{NC^k}$ reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}, for some integer $q$ greater than 1.
+    Furthermore, the reduction yields $O(\lg^d n)$ variables and $O(\lg^d n)$ constraints on inputs of length $n$.
+  \end{enumerate}
+\end{lemma}
 \begin{proof}
-  First we suppose $\NP \subseteq \PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$.
-  Let $L$ be a language in $\NP$, so $L$ is also in $\PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$.
+  Let $L$ be a language in $\PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$.
   Let $V$ be the polynomial time \PCP{} verifier for $L$ which uses $r \lg n$ bits of randomness and queries $q$ bits of the proof string, for some constants $r$ and $q$.
   Consider the Cook-Levin transformation of the operation of $V$ into a Boolean circuit; the circuit will have input variables representing the bits of the input $x$, the bits of the random string $\rho$, and the bits of the proof string $\pi$.
   For each fixed input $x$ of length $n$ and each fixed $\rho \in \Sigma^{r \lg n}$, simplify the circuit based on the values (that is, the 0s and 1s) of the variables corresponding to $x$ and the variables corresponding to $\rho$ into a Boolean function (also called a Boolean constraint) which depends only on the bits of the proof string $\pi$.
@@ -181,16 +192,23 @@ The hard part uses the following ``inapproximability'' view of the PCP Theorem.
   $f(x)$ is polynomial time computable (there are $qn^r$ variables in $U$ and $n^r$ constraints in $D$, both polynomials in $n$).
   By the correctness of the Cook-Levin reduction and by the completeness and soundness of the \PCP{} verifier if $x \in L$ then there exists a $\pi$ such that for all strings $\rho$, we have $V(x, \rho; \pi)$ accepts and hence all the constraints are satisfiable.
   Furthermore, if $x \notin L$ then for all $\pi$, on less than half of the strings $\rho$ will $V(x, \pi; \rho)$ accept, so less than half of the constraints will be satisfiable.
-  Therefore we have shown a correct polynomial time reduction from an arbitrary language $L$ in \NP{} to \textsc{$\frac{1}{2}$-gap $q$-CSP}.
+  Therefore we have shown a correct polynomial time reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}.
 
-  Now we prove the converse implication.
+  The proof for the second claim is similar; the only difference is in the length of the random string $\rho$, and hence the size of the output of the reduction.
+  Since the verifier $V$ now uses only $d \lg \lg n + t$ bits of randomness, the reduction enumerates (in parallel) each of the $2^{d \lg \lg n + t}$ possible random strings of length $d \lg \lg n + t$, instead of the $2^{r \lg n}$ possible strings of length $r \lg n$.
+  Observe that the number of variables must be $q 2^{d \lg \lg n + t}$, which equals $q 2^t \lg^d n$, and the number of constraints is $2^t \lg^d n$, both members of $O(\lg^d n)$.
+\end{proof}
+
+\begin{proof}[Proof of \autoref{prop:equivalence}]
+  One direction of the equivalence follows immediately from the inclusion in the hypothesis and from \autoref{lem:constraints}.
+  Thus it suffices to prove the converse implication.
   Suppose \textsc{$\frac{1}{2}$-gap $q$-CSP} is \NP-hard for some $q$ greater than 1.
   Let $L$ be a language in \NP.
   By hypothesis there exists a (deterministic) polynomial time computable reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}.
   Construct the \PCP{} verifier as follows.
   \begin{enumerate}
   \item Compute the reduction to produce a set of constraints.
-  \item Use some random bits to choose a constraint uniformly at random.
+  \item Use $O(\lg n)$ random bits to choose a constraint uniformly at random.
   \item Check that the constraint is satisfied by querying the proof string at the appropriate locations (the locations corresponding to the $q$ variables in the constraint).
   \end{enumerate}
 
@@ -224,6 +242,7 @@ In order to utilize the proof techniques from the \NP{} version of the \PCP{} Th
 \end{proposition}
 
 In \cite{wolf94}, the author conjectures that $\NNC(\polylog)$ is incomparable with $\P$ (but like \P, it resides between \NC{} and \NP).
+We can get some of idea of the relationship between $\NNC(\polylog)$ and $\P$ from the following lemma and proposition.
 
 \begin{lemma}[{{\cite[Lemma~3.2.8]{wolf90}}}]\label{lem:dspace}
   For all $k, j \in \mathbb{Q}$ with $k \geq 1$ and $j \geq 1$, we have $\NNC^k(\lg^j n) \subseteq \DSPACE(\lg^{\max(k, j)} n)$.
@@ -242,6 +261,7 @@ In \cite{wolf94}, the author conjectures that $\NNC(\polylog)$ is incomparable w
   Since we have $\NNC^k(\lg^d n) \subseteq \DSPACE(\lg^m)$, where $m = \max(k, d)$, by \autoref{lem:dspace} and $\P \neq \polyL$ (by the Space Hierarchy Theorem), we conclude that $\P \subsetneq \polyL$.
 \end{proof}
 
+Now that we have the basic notions of nondeterministic circuits, we can return to our search for a restricted $\PCP$ characterization for $\NNC$ circuits.
 Following the proof of \autoref{lem:pcpinnp}, we can show the following inclusion.
 \begin{proposition}\label{prop:pcpinnnc}
   For all $j \in \mathbb{N}$ with $j \geq 0$, for all $k \in \mathbb{N}$ with $k \geq 1$ (\textbf{TODO can this be k = 1?}), and for all positive rationals $q$ and $r$,
@@ -307,7 +327,7 @@ Since we will be interested only in the subclasses of $\NNC(\polylog)$, there mu
   \end{enumerate}
 \end{corollary}
 
-\begin{corollary}
+\begin{corollary}\label{cor:pcpinnnc}
   \mbox{}
   \begin{enumerate}
   \item $\PCPcs{\NC}{1}{\frac{1}{2}}{0}{O(\lg n)} = \NNC(\lg n) = \NC$,
@@ -328,23 +348,30 @@ Since we will be interested only in the subclasses of $\NNC(\polylog)$, there mu
   \end{equation*}
 \end{corollary}
 
-As an analog to \autoref{prop:equivalence}, we can provide an inapproximability view of the restricted version PCP Theorem.
+As an analog to \autoref{prop:equivalence}, we can provide an inapproximability view of the restricted version of the PCP Theorem.
+The statement of this proposition is more precise than that of \autoref{prop:equivalence} about the number of bits of randomness required because the precision is required for a later theorem.
 
-\begin{proposition}
+\begin{proposition}\label{prop:inapprox}
+  Suppose $d$ is a non-negative integer and $k$ is an integer greater than or equal to 1 (\textbf{TODO is $k = 1$ okay?}).
   The following are equivalent.
   \begin{enumerate}
-    \item  $\NNC^k(\lg^d n) \subseteq \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n}{O(1)}$.
-    \item There exists an integer $q$ with $q > 1$ such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for $\NNC^k(\lg^d n)$ under $\leq_m^L$ reductions that produce instances with $O(\lg^d n)$ variables and $\lg^d n$ constraints.
+    \item There is a non-negative integer $t$ such that
+      \begin{equation*}
+        \NNC^k(\lg^d n) \subseteq \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n + t}{O(1)}.
+      \end{equation*}
+    \item There exists an integer $q$ with $q > 1$ such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for $\NNC^k(\lg^d n)$ under $\leq_m^{NC^k}$ reductions that produce instances with $O(\lg^d n)$ variables and $O(\lg^d n)$ constraints.
   \end{enumerate}
 \end{proposition}
 \begin{proof}
   The proof is the same as the proof of \autoref{prop:equivalence}; the only difference is in the length of the random string $\rho$, and hence the size of the output of the reduction.
-  The reduction in the proof that item 1 implies item 2 now enumerates (in parallel) each of the $2^{d \lg \lg n}$ possible random strings of length $d \lg \lg n$ instead of $2^{r \lg n}$ possible strings of length $r \lg n$.
-  Similarly, the PCP verifier in the proof that item 2 implies item 1 requires exactly $d \lg \lg n$ bits of randomness to select one of the $\lg^d n$ constraints uniformly at random.
+  Observe that the PCP verifier in the proof that item 2 implies item 1 requires $d \lg \lg n + \lg c$ bits of randomness to select one of the $c \lg^d n$ constraints uniformly at random, where $c$ is a constant, so we choose $t = \lg c$.
 \end{proof}
 
 Now in order to prove the restricted version of the PCP Theorem, it suffices to prove that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for $\NNC^k(\lg^d n)$ under the appropriate type of (highly restrictive) reduction.
 This also shows that \textsc{Maximum $q$-CSP}, the optimization problem corresponding to \textsc{$q$-CSP}, is ``hard to approximate'' in the sense that unless $\NNC^k(\lg^d n) = \NC^k$, it is computationally infeasible to compute an $\epsilon$-approximation for an instance of \textsc{$q$-CSP}, for all $\epsilon \leq 2$.
+
+\section{Hardness of approximation}
+
 The key to showing hardness of approximation for an optimization problem whose budget problem is in $\NNC^k(\lg^d n)$ is to exhibit an $\NC^k$ gap-introducing reduction from a decision problem complete for $\NNC^k(\lg^d n)$ to the optimization problem.
 In order to show other optimization problems are hard to approximate, we use a size-restricted gap-preserving reduction.
 
@@ -359,6 +386,66 @@ In order to show other optimization problems are hard to approximate, we use a s
 \end{definition}
 
 A gap-preserving reduction from \textsc{Maximum $q$-CSP} to any other optimization problem will show that it is also hard to approximate.
+
+\section{TODO work in progress}
+
+The following theorem is the $\NC$ analog of \cite[Theorem~9]{fs96}.
+
+\begin{theorem}
+  For all $k \in \mathbb{N}$ with $k \geq 1$ (\textbf{TODO can this be k = 1?}), and for all positive rationals $q$ and $d$, the following are equivalent.
+  \begin{enumerate}
+  \item $\NNC^k(\lg^d n) = \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n}{q}$.
+  \item $\NNC^k(\lg^d n) = \NC^k$.
+  \end{enumerate}
+\end{theorem}
+\begin{proof}
+  First suppose $\NNC^k(\lg^d n) = \NC^k$.
+  In this case, we have
+  \begin{equation*}
+    \NNC^k(\lg^d n)
+    \subseteq \NC^k
+    = \PCPcs{\NC^k}{1}{\frac{1}{2}}{0}{0}
+    \subseteq \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n}{q}.
+  \end{equation*}
+  Combine this with \autoref{prop:pcpinnnc} to achieve equality.
+
+  For the converse, suppose $L$ is a language in $\NNC^k(\lg^d n)$.
+  By hypothesis, $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n}{q}$.
+  By \autoref{lemma4}, there exists a $t$ such that $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{\lg \lg n + t}{q}$.
+  By \autoref{lem:constraints}, there exists an integer $q$ greater than 1 such that $L$ reduces to \textsc{$\frac{1}{2}$-gap $q$-CSP} under a $\leq_m^{NC^k}$ reduction that produces an instance with $O(\lg n)$ variables and $O(\lg n)$ constraints; let $f$ be the function which computes this reduction.
+  We construct an $\NC^k$ algorithm for $L$ as follows on input $x$ of length $n$.
+  \begin{enumerate}
+  \item Compute $f(x)$, which yields alphabet $\Gamma$, set of variables $U$, and set of constraints $D$.
+  \item For each pair $(\alpha, C)$, where $\alpha$ is a truth assignment to $U$ and $C$ is a constraint in $D$, evaluate the constraint $C$ with respect to truth assignment $\alpha$.
+  \item Accept if and only if there exists a truth assignment for which all constraints in $D$ are satisfied.
+  \end{enumerate}
+
+  First we show that this algorithm can be computed by an $\NC^k$ circuit family.
+  Computing $f$ can be performed in $\NC^k$.
+  There are a polynomial number of truth assignments to the $O(\lg n)$ variables of $U$, and there are only $O(\lg n)$ constraints in $D$, so the second step requires only a polynomial number of parallel sub-circuits.
+  Boolean constraint evaluation can be performed in logarithmic space with respect to the length of the input, and in this case the length of the input is the size of a constraint (which is constant, since each constraint depends on at most $q$ variables).
+  The circuit concludes with a polynomial number of parallel conjunction gates, each of which computes the conjunction of the result of evaluating each constraint for a single assignment, followed by a single gate computing the disjunction of all the conjunctions.
+  All steps after the first add only constant depth to the overall circuit, and the number of gates is polynomial in $n$, so this is indeed an $\NC^k$ circuit.
+
+  It remains to show that this algorithm is correct.
+  For all strings $x$, we know $x$ is in $L$ if and only if $f(x)$ is in \textsc{$\frac{1}{2}$-gap $q$-CSP}.
+  In fact, the procedure in steps 2 and 3 is a correct algorithm for the more general constraint satisfaction problem.
+  If all constraints in $D$ are satisfiable, then there is some assignment to $U$ which satisfies all of them, and the final disjunction must be true.
+  Conversely, if some of the constraints in $D$ are not satisfiable, then no assignment satisfies all of them, so the final disjunction must be false.
+  Therefore $x$ is in $L$ if and only if the algorithm accepts.
+
+  Finally, we conclude that the given algorithm is a correct $\NC^k$ algorithm for an arbitrary language $L$ in $\NNC^k(\lg^d n)$, and hence $\NNC^k(\lg^d n) = \NC^k$.
+\end{proof}
+
+The technique used in the proof of the preceding theorem also yields the following.
+
+\begin{corollary}
+  The following are equivalent.
+  \begin{enumerate}
+  \item $\NNC(\polylog) = \PCPcs{\NC}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(1)}$.
+  \item $\NNC(\polylog) = \NC$.
+  \end{enumerate}
+\end{corollary}
 
 \bibliographystyle{plain}
 \bibliography{references}
