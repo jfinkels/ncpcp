@@ -13,6 +13,7 @@
 \declaretheorem[numberlike=theorem]{corollary}
 \declaretheorem[numberlike=theorem]{lemma}
 \declaretheorem[numberlike=theorem]{proposition}
+\declaretheorem[numberlike=theorem, style=definition]{construction}
 \declaretheorem[numberlike=theorem, style=definition]{definition}
 
 %% Arguments:
@@ -390,16 +391,89 @@ A gap-preserving reduction from \textsc{Maximum $q$-CSP} to any other optimizati
 \section{TODO work in progress}
 
 The results in this section are \NC{} analogs of results from \cite{fs96}.
+We adapt the authors' presentation of derandomization using constant degree spectral expanders.
+With this derandomization, we will show a simulation of $O(\lg \lg n)$ bits of randomness by $\lg \lg n + O(1)$ bits of randomness, which allows us to provide evidence that $\NNC(\polylog) \neq \PCPcs{\NC}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(1)}$.
+
+%% TODO can we replace this with a generic pseudo random generator?
+The derandomization uses a fully explicit constant degree spectral expander graph on the discrete torus due to \cite{margulis} and \cite{gg}.
+\begin{construction}\label{con:expander}
+  Suppose $m$ is a positive integer.
+  The \emph{discrete torus expander} is the graph with vertex set ${(\mathbb{Z}/m\mathbb{Z})}^2$ and edge set $E$ containing an edge from $(x, y)$ to each of the vertices $(x, y)$, $(x + 1, y)$, $(x, y + 1)$, $(x, x + y)$, and $(-y, x)$, for all vertices $(x, y)$.
+\end{construction}
+
+This graph is a spectral expander \cite{gg} and is fully explicit because integer addition modulo $m$ can be computed in $\NC^1$ with respect to $\log m$ (the length of an integer in $\mathbb{Z}/m\mathbb{Z}$).
+For our purposes, it is important that neighboring vertices can be computed not just in $\P$, but more specifically in $\NC$.
+
 The first lemma states that $O(\lg \lg n)$ random bits can be simulated with only $\lg \lg n + t$ random bits.
 
 \begin{lemma}[{\cite[Lemma~4]{fs96}}]\label{lem:derandomize}
+  (\textbf{TODO we need $\lg \lg n$ to be even; the even requirement is an artifact of the construction of the Margulis expander}.)
+  For all integers $k$ where $k \geq 1$, we have
   \begin{equation*}
-    \PCPcs{\NC^k}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(1)} \subseteq \PCPcs{\NC^k}{1}{\frac{1}{2}}{\lg \lg n + O(1)}{O(1)}.
+    \PCPcs{\NC^k}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(1)}
+    \subseteq
+    \PCPcs{\NC^k}{1}{\frac{1}{2}}{\lg \lg n + O(1)}{O(1)}.
   \end{equation*}
 \end{lemma}
 \begin{proof}
-  TODO copy proof
+  Let $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(1)}$.
+  This means there exists a $(\alpha \lg \lg n, q)$-\PCP{} verifier $V$ for $L$, for some positive rational $\alpha$ and positive integer $q$.
+  We assume without loss of generality that $\alpha > 1$; if $\alpha \leq 1$ the statement is immediately true.
+  Our goal is to construct a $(\lg \lg n + t, O(1))$-\PCP{} verifier $V'$ for $L$, for some constant integer $t$.
+  Suppose for now that $t$ has been fixed; we will define it later in the proof.
+  We construct the verifier $V'$ as follows on input $x$ of length $n$, random string $\rho$ of length $\lg \lg n + t$ and proof string $\pi$ of length $2^{\lg \lg n + t} q$ (this is the maximum number of possible bits of the proof string queried by a nonadaptive verifier with $\lg \lg n$ bits of randomness).
+  Interpret $\rho$ as $\rho_1 \circ \rho_2$, where $|\rho_1| = \lg \lg n$ and $|\rho_2| = t$.
+
+  Intuitively, the verifier will simulate $\alpha \lg \lg n$ random bits with only $\lg \lg n + t$ random bits by using a random walk on an expander graph.
+  Let $\ell = 2^{\lg \lg n}$ and $d = 5$, and let $G_\ell$ be the $d$-regular discrete torus expander on $\ell$ vertices from \autoref{con:expander}.
+  Let $C$ be the subset of vertices of cardinality $\frac{|V(G_\ell)|}{2}$ from \autoref{lem:badsubset}.
+  By \autoref{lemma2} there is a constant $c$ such that (\textbf{TODO for all $\kappa$?}), the probability that a random walk of length $\kappa c$ on $G_\ell$ arrives at a vertex in $C$ on every $c$th step is at most $\frac{1}{2^\kappa}$.
+  We will be using such a random walk to simulate the randomness of $V$ and we want the soundness probability of $V'$ to be strictly less than $\frac{1}{2}$, so we require the length of the walk to be strictly greater than $c$.
+
+  Now we are ready to describe $V'$.
+  \begin{enumerate}
+  \item
+    Perform a random walk of length $\alpha c$ on $G_\ell$ from an initial vertex chosen uniformly at random.
+    Let $(v_{i_1}, \dotsc, v_{i_{\alpha c}})$ be the sequence of vertices which comprise this walk.
+  \item
+    Let $s = i_{1c} \circ i_{2c} \circ \dotsb \circ i_{\alpha c}$, where $i_k$ is the binary representation of the index of the vertex $v_{i_k}$, for all $k \in \{1, \dotsc, \alpha c\}$.
+    Observe that $|s| = \alpha |i_k| = \alpha \lg |V(G_\ell)| = \alpha \lg 2^{\lg \lg n} = \alpha \lg \lg n$.
+  \item Accept if and only if $V(x, s, \pi)$ accepts.
+  \end{enumerate}
+  $V'$ requires $2 \frac{\lg \lg n}{2}$ random bits to choose an initial vertex for the walk and $\lg d$ random bits at each of the $\alpha c$ steps of the walk.
+  Thus $V'$ uses $\lg \lg n + \alpha c \lg d$ random bits in total; now we define $t$ to be $\alpha c \lg d$, a constant independent of $n$.
+  Since $V'$ only accesses the proof string $\pi$ via the simulation of $V$, the verifier $V'$ queries exactly the same number of bits of the proof string as does the verifier $V$.
+
+  (\textbf{TODO define linear time explicit expander}.)
+  Performing a single step in a linear time explicit expander takes $O(|V(G_\ell)|)$ time.
+  Thus, performing a random walk of length $\alpha c$ takes $O(\alpha c |V(G_\ell)|)$.
+  Since $G_\ell$ has exactly $2^{\lg \lg n}$, or more simply $\lg n$, vertices, the total computation time for the random walk is $O(\alpha c \lg n)$, which is in $O(\lg n)$.
+  Since $V$ is an $\NC^k$ algorithm, the simulation of $V$ can be performed by a polynomial size, $O(\log^k n)$ depth circuit.
+  Therefore the overall time required by $V'$ is $O(\lg n) + O(\log^k n)$, which is $O(\log^k n)$ for all $k \geq 1$.
+
+  Now we show that $V'$ achieves the necessary completeness and soundness error bounds.
+  Let $x$ be a string of length $n$, and $\pi$ be any sufficiently long proof string.
+  By construction, we have
+  \begin{equation*}
+    \Pr_\rho[V'(x, \rho, \pi) \text{ accepts}] = \Pr_\rho[V(x, s, \pi) \text{ accepts}],
+  \end{equation*}
+  where $\rho$ is a binary string of length $\lg \lg n + t$ chosen uniformly at random, and $s$ is generated by the random walk on $G_\ell$ as described above.
+  If $x \in L$, then there exists a proof string $\pi$ such that for all strings $\gamma$, we have $V(x, \gamma, \pi)$ accepts, and in particular, $V(x, s, \pi)$ accepts.
+  Therefore, for all strings $\rho$, it follows that $V'(x, \rho, \pi)$ accepts.
+  If $x \notin L$, then for all proof strings $\pi$, the probability over binary strings $\gamma$ of length $\alpha \lg \lg n$ that $V(x, \gamma, \pi)$ accepts is less than $\frac{1}{2}$.
+  (\textbf{TODO how does this correspond to the following probability analysis? I think it has something to do with \autoref{lem:badsubset}.})
+  \begin{align*}
+    \Pr_\rho[V'(x, \rho, \pi) \text{ accepts}] & = \Pr_\rho[V(x, s, \pi) \text{ accepts}] \\
+    & = \Pr_\rho[\forall j \in \{1, \dotsc, \alpha\} \colon i_{jc} \in C] \qquad \text{(by \autoref{lem:badsubset})} \\
+    & \leq \frac{1}{2^\alpha} \qquad \text{(by \autoref{lemma2})} \\
+    & < \frac{1}{2} \qquad \text{(because } \alpha > 1)
+  \end{align*}
+
+  To summarize, we have shown that $V'$ uses exactly $\lg \lg n + \alpha c \lg d$ bits of randomness, makes $O(1)$ queries to the proof string, can be implemented by an $\NC^k$ circuit, and has completeness 1 and soundness $\frac{1}{2}$.
+  Therefore, $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{\lg \lg n + O(1)}{O(1)}$.
 \end{proof}
+
+Using the derandomizations from \autoref{prop:pcpinnnc} and \autoref{lem:derandomize}, we can prove the following theorem.
 
 \begin{theorem}
   For all $k \in \mathbb{N}$ with $k \geq 1$ (\textbf{TODO can this be k = 1?}), and for all positive rationals $q$ and $d$, the following are equivalent.
@@ -439,7 +513,7 @@ The first lemma states that $O(\lg \lg n)$ random bits can be simulated with onl
 
   It remains to show that this algorithm is correct.
   For all strings $x$, we know $x$ is in $L$ if and only if $f(x)$ is in \textsc{$\frac{1}{2}$-gap $q$-CSP}.
-  In fact, the procedure in steps 2 and 3 is a correct algorithm for the more general constraint satisfaction problem.
+  In fact, the procedure defined by steps 2 and 3 together is a correct algorithm for the more general constraint satisfaction problem.
   If all constraints in $D$ are satisfiable, then there is some assignment to $U$ which satisfies all of them, and the final disjunction must be true.
   Conversely, if some of the constraints in $D$ are not satisfiable, then no assignment satisfies all of them, so the final disjunction must be false.
   Therefore $x$ is in $L$ if and only if the algorithm accepts.
@@ -447,7 +521,7 @@ The first lemma states that $O(\lg \lg n)$ random bits can be simulated with onl
   Finally, we conclude that the given algorithm is a correct $\NC^k$ algorithm for an arbitrary language $L$ in $\NNC^k(\lg^d n)$, and hence $\NNC^k(\lg^d n) = \NC^k$.
 \end{proof}
 
-The technique used in the proof of the preceding theorem also yields the following.
+The technique used in the proof of the preceding theorem also yields the following corollary.
 
 \begin{corollary}
   The following are equivalent.
@@ -455,6 +529,17 @@ The technique used in the proof of the preceding theorem also yields the followi
   \item $\NNC(\polylog) = \PCPcs{\NC}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(1)}$.
   \item $\NNC(\polylog) = \NC$.
   \end{enumerate}
+\end{corollary}
+
+Combining these results with \autoref{prop:inapprox} yields evidence that the techniques used to prove the PCP Theorem do not provide the insight necessary to derive a PCP characterization for $\NNC(\polylog)$.
+
+\begin{corollary}
+  Let $k$ be a positive integer and $d$ be a non-negative integer.
+  If there exists an integer $q$ with $q > 1$ such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for $\NNC^k(\lg^d n)$ under $\leq_m^{NC^k}$ reductions that produce instances with $O(\lg^d n)$ variables and $O(\lg^d n)$ constraints, then $\NNC^k(\lg^d n) = \NC^k$.
+\end{corollary}
+
+\begin{corollary}
+  If there exists an integer $q$ with $q > 1$ such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for $\NNC(\polylog)$ under $\leq_m^{NC}$ reductions that produce instances with $O(\polylog)$ variables and $O(\polylog)$ constraints, then $\NNC(\polylog) = \NC$.
 \end{corollary}
 
 \bibliographystyle{plain}
