@@ -357,7 +357,7 @@ Our original motivation for this work was to show that $\NNC^k(\lg^d n) = \PCPcs
   For all $k \in \mathbb{N}$ with $k \geq 1$ (\textbf{TODO can this be k = 1?}), and for all positive rationals $q$ and $d$, the following are equivalent.
   \begin{enumerate}
   \item $\NNC^k(\lg^d n) = \NC^k$.
-  \item There is a non-negative integer $t$ such that $\NNC^k(\lg^d n) = \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n + t}{q}$.
+  \item $\NNC^k(\lg^d n) = \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n + t}{q}$ for some non-negative integer $t$.
   \item There is an integer $c$ with $c > 1$ such that \textsc{$\frac{1}{2}$-gap $c$-CSP} is hard for $\NNC^k(\lg^d n)$ under $\leq_m^{NC^k}$ reductions that produce instances with $O(\lg^d n)$ variables and $O(\lg^d n)$ constraints.
   \end{enumerate}
 \end{theorem}
@@ -367,11 +367,11 @@ Our original motivation for this work was to show that $\NNC^k(\lg^d n) = \PCPcs
   \begin{enumerate}
   \item $\NNC(\polylog) = \NC$.
   \item $\NNC(\polylog) = \PCPcs{\NC}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(1)}$.
-  \item There is an integer $c$ with $c > 1$ such that \textsc{$\frac{1}{2}$-gap $c$-CSP} is hard for $\NNC(\polylog)$ under $\leq_m^{NC}$ reductions that produce instances with $O(\polylog)$ variables and $O(\polylog)$ constraints.
+  \item \textsc{$\frac{1}{2}$-gap $c$-CSP} is hard for $\NNC(\polylog)$ under $\leq_m^{NC}$ reductions that produce instances with $O(\polylog)$ variables and $O(\polylog)$ constraints, where $c$ is some integer greater than 1.
   \end{enumerate}
 \end{corollary}
 
-In order to prove this equivalence, we require the \NC{} analog of \prop{prop:equivalence}, as well as some derandomization techniques.
+In order to prove this equivalence, we require the \NC{} analog of \autoref{prop:equivalence}, as well as some derandomization techniques.
 Some of the theorems below are \NC{} analogs of results from \cite{fs96}.
 We adapt the authors' presentation of derandomization using constant degree spectral expanders.
 With this derandomization, we will show a simulation of $O(\lg \lg n)$ bits of randomness by $\lg \lg n + O(1)$ bits of randomness, which allows us to provide evidence that $\NNC(\polylog) \neq \PCPcs{\NC}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(1)}$.
