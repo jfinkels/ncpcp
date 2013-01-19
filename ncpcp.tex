@@ -171,7 +171,7 @@ Before proving this proposition, we provide one part of it as a separate lemma, 
   \begin{enumerate}
   \item If $L \in \PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$ then there is a $\leq_m^P$ reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}, for some integer $q$ greater than 1.
   \item
-    For all non-negative integers $d$ and $t$, if $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n + t)}{O(1)}$ then there is a $\leq_m^{NC^k}$ reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}, for some integer $q$ greater than 1.
+    For all non-negative integers $d$ and $t$, if $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n + t}{O(1)}$ then there is a $\leq_m^{NC^k}$ reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}, for some integer $q$ greater than 1.
     Furthermore, the reduction yields $O(\lg^d n)$ variables and $O(\lg^d n)$ constraints on inputs of length $n$.
   \end{enumerate}
 \end{lemma}
@@ -349,48 +349,30 @@ Since we will be interested only in the subclasses of $\NNC(\polylog)$, there mu
   \end{equation*}
 \end{corollary}
 
-As an analog to \autoref{prop:equivalence}, we can provide an inapproximability view of the restricted version of the PCP Theorem.
-The statement of this proposition is more precise than that of \autoref{prop:equivalence} about the number of bits of randomness required because the precision is required for a later theorem.
 
-\begin{proposition}\label{prop:inapprox}
-  Suppose $d$ is a non-negative integer and $k$ is an integer greater than or equal to 1 (\textbf{TODO is $k = 1$ okay?}).
+
+Our original motivation for this work was to show that $\NNC^k(\lg^d n) = \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n}{O(1)}$, but it now seems unlikely that this is true.
+
+\begin{theorem}\label{thm:equiv}
+  For all $k \in \mathbb{N}$ with $k \geq 1$ (\textbf{TODO can this be k = 1?}), and for all positive rationals $q$ and $d$, the following are equivalent.
+  \begin{enumerate}
+  \item $\NNC^k(\lg^d n) = \NC^k$.
+  \item There is a non-negative integer $t$ such that $\NNC^k(\lg^d n) = \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n + t}{q}$.
+  \item There is an integer $c$ with $c > 1$ such that \textsc{$\frac{1}{2}$-gap $c$-CSP} is hard for $\NNC^k(\lg^d n)$ under $\leq_m^{NC^k}$ reductions that produce instances with $O(\lg^d n)$ variables and $O(\lg^d n)$ constraints.
+  \end{enumerate}
+\end{theorem}
+
+\begin{corollary}
   The following are equivalent.
   \begin{enumerate}
-    \item There is a non-negative integer $t$ such that
-      \begin{equation*}
-        \NNC^k(\lg^d n) \subseteq \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n + t}{O(1)}.
-      \end{equation*}
-    \item There exists an integer $q$ with $q > 1$ such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for $\NNC^k(\lg^d n)$ under $\leq_m^{NC^k}$ reductions that produce instances with $O(\lg^d n)$ variables and $O(\lg^d n)$ constraints.
+  \item $\NNC(\polylog) = \NC$.
+  \item $\NNC(\polylog) = \PCPcs{\NC}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(1)}$.
+  \item There is an integer $c$ with $c > 1$ such that \textsc{$\frac{1}{2}$-gap $c$-CSP} is hard for $\NNC(\polylog)$ under $\leq_m^{NC}$ reductions that produce instances with $O(\polylog)$ variables and $O(\polylog)$ constraints.
   \end{enumerate}
-\end{proposition}
-\begin{proof}
-  The proof is the same as the proof of \autoref{prop:equivalence}; the only difference is in the length of the random string $\rho$, and hence the size of the output of the reduction.
-  Observe that the PCP verifier in the proof that item 2 implies item 1 requires $d \lg \lg n + \lg c$ bits of randomness to select one of the $c \lg^d n$ constraints uniformly at random, where $c$ is a constant, so we choose $t = \lg c$.
-\end{proof}
+\end{corollary}
 
-Now in order to prove the restricted version of the PCP Theorem, it suffices to prove that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for $\NNC^k(\lg^d n)$ under the appropriate type of (highly restrictive) reduction.
-This also shows that \textsc{Maximum $q$-CSP}, the optimization problem corresponding to \textsc{$q$-CSP}, is ``hard to approximate'' in the sense that unless $\NNC^k(\lg^d n) = \NC^k$, it is computationally infeasible to compute an $\epsilon$-approximation for an instance of \textsc{$q$-CSP}, for all $\epsilon \leq 2$.
-
-\section{Hardness of approximation}
-
-The key to showing hardness of approximation for an optimization problem whose budget problem is in $\NNC^k(\lg^d n)$ is to exhibit an $\NC^k$ gap-introducing reduction from a decision problem complete for $\NNC^k(\lg^d n)$ to the optimization problem.
-In order to show other optimization problems are hard to approximate, we use a size-restricted gap-preserving reduction.
-
-\begin{definition}
-  Let $P$ and $Q$ be two maximization problems. Suppose $P = (I_P, S_P, m_p, \max)$ and $Q = (I_Q, S_Q, m_Q, \max)$.
-  There is a \emph{gap-preserving reduction from $P$ to $Q$} if there exists a five-tuple $(f, c_P, c_Q, \alpha, \beta)$ where $f \colon I_P \to I_Q$, $c_P \colon I_P \to \mathbb{Q}^+$, $c_Q \colon I_Q \to \mathbb{Q}^+$, and $\alpha, \beta \in \mathbb{Q}^+$ such that for all $x \in I_P$,
-  \begin{enumerate}
-  \item if $m^*_P(x) \geq c_P(x)$ then $m^*_Q(f(x)) \geq c_Q(f(x))$,
-  \item if $m^*_P(x) < \frac{1}{1 + \alpha} c_P(x)$ then $m^*_Q(f(x)) < \frac{1}{1 + \beta} c_Q(f(x))$, and
-  \item $|f(x)| \leq |x| \lg^k |x|$ for some $k \in \mathbb{N}$ with $k \geq 1$.
-  \end{enumerate}
-\end{definition}
-
-A gap-preserving reduction from \textsc{Maximum $q$-CSP} to any other optimization problem will show that it is also hard to approximate.
-
-\section{TODO work in progress}
-
-The results in this section are \NC{} analogs of results from \cite{fs96}.
+In order to prove this equivalence, we require the \NC{} analog of \prop{prop:equivalence}, as well as some derandomization techniques.
+Some of the theorems below are \NC{} analogs of results from \cite{fs96}.
 We adapt the authors' presentation of derandomization using constant degree spectral expanders.
 With this derandomization, we will show a simulation of $O(\lg \lg n)$ bits of randomness by $\lg \lg n + O(1)$ bits of randomness, which allows us to provide evidence that $\NNC(\polylog) \neq \PCPcs{\NC}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(1)}$.
 
@@ -473,28 +455,29 @@ The first lemma states that $O(\lg \lg n)$ random bits can be simulated with onl
   Therefore, $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{\lg \lg n + O(1)}{O(1)}$.
 \end{proof}
 
-Using the derandomizations from \autoref{prop:pcpinnnc} and \autoref{lem:derandomize}, we can prove the following theorem.
+Using the derandomizations from \autoref{prop:pcpinnnc} and \autoref{lem:derandomize}, we can prove \autoref{thm:equiv}.
 
-\begin{theorem}
-  For all $k \in \mathbb{N}$ with $k \geq 1$ (\textbf{TODO can this be k = 1?}), and for all positive rationals $q$ and $d$, the following are equivalent.
-  \begin{enumerate}
-  \item $\NNC^k(\lg^d n) = \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n}{q}$.
-  \item $\NNC^k(\lg^d n) = \NC^k$.
-  \end{enumerate}
-\end{theorem}
+We divide the proof of the theorem into two lemmata.
+The first lemma shows the equivalence of the first and second statements, and the second lemma shows the equivalence of the second and third statements.
+
+\begin{lemma}\label{lem:1}
+  For all positive integers $k$ and all non-negative rationals $d$, we have $\NNC^k(\lg^d n) = \NC^k$ if and only if there is a non-negative integer $z$ such that $\NNC^k(\lg^d n) = \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n + z}{q}$.
+\end{lemma}
 \begin{proof}
-  First suppose $\NNC^k(\lg^d n) = \NC^k$.
-  In this case, we have
+  First, suppose $\NNC^k(\lg^d n) = \NC^k$.
+  Then we have
   \begin{equation*}
     \NNC^k(\lg^d n)
-    \subseteq \NC^k
+    = \NC^k
     = \PCPcs{\NC^k}{1}{\frac{1}{2}}{0}{0}
     \subseteq \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n}{q}.
   \end{equation*}
   Combine this with \autoref{prop:pcpinnnc} to achieve equality.
+  In this case, we choose $z = 0$.
 
   For the converse, suppose $L$ is a language in $\NNC^k(\lg^d n)$.
-  By hypothesis, $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n}{q}$.
+  By hypothesis, $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n + z}{q}$ for some non-negative integer $z$.
+  Since $d \lg \lg n + z$ is in $O(\lg \lg n)$, we also have that $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{d' \lg \lg n}{q}$ for some $d'$ greater than or equal to $d$.
   By \autoref{lem:derandomize}, there exists a $t$ such that $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{\lg \lg n + t}{q}$.
   By \autoref{lem:constraints}, there exists an integer $q$ greater than 1 such that $L$ reduces to \textsc{$\frac{1}{2}$-gap $q$-CSP} under a $\leq_m^{NC^k}$ reduction that produces an instance with $O(\lg n)$ variables and $O(\lg n)$ constraints; let $f$ be the function which computes this reduction.
   We construct an $\NC^k$ algorithm for $L$ as follows on input $x$ of length $n$.
@@ -521,26 +504,37 @@ Using the derandomizations from \autoref{prop:pcpinnnc} and \autoref{lem:derando
   Finally, we conclude that the given algorithm is a correct $\NC^k$ algorithm for an arbitrary language $L$ in $\NNC^k(\lg^d n)$, and hence $\NNC^k(\lg^d n) = \NC^k$.
 \end{proof}
 
-The technique used in the proof of the preceding theorem also yields the following corollary.
+\begin{lemma}\label{lem:2}
+  For all positive integers $k$ and all non-negative rationals $d$, $\NNC^k(\lg^d n) = \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n + t}{q}$ for some non-negative integer $t$ if and only if there exists an integer $c$ with $c > 1$ such that \textsc{$\frac{1}{2}$-gap $c$-CSP} is hard for $\NNC^k(\lg^d n)$ under $\leq_m^{NC^k}$ reductions that produce instances with $O(\lg^d n)$ variables and $O(\lg^d n)$ constraints.
+\end{lemma}
+\begin{proof}
+  One direction of the equivalence follows immediately \autoref{lem:constraints}.
+  Thus it suffices to prove the converse implication.
+  The proof is nearly the same as the proof of \autoref{prop:equivalence}; the only difference is in the length of the random string $\rho$, and hence the size of the output of the reduction.
+  Observe that the PCP verifier in the proof that item 2 implies item 1 requires $d \lg \lg n + \lg c$ bits of randomness to select one of the $c \lg^d n$ constraints uniformly at random, where $c$ is a constant, so we choose $t = \lg c$.
+  To prove the other direction of the inclusion and complete the proof, we apply \autoref{prop:pcpinnnc}.
+\end{proof}
 
-\begin{corollary}
-  The following are equivalent.
+\autoref{thm:equiv} follows immediately from \autoref{lem:1} and \autoref{lem:2}.
+
+\section{Hardness of approximation}
+
+The results in the previous section also show that \textsc{Maximum $q$-CSP}, the optimization problem corresponding to \textsc{$q$-CSP}, is ``hard to approximate'' in the sense that unless $\NNC^k(\lg^d n) = \NC^k$, it is computationally infeasible to compute an $\epsilon$-approximation for an instance of \textsc{$q$-CSP}, for all $\epsilon \leq 2$.
+This allows us to show that other computational problems are hard to approximate.
+The key to showing hardness of approximation for an optimization problem whose budget problem is in $\NNC^k(\lg^d n)$ is to exhibit an $\NC^k$ gap-introducing reduction from a decision problem complete for $\NNC^k(\lg^d n)$ to the optimization problem.
+In order to show other optimization problems are hard to approximate, we use a size-restricted gap-preserving reduction.
+
+\begin{definition}
+  Let $P$ and $Q$ be two maximization problems. Suppose $P = (I_P, S_P, m_p, \max)$ and $Q = (I_Q, S_Q, m_Q, \max)$.
+  There is a \emph{gap-preserving reduction from $P$ to $Q$} if there exists a five-tuple $(f, c_P, c_Q, \alpha, \beta)$ where $f \colon I_P \to I_Q$, $c_P \colon I_P \to \mathbb{Q}^+$, $c_Q \colon I_Q \to \mathbb{Q}^+$, and $\alpha, \beta \in \mathbb{Q}^+$ such that for all $x \in I_P$,
   \begin{enumerate}
-  \item $\NNC(\polylog) = \PCPcs{\NC}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(1)}$.
-  \item $\NNC(\polylog) = \NC$.
+  \item if $m^*_P(x) \geq c_P(x)$ then $m^*_Q(f(x)) \geq c_Q(f(x))$,
+  \item if $m^*_P(x) < \frac{1}{1 + \alpha} c_P(x)$ then $m^*_Q(f(x)) < \frac{1}{1 + \beta} c_Q(f(x))$, and
+  \item $|f(x)| \leq |x| \lg^k |x|$ for some $k \in \mathbb{N}$ with $k \geq 1$.
   \end{enumerate}
-\end{corollary}
+\end{definition}
 
-Combining these results with \autoref{prop:inapprox} yields evidence that the techniques used to prove the PCP Theorem do not provide the insight necessary to derive a PCP characterization for $\NNC(\polylog)$.
-
-\begin{corollary}
-  Let $k$ be a positive integer and $d$ be a non-negative integer.
-  If there exists an integer $q$ with $q > 1$ such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for $\NNC^k(\lg^d n)$ under $\leq_m^{NC^k}$ reductions that produce instances with $O(\lg^d n)$ variables and $O(\lg^d n)$ constraints, then $\NNC^k(\lg^d n) = \NC^k$.
-\end{corollary}
-
-\begin{corollary}
-  If there exists an integer $q$ with $q > 1$ such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for $\NNC(\polylog)$ under $\leq_m^{NC}$ reductions that produce instances with $O(\polylog)$ variables and $O(\polylog)$ constraints, then $\NNC(\polylog) = \NC$.
-\end{corollary}
+A gap-preserving reduction from \textsc{Maximum $q$-CSP} to any other optimization problem will show that it is also hard to approximate.
 
 \bibliographystyle{plain}
 \bibliography{references}
