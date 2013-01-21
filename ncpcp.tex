@@ -132,7 +132,7 @@ From the definition, we see immediately that
   \PCPcs{\mathcal{C}}{c(n)}{s{n}}{O(r(n))}{O(q(n))} = \bigcup_{a \in \mathbb{N}, b \in \mathbb{N}}{\PCPcs{\mathcal{C}}{c(n)}{s(n)}{a \cdot r(n)}{b \cdot q(n)}}.
 \end{equation*}
 
-\section{The PCP Theorem}
+\section{Probabilistically checkable proofs for \texorpdfstring{\NP}{NP}}
 
 The celebrated ``PCP Theorem'' can be stated as follows.
 \begin{theorem}
@@ -166,14 +166,8 @@ The hard part uses the following ``inapproximability'' view of the PCP Theorem.
 
 Before proving this proposition, we provide one part of it as a separate lemma, because it will be of use in later theorems.
 
-\begin{lemma} \label{lem:constraints}
-  \mbox{}
-  \begin{enumerate}
-  \item If $L \in \PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$ then there is a $\leq_m^P$ reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}, for some integer $q$ greater than 1.
-  \item
-    For all non-negative integers $d$ and $t$, if $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n + t}{O(1)}$ then there is a $\leq_m^{NC^k}$ reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}, for some integer $q$ greater than 1.
-    Furthermore, the reduction yields $O(\lg^d n)$ variables and $O(\lg^d n)$ constraints on inputs of length $n$.
-  \end{enumerate}
+\begin{lemma}\label{lem:constraintsp}
+  If $L \in \PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$ then there is a $\leq_m^P$ reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}, for some integer $q$ greater than 1.
 \end{lemma}
 \begin{proof}
   Let $L$ be a language in $\PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$.
@@ -194,14 +188,10 @@ Before proving this proposition, we provide one part of it as a separate lemma, 
   By the correctness of the Cook-Levin reduction and by the completeness and soundness of the \PCP{} verifier if $x \in L$ then there exists a $\pi$ such that for all strings $\rho$, we have $V(x, \rho; \pi)$ accepts and hence all the constraints are satisfiable.
   Furthermore, if $x \notin L$ then for all $\pi$, on less than half of the strings $\rho$ will $V(x, \pi; \rho)$ accept, so less than half of the constraints will be satisfiable.
   Therefore we have shown a correct polynomial time reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}.
-
-  The proof for the second claim is similar; the only difference is in the length of the random string $\rho$, and hence the size of the output of the reduction.
-  Since the verifier $V$ now uses only $d \lg \lg n + t$ bits of randomness, the reduction enumerates (in parallel) each of the $2^{d \lg \lg n + t}$ possible random strings of length $d \lg \lg n + t$, instead of the $2^{r \lg n}$ possible strings of length $r \lg n$.
-  Observe that the number of variables must be $q 2^{d \lg \lg n + t}$, which equals $q 2^t \lg^d n$, and the number of constraints is $2^t \lg^d n$, both members of $O(\lg^d n)$.
 \end{proof}
 
 \begin{proof}[Proof of \autoref{prop:equivalence}]
-  One direction of the equivalence follows immediately from the inclusion in the hypothesis and from \autoref{lem:constraints}.
+  One direction of the equivalence follows immediately from the inclusion in the hypothesis and from \autoref{lem:constraintsp}.
   Thus it suffices to prove the converse implication.
   Suppose \textsc{$\frac{1}{2}$-gap $q$-CSP} is \NP-hard for some $q$ greater than 1.
   Let $L$ be a language in \NP.
@@ -219,6 +209,8 @@ Before proving this proposition, we provide one part of it as a separate lemma, 
 \end{proof}
 With this equivalence, we can reduce the problem of showing that $\NP \subseteq \PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$ to the problem of showing that \textsc{$\frac{1}{2}$-gap $q$-CSP} is \NP-hard.
 An almost entirely combinatoric approach can solve the latter problem \cite{dinur07}.
+
+\section{PCPs in NNC}
 
 One of our goals is to characterize smaller complexity classes using more restrictive \PCP{} classes.
 We hope to use such a characterization for applications to inapproximability in the realm of optimization problems whose corresponding decision problems are \P-complete, but which admit a ``good'' highly parallel approximation.
@@ -349,9 +341,9 @@ Since we will be interested only in the subclasses of $\NNC(\polylog)$, there mu
   \end{equation*}
 \end{corollary}
 
+\section{NNC in PCPs}
 
-
-Our original motivation for this work was to show that $\NNC^k(\lg^d n) = \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n}{O(1)}$, but it now seems unlikely that this is true.
+We intended to show $\NNC^k(\lg^d n) = \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n}{O(1)}$, but it now seems unlikely that this is true.
 
 \begin{theorem}\label{thm:equiv}
   For all $k \in \mathbb{N}$ with $k \geq 1$ (\textbf{TODO can this be k = 1?}), and for all positive rationals $q$ and $d$, the following are equivalent.
@@ -474,22 +466,34 @@ Infinite families of very explicit constant degree spectral expanders exist; for
   where $\rho$ is a binary string of length $\lg \lg n + t$ chosen uniformly at random, and $s$ is generated by the random walk on $G_\ell$ as described above.
   If $x \in L$, then there exists a proof string $\pi$ such that for all strings $\gamma$, we have $V(x, \gamma, \pi)$ accepts, and in particular, $V(x, s, \pi)$ accepts.
   Therefore, for all strings $\rho$, it follows that $V'(x, \rho, \pi)$ accepts.
-  If $x \notin L$, then for all proof strings $\pi$, the probability over binary strings $\gamma$ of length $\alpha \lg \lg n$ that $V(x, \gamma, \pi)$ accepts is less than $\frac{1}{2}$.
+  If $x \notin L$, then \autoref{lem:badsubset} applies, and we have
   \begin{align*}
     \Pr_\rho[V'(x, \rho, \pi) \text{ accepts}] & = \Pr_\rho[V(x, s, \pi) \text{ accepts}] \\
-    & = \Pr_\rho[\forall j \in \{1, \dotsc, \alpha\} \colon i_{jc} \in C] \qquad \text{(by \autoref{lem:badsubset})} \\
-    & \leq \frac{1}{2^\alpha} \qquad \text{(by \autoref{lem:expander})} \\
-    & < \frac{1}{2} \qquad \text{(because } \alpha > 1)
+    & = \Pr_\rho[\forall j \in \{1, \dotsc, \alpha\} \colon v_{i_{jc}} \in C],
   \end{align*}
+  where each $v_{i_{jc}}$ is a vertex on the random walk $(v_{i_1}, \dotsc, v_{i_{\alpha c}})$ from which $s$ is derived.
+  This probability is at most $\frac{1}{2^\alpha}$ by \autoref{lem:expander}, which is strictly less than $\frac{1}{2}$ because $\alpha > 1$.
 
   To summarize, we have shown that $V'$ uses exactly $\lg \lg n + \alpha c \lg d$ bits of randomness, makes $O(1)$ queries to the proof string, can be implemented by an $\NC^k$ circuit, and has completeness 1 and soundness $\frac{1}{2}$.
   Therefore, $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{\lg \lg n + O(1)}{O(1)}$.
 \end{proof}
 
 Using the derandomizations from \autoref{prop:pcpinnnc} and \autoref{lem:derandomize}, we can prove \autoref{thm:equiv}.
+We divide the proof of the theorem into several lemmata.
+The first lemma provides an \NC{} analog of \autoref{lem:constraintsp}.
+The second lemma shows the equivalence of the first and second statements, and the third shows the equivalence of the second and third statements.
 
-We divide the proof of the theorem into two lemmata.
-The first lemma shows the equivalence of the first and second statements, and the second lemma shows the equivalence of the second and third statements.
+\begin{lemma}\label{lem:constraintsnc}
+  Suppose $d$ and $t$ are non-negative integers.
+  Let $L$ be a language in $\PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n + t}{O(1)}$.
+  Then there is a $\leq_m^{NC^k}$ reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}, for some integer $q$ greater than 1.
+  Furthermore, the reduction yields $O(\lg^d n)$ variables and $O(\lg^d n)$ constraints on inputs of length $n$.
+\end{lemma}
+\begin{proof}
+  The proof is similar to the proof of \autoref{lem:constraintsp}; the only difference is in the length of the random string $\rho$, and hence the size of the output of the reduction.
+  Since the verifier $V$ now uses only $d \lg \lg n + t$ bits of randomness, the reduction enumerates (in parallel) each of the $2^{d \lg \lg n + t}$ possible random strings of length $d \lg \lg n + t$, instead of the $2^{r \lg n}$ possible strings of length $r \lg n$.
+  Observe that the number of variables must be $q 2^{d \lg \lg n + t}$, which equals $q 2^t \lg^d n$, and the number of constraints is $2^t \lg^d n$, both members of $O(\lg^d n)$.
+\end{proof}
 
 \begin{lemma}\label{lem:1}
   For all positive integers $k$ and all non-negative rationals $d$, we have $\NNC^k(\lg^d n) = \NC^k$ if and only if there is a non-negative integer $z$ such that $\NNC^k(\lg^d n) = \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n + z}{q}$.
@@ -510,7 +514,7 @@ The first lemma shows the equivalence of the first and second statements, and th
   By hypothesis, $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n + z}{q}$ for some non-negative integer $z$.
   Since $d \lg \lg n + z$ is in $O(\lg \lg n)$, we also have that $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{d' \lg \lg n}{q}$ for some $d'$ greater than or equal to $d$.
   By \autoref{lem:derandomize}, there exists a $t$ such that $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{\lg \lg n + t}{q}$.
-  By \autoref{lem:constraints}, there exists an integer $q$ greater than 1 such that $L$ reduces to \textsc{$\frac{1}{2}$-gap $q$-CSP} under a $\leq_m^{NC^k}$ reduction that produces an instance with $O(\lg n)$ variables and $O(\lg n)$ constraints; let $f$ be the function which computes this reduction.
+  By \autoref{lem:constraintsnc}, there exists an integer $q$ greater than 1 such that $L$ reduces to \textsc{$\frac{1}{2}$-gap $q$-CSP} under a $\leq_m^{NC^k}$ reduction that produces an instance with $O(\lg n)$ variables and $O(\lg n)$ constraints; let $f$ be the function which computes this reduction.
   We construct an $\NC^k$ algorithm for $L$ as follows on input $x$ of length $n$.
   \begin{enumerate}
   \item Compute $f(x)$, which yields alphabet $\Gamma$, set of variables $U$, and set of constraints $D$.
@@ -539,7 +543,7 @@ The first lemma shows the equivalence of the first and second statements, and th
   For all positive integers $k$ and all non-negative rationals $d$, $\NNC^k(\lg^d n) = \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n + t}{q}$ for some non-negative integer $t$ if and only if there exists an integer $c$ with $c > 1$ such that \textsc{$\frac{1}{2}$-gap $c$-CSP} is hard for $\NNC^k(\lg^d n)$ under $\leq_m^{NC^k}$ reductions that produce instances with $O(\lg^d n)$ variables and $O(\lg^d n)$ constraints.
 \end{lemma}
 \begin{proof}
-  One direction of the equivalence follows immediately \autoref{lem:constraints}.
+  One direction of the equivalence follows immediately \autoref{lem:constraintsnc}.
   Thus it suffices to prove the converse implication.
   The proof is nearly the same as the proof of \autoref{prop:equivalence}; the only difference is in the length of the random string $\rho$, and hence the size of the output of the reduction.
   Observe that the PCP verifier in the proof that the latter statement implies the former requires $d \lg \lg n + \lg c$ bits of randomness to select one of the $c \lg^d n$ constraints uniformly at random, where $c$ is a constant, so we choose $t = \lg c$.
