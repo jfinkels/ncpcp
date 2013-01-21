@@ -393,20 +393,21 @@ Infinite families of very explicit constant degree spectral expanders exist; for
 \end{lemma}
 
 \begin{lemma}\label{lem:badsubset}
-  Let $L \in \PCPcs{\NC^k}{1}{??}{??}{O(1)}$ and let $V$ be the corresponding \PCP{} verifier.
+  Let $L \in \PCPcs{\NC^k}{1}{\frac{1}{16}}{\alpha \lg \lg n}{O(1)}$ for some integer $\alpha$ greater than 1, and let $V$ be the corresponding \PCP{} verifier.
+  Let $\ell = 2^{\lg \lg n}$.
   Let $x$ be a binary string of length $n$.
   Let $b(i)$ denote the binary representation of the non-negative integer $i$.
-  Let $\mathcal{G}$ be an infinite family of constant degree spectral expanders, and let $G \in \mathcal{G}$.
-  There is a subset $C$ of $V(G)$ such that if the string $x$ is not in $L$ then for all $\pi \in \Sigma^{??}$, there is a bijection between
+  Let $\mathcal{G}$ be an infinite family of constant degree spectral expanders, and let $G_\ell$ be the graph in $\mathcal{G}$ with $\ell$ nodes.
+  There is a subset $C$ of $V(G_\ell)$ such that if the string $x$ is not in $L$ then for all proof strings $\pi$, there is a bijection between
   \begin{enumerate}
-  \item the set of all strings $b(i_{1c}) \circ b(i_{2c}) \circ \dotsb \circ b(i_{\alpha c})$ such that $(v_{i_1}, \dotsc, v_{i_{\alpha c}})$ is a walk on $G$ and $v_{i_{jc}} \in C$ for all $j \in \{1, \dotsc, \alpha\}$ and
-  \item the set of all strings $\rho \in \Sigma^{??}$ such that $V(x, \rho, \pi)$ accepts.
+  \item the set of all strings $b(i_{1c}) \circ b(i_{2c}) \circ \dotsb \circ b(i_{\alpha c})$ such that $(v_{i_1}, \dotsc, v_{i_{\alpha c}})$ is a walk on $G_\ell$ and $v_{i_{jc}} \in C$ for all $j \in \{1, \dotsc, \alpha\}$ and
+  \item the set of all strings $\rho \in \Sigma^{\alpha \lg \lg n}$ such that $V(x, \rho, \pi)$ accepts.
   \end{enumerate}
 \end{lemma}
 \begin{proof}
-  If $x \notin L$, then for all $\pi$, the probability over all strings $\rho$ chosen uniformly at random that $V(x, \rho, \pi)$ accepts is strictly less than $\frac{1}{2}$, so there are less than $\frac{1}{2} 2^{??}$ such strings $\rho$.
+  If $x \notin L$, then for all $\pi$, the probability over all strings $\rho$ chosen uniformly at random that $V(x, \rho, \pi)$ accepts is strictly less than $\frac{1}{16}$, so there are less than $\frac{1}{16} 2^{\alpha \lg \lg n}$, such strings $\rho$.
   Call these strings ``bad''.
-  Interpret each $\rho$ as the concatenation of $\alpha$ binary strings $\rho_1 \circ \rho_2 \circ \dotsb \circ \rho_\alpha$, each of length $\lg |V(G)|$.
+  Interpret each $\rho$ as $\rho_1 \circ \rho_2 \circ \dotsb \circ \rho_\alpha$, the concatenation of $\alpha$ binary strings, each of length $\lg \lg n$.
   Choose the subset $C$ to be the set of all vertices $v_i$ such that there is some bad string $\rho_1 \circ \dotsb \circ \rho_\alpha$ such that $b(i) = \rho_j$ for some $j \in \{1, \dotsc, \alpha\}$.
   In other words, the set $C$ contains all vertices whose binary representation appears in one of the substrings $\rho_j$ of some bad string.
 
