@@ -413,6 +413,17 @@ Infinite families of very explicit constant degree spectral expanders exist; for
   \textbf{TODO complete this proof.}
 \end{proof}
 
+By using a constant number of independent simulations of a \PCP{} verifier, we can achieve any constant soundness probability.
+
+\begin{lemma}\label{lem:16}
+  For all positive integers $k$, we have
+  \begin{equation*}
+    \PCPcs{\NC^k}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(1)}
+    \subseteq
+    \PCPcs{\NC^k}{1}{\frac{1}{16}}{O(\lg \lg n)}{O(1)}.
+  \end{equation*}
+\end{lemma}
+
 \begin{lemma}[{\cite[Lemma~4]{fs96}}]\label{lem:derandomize}
   For all integers $k$ where $k \geq 1$, we have
   \begin{equation*}
@@ -423,7 +434,8 @@ Infinite families of very explicit constant degree spectral expanders exist; for
 \end{lemma}
 \begin{proof}
   Let $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(1)}$.
-  This means there exists a $(\alpha \lg \lg n, q)$-\PCP{} verifier $V$ for $L$, for some positive rational $\alpha$ and positive integer $q$.
+  $L$ is also in $\PCPcs{\NC^k}{1}{\frac{1}{16}}{O(\lg \lg n)}{O(1)}$ by \autoref{lem:16}.
+  This means there exists a $(\alpha \lg \lg n, q)$-\PCP{} verifier $V$ for $L$, for some positive rational $\alpha$ and positive integer $q$, which has soundness probability $\frac{1}{16}$.
   We assume without loss of generality that $\alpha > 1$; if $\alpha \leq 1$ the statement is immediately true.
   Our goal is to construct a $(\lg \lg n + t, O(1))$-\PCP{} verifier $V'$ for $L$, for some constant integer $t$.
   Suppose for now that $t$ has been fixed; we will define it later in the proof.
@@ -433,7 +445,7 @@ Infinite families of very explicit constant degree spectral expanders exist; for
   Intuitively, the verifier will simulate $\alpha \lg \lg n$ random bits with only $\lg \lg n + t$ random bits by using a random walk on an expander graph.
   Let $\ell = 2^{\lg \lg n}$ and let $G_\ell$ be a $d$-regular very explicit spectral expander on $\ell$ vertices, for some positive integer $d$.
   Let $C$ be the subset of vertices guaranteed by \autoref{lem:badsubset}.
-  Observe that the cardinality of $C$ is at most $\frac{|V(G_\ell)|}{2}$.
+  Observe that the cardinality of $C$ is less than $\frac{|V(G_\ell)|}{16}$.
   By \autoref{lem:expander} there is a constant $c$ such that the probability that a random walk of length $\alpha c$ on $G_\ell$ arrives at a vertex in $C$ on every $c$th step is at most $\frac{1}{2^\alpha}$.
   We will be using such a random walk to simulate the randomness of $V$ and we want the soundness probability of $V'$ to be strictly less than $\frac{1}{2}$, so we will require the length of the walk to be strictly greater than $c$.
 
