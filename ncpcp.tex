@@ -362,6 +362,8 @@ Our original motivation for this work was to show that $\NNC^k(\lg^d n) = \PCPcs
   \end{enumerate}
 \end{theorem}
 
+The techniques used to prove this theorem immediately imply the following corollary.
+
 \begin{corollary}
   The following are equivalent.
   \begin{enumerate}
@@ -374,22 +376,52 @@ Our original motivation for this work was to show that $\NNC^k(\lg^d n) = \PCPcs
 In order to prove this equivalence, we require the \NC{} analog of \autoref{prop:equivalence}, as well as some derandomization techniques.
 Some of the theorems below are \NC{} analogs of results from \cite{fs96}.
 We adapt the authors' presentation of derandomization using constant degree spectral expanders.
-With this derandomization, we will show a simulation of $O(\lg \lg n)$ bits of randomness by $\lg \lg n + O(1)$ bits of randomness, which allows us to provide evidence that $\NNC(\polylog) \neq \PCPcs{\NC}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(1)}$.
+With this derandomization, we will show a simulation of $O(\lg \lg n)$ bits of randomness by $\lg \lg n + O(1)$ bits of randomness.
+The derandomization requires a very explicit constant degree spectral expander.
 
-%% TODO can we replace this with a generic pseudo random generator?
-The derandomization uses a fully explicit constant degree spectral expander graph on the discrete torus due to \cite{margulis} and \cite{gg}.
-\begin{construction}\label{con:expander}
-  Suppose $m$ is a positive integer.
-  The \emph{discrete torus expander} is the graph with vertex set ${(\mathbb{Z}/m\mathbb{Z})}^2$ and edge set $E$ containing an edge from $(x, y)$ to each of the vertices $(x, y)$, $(x + 1, y)$, $(x, y + 1)$, $(x, x + y)$, and $(-y, x)$, for all vertices $(x, y)$.
-\end{construction}
+\begin{definition}
+  Suppose $d$ and $n$ are positive integers and $\lambda$ is a real number in the interval $(0, 1)$.
+  Suppose $G_n$ is a $d$-regular directed multigraph on $n$ vertices and $M$ is the adjacency matrix of $G_n$.
+  We say $G_n$ is a \emph{$\lambda$ spectral expander} if all but the largest eigenvalue of $\frac{1}{d}M$ are in the interval $(0, 1 - \lambda)$.
+\end{definition}
 
-This graph is a spectral expander \cite{gg} and is fully explicit because integer addition modulo $m$ can be computed in $\NC^1$ with respect to $\log m$ (the length of an integer in $\mathbb{Z}/m\mathbb{Z}$).
-For our purposes, it is important that neighboring vertices can be computed not just in $\P$, but more specifically in $\NC$.
+The motivation behind the above definition is that the gap between the largest and second largest eigenvalues of the (normalized) adjacency matrix provides information about how quickly a random walk on the graph will approach the uniform distribution on the vertices of the graph.
+Since we are concerned about the computational efficiency of such a random walk, it is important that computing the step from one vertex to the next can be performed quickly.
 
-The first lemma states that $O(\lg \lg n)$ random bits can be simulated with only $\lg \lg n + t$ random bits.
+\begin{definition}
+  We say a constant degree spectral expander with vertex set $V$ is \emph{very explicit} if each neighbor of a vertex can be computed in $O(\log |V|)$ time.
+  (Compare this with the definition of a \emph{fully explicit} expander, in which the neighbor can be computed in time polynomial in $\log |V|$.)
+\end{definition}
+
+Infinite families of very explicit constant degree spectral expanders exist; for example, the construction due to Margulis \cite{margulis} and Gabber and Galil \cite{gg81} satisfies the definition.
+
+\begin{lemma}[{\cite{aks87}}]\label{lem:expander}
+  Let $\mathcal{G}$ be an infinite family of constant degree spectral expanders and let $G_n \in \mathcal{G}$.
+  For each subset $C$ of $V(G_n)$ with $|C| \leq \frac{|V(G_n)|}{16}$ there exists a constant $c$ such that for all positive integers $\kappa$, the probability that each $c$th step of a random walk on $G$ of length $\kappa c$ is in $C$ is at most $\frac{1}{2^\kappa}$.
+\end{lemma}
+
+\begin{lemma}\label{lem:badsubset}
+  Let $L \in \PCPcs{\NC^k}{1}{??}{??}{O(1)}$ and let $V$ be the corresponding \PCP{} verifier.
+  Let $x$ be a binary string of length $n$.
+  Let $b(i)$ denote the binary representation of the non-negative integer $i$.
+  Let $\mathcal{G}$ be an infinite family of constant degree spectral expanders, and let $G \in \mathcal{G}$.
+  There is a subset $C$ of $V(G)$ such that if the string $x$ is not in $L$ then for all $\pi \in \Sigma^{??}$, there is a bijection between
+  \begin{enumerate}
+  \item the set of all strings $b(i_{1c}) \circ b(i_{2c}) \circ \dotsb \circ b(i_{\alpha c})$ such that $(v_{i_1}, \dotsc, v_{i_{\alpha c}})$ is a walk on $G$ and $v_{i_{jc}} \in C$ for all $j \in \{1, \dotsc, \alpha\}$ and
+  \item the set of all strings $\rho \in \Sigma^{??}$ such that $V(x, \rho, \pi)$ accepts.
+  \end{enumerate}
+\end{lemma}
+\begin{proof}
+  If $x \notin L$, then for all $\pi$, the probability over all strings $\rho$ chosen uniformly at random that $V(x, \rho, \pi)$ accepts is strictly less than $\frac{1}{2}$, so there are less than $\frac{1}{2} 2^{??}$ such strings $\rho$.
+  Call these strings ``bad''.
+  Interpret each $\rho$ as the concatenation of $\alpha$ binary strings $\rho_1 \circ \rho_2 \circ \dotsb \circ \rho_\alpha$, each of length $\lg |V(G)|$.
+  Choose the subset $C$ to be the set of all vertices $v_i$ such that there is some bad string $\rho_1 \circ \dotsb \circ \rho_\alpha$ such that $b(i) = \rho_j$ for some $j \in \{1, \dotsc, \alpha\}$.
+  In other words, the set $C$ contains all vertices whose binary representation appears in one of the substrings $\rho_j$ of some bad string.
+
+  \textbf{TODO complete this proof.}
+\end{proof}
 
 \begin{lemma}[{\cite[Lemma~4]{fs96}}]\label{lem:derandomize}
-  (\textbf{TODO we need $\lg \lg n$ to be even; the even requirement is an artifact of the construction of the Margulis expander}.)
   For all integers $k$ where $k \geq 1$, we have
   \begin{equation*}
     \PCPcs{\NC^k}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(1)}
@@ -407,31 +439,31 @@ The first lemma states that $O(\lg \lg n)$ random bits can be simulated with onl
   Interpret $\rho$ as $\rho_1 \circ \rho_2$, where $|\rho_1| = \lg \lg n$ and $|\rho_2| = t$.
 
   Intuitively, the verifier will simulate $\alpha \lg \lg n$ random bits with only $\lg \lg n + t$ random bits by using a random walk on an expander graph.
-  Let $\ell = 2^{\lg \lg n}$ and $d = 5$, and let $G_\ell$ be the $d$-regular discrete torus expander on $\ell$ vertices from \autoref{con:expander}.
-  Let $C$ be the subset of vertices of cardinality $\frac{|V(G_\ell)|}{2}$ from \autoref{lem:badsubset}.
-  By \autoref{lemma2} there is a constant $c$ such that (\textbf{TODO for all $\kappa$?}), the probability that a random walk of length $\kappa c$ on $G_\ell$ arrives at a vertex in $C$ on every $c$th step is at most $\frac{1}{2^\kappa}$.
-  We will be using such a random walk to simulate the randomness of $V$ and we want the soundness probability of $V'$ to be strictly less than $\frac{1}{2}$, so we require the length of the walk to be strictly greater than $c$.
+  Let $\ell = 2^{\lg \lg n}$ and let $G_\ell$ be a $d$-regular very explicit spectral expander on $\ell$ vertices, for some positive integer $d$.
+  Let $C$ be the subset of vertices guaranteed by \autoref{lem:badsubset}.
+  Observe that the cardinality of $C$ is at most $\frac{|V(G_\ell)|}{2}$.
+  By \autoref{lem:expander} there is a constant $c$ such that the probability that a random walk of length $\alpha c$ on $G_\ell$ arrives at a vertex in $C$ on every $c$th step is at most $\frac{1}{2^\alpha}$.
+  We will be using such a random walk to simulate the randomness of $V$ and we want the soundness probability of $V'$ to be strictly less than $\frac{1}{2}$, so we will require the length of the walk to be strictly greater than $c$.
 
   Now we are ready to describe $V'$.
   \begin{enumerate}
   \item
     Perform a random walk of length $\alpha c$ on $G_\ell$ from an initial vertex chosen uniformly at random.
-    Let $(v_{i_1}, \dotsc, v_{i_{\alpha c}})$ be the sequence of vertices which comprise this walk.
+    Let $(v_{i_1}, \dotsc, v_{i_{\alpha c}})$ be the sequence of vertices that comprise this walk.
   \item
-    Let $s = i_{1c} \circ i_{2c} \circ \dotsb \circ i_{\alpha c}$, where $i_k$ is the binary representation of the index of the vertex $v_{i_k}$, for all $k \in \{1, \dotsc, \alpha c\}$.
-    Observe that $|s| = \alpha |i_k| = \alpha \lg |V(G_\ell)| = \alpha \lg 2^{\lg \lg n} = \alpha \lg \lg n$.
+    Let $s = b(i_{1c}) \circ b(i_{2c}) \circ \dotsb \circ b(i_{\alpha c})$.
+    Observe that $|s| = \alpha |b(i_k)| = \alpha \lg |V(G_\ell)| = \alpha \lg 2^{\lg \lg n} = \alpha \lg \lg n$.
   \item Accept if and only if $V(x, s, \pi)$ accepts.
   \end{enumerate}
-  $V'$ requires $2 \frac{\lg \lg n}{2}$ random bits to choose an initial vertex for the walk and $\lg d$ random bits at each of the $\alpha c$ steps of the walk.
+  $V'$ requires $\lg \lg n$ random bits to choose an initial vertex for the walk and $\lg d$ random bits at each of the $\alpha c$ steps of the walk.
   Thus $V'$ uses $\lg \lg n + \alpha c \lg d$ random bits in total; now we define $t$ to be $\alpha c \lg d$, a constant independent of $n$.
   Since $V'$ only accesses the proof string $\pi$ via the simulation of $V$, the verifier $V'$ queries exactly the same number of bits of the proof string as does the verifier $V$.
 
-  (\textbf{TODO define linear time explicit expander}.)
-  Performing a single step in a linear time explicit expander takes $O(|V(G_\ell)|)$ time.
-  Thus, performing a random walk of length $\alpha c$ takes $O(\alpha c |V(G_\ell)|)$.
+  Performing a single step in a very explicit expander takes $O(|V(G_\ell)|)$ time.
+  Thus, performing a random walk of length $\alpha c$ takes $O(\alpha c |V(G_\ell)|)$ time.
   Since $G_\ell$ has exactly $2^{\lg \lg n}$, or more simply $\lg n$, vertices, the total computation time for the random walk is $O(\alpha c \lg n)$, which is in $O(\lg n)$.
   Since $V$ is an $\NC^k$ algorithm, the simulation of $V$ can be performed by a polynomial size, $O(\log^k n)$ depth circuit.
-  Therefore the overall time required by $V'$ is $O(\lg n) + O(\log^k n)$, which is $O(\log^k n)$ for all $k \geq 1$.
+  Therefore the overall time required by $V'$ is $O(\lg n) + O(\log^k n)$, which is in $O(\log^k n)$ for all $k \geq 1$.
 
   Now we show that $V'$ achieves the necessary completeness and soundness error bounds.
   Let $x$ be a string of length $n$, and $\pi$ be any sufficiently long proof string.
@@ -443,11 +475,10 @@ The first lemma states that $O(\lg \lg n)$ random bits can be simulated with onl
   If $x \in L$, then there exists a proof string $\pi$ such that for all strings $\gamma$, we have $V(x, \gamma, \pi)$ accepts, and in particular, $V(x, s, \pi)$ accepts.
   Therefore, for all strings $\rho$, it follows that $V'(x, \rho, \pi)$ accepts.
   If $x \notin L$, then for all proof strings $\pi$, the probability over binary strings $\gamma$ of length $\alpha \lg \lg n$ that $V(x, \gamma, \pi)$ accepts is less than $\frac{1}{2}$.
-  (\textbf{TODO how does this correspond to the following probability analysis? I think it has something to do with \autoref{lem:badsubset}.})
   \begin{align*}
     \Pr_\rho[V'(x, \rho, \pi) \text{ accepts}] & = \Pr_\rho[V(x, s, \pi) \text{ accepts}] \\
     & = \Pr_\rho[\forall j \in \{1, \dotsc, \alpha\} \colon i_{jc} \in C] \qquad \text{(by \autoref{lem:badsubset})} \\
-    & \leq \frac{1}{2^\alpha} \qquad \text{(by \autoref{lemma2})} \\
+    & \leq \frac{1}{2^\alpha} \qquad \text{(by \autoref{lem:expander})} \\
     & < \frac{1}{2} \qquad \text{(because } \alpha > 1)
   \end{align*}
 
@@ -511,7 +542,7 @@ The first lemma shows the equivalence of the first and second statements, and th
   One direction of the equivalence follows immediately \autoref{lem:constraints}.
   Thus it suffices to prove the converse implication.
   The proof is nearly the same as the proof of \autoref{prop:equivalence}; the only difference is in the length of the random string $\rho$, and hence the size of the output of the reduction.
-  Observe that the PCP verifier in the proof that item 2 implies item 1 requires $d \lg \lg n + \lg c$ bits of randomness to select one of the $c \lg^d n$ constraints uniformly at random, where $c$ is a constant, so we choose $t = \lg c$.
+  Observe that the PCP verifier in the proof that the latter statement implies the former requires $d \lg \lg n + \lg c$ bits of randomness to select one of the $c \lg^d n$ constraints uniformly at random, where $c$ is a constant, so we choose $t = \lg c$.
   To prove the other direction of the inclusion and complete the proof, we apply \autoref{prop:pcpinnnc}.
 \end{proof}
 
