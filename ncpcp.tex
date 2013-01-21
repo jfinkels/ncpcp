@@ -552,25 +552,6 @@ The second lemma shows the equivalence of the first and second statements, and t
 
 \autoref{thm:equiv} follows immediately from \autoref{lem:1} and \autoref{lem:2}.
 
-\section{Hardness of approximation}
-
-The results in the previous section also show that \textsc{Maximum $q$-CSP}, the optimization problem corresponding to \textsc{$q$-CSP}, is ``hard to approximate'' in the sense that unless $\NNC^k(\lg^d n) = \NC^k$, it is computationally infeasible to compute an $\epsilon$-approximation for an instance of \textsc{$q$-CSP}, for all $\epsilon \leq 2$.
-This allows us to show that other computational problems are hard to approximate.
-The key to showing hardness of approximation for an optimization problem whose budget problem is in $\NNC^k(\lg^d n)$ is to exhibit an $\NC^k$ gap-introducing reduction from a decision problem complete for $\NNC^k(\lg^d n)$ to the optimization problem.
-In order to show other optimization problems are hard to approximate, we use a size-restricted gap-preserving reduction.
-
-\begin{definition}
-  Let $P$ and $Q$ be two maximization problems. Suppose $P = (I_P, S_P, m_p, \max)$ and $Q = (I_Q, S_Q, m_Q, \max)$.
-  There is a \emph{gap-preserving reduction from $P$ to $Q$} if there exists a five-tuple $(f, c_P, c_Q, \alpha, \beta)$ where $f \colon I_P \to I_Q$, $c_P \colon I_P \to \mathbb{Q}^+$, $c_Q \colon I_Q \to \mathbb{Q}^+$, and $\alpha, \beta \in \mathbb{Q}^+$ such that for all $x \in I_P$,
-  \begin{enumerate}
-  \item if $m^*_P(x) \geq c_P(x)$ then $m^*_Q(f(x)) \geq c_Q(f(x))$,
-  \item if $m^*_P(x) < \frac{1}{1 + \alpha} c_P(x)$ then $m^*_Q(f(x)) < \frac{1}{1 + \beta} c_Q(f(x))$, and
-  \item $|f(x)| \leq |x| \lg^k |x|$ for some $k \in \mathbb{N}$ with $k \geq 1$.
-  \end{enumerate}
-\end{definition}
-
-A gap-preserving reduction from \textsc{Maximum $q$-CSP} to any other optimization problem will show that it is also hard to approximate.
-
 \bibliographystyle{plain}
 \bibliography{references}
 
