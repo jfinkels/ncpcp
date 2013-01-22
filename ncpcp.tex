@@ -237,7 +237,7 @@ Before proving this proposition, we provide one part of it as a separate lemma, 
 With this equivalence, we can reduce the problem of showing that $\NP \subseteq \PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$ to the problem of showing that \textsc{$\frac{1}{2}$-gap $q$-CSP} is \NP-hard.
 An almost entirely combinatoric approach can solve the latter problem \cite{dinur07}.
 
-\section{PCPs in NNC}
+\section{Nondeterministic \texorpdfstring{\NC}{NC} circuits for probabilistically checkable proof systems}
 
 One of our goals is to characterize smaller complexity classes using more restrictive \PCP{} classes.
 We hope to use such a characterization for applications to inapproximability in the realm of optimization problems whose corresponding decision problems are \P-complete, but which admit a ``good'' highly parallel approximation.
@@ -368,7 +368,7 @@ Since we will be interested only in the subclasses of $\NNC(\polylog)$, there mu
   \end{equation*}
 \end{corollary}
 
-\section{NNC in PCPs}
+\section{Probabilistically checkable proof systems for nondeterministic \texorpdfstring{\NC}{NC} circuits}
 
 We intended to show $\NNC^k(\lg^d n) = \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n}{O(1)}$, but it now seems unlikely that this is true.
 
