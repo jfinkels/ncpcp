@@ -160,14 +160,72 @@ From the definition, we see immediately that
   \PCPcs{\mathcal{C}}{c(n)}{s{n}}{O(r(n))}{O(q(n))} = \bigcup_{a \in \mathbb{N}, b \in \mathbb{N}}{\PCPcs{\mathcal{C}}{c(n)}{s(n)}{a \cdot r(n)}{b \cdot q(n)}}.
 \end{equation*}
 
+\section{Nondeterministic \texorpdfstring{\NC}{NC} circuits and polynomial time}\label{sec:nnc}
+
+As stated in the introduction, we are motivated by the search for a reasonable model of a proof system for \P{} in which the verifier is an \NC{} circuit.
+Unlike \P{} and \NP{}, the classes \NC{} and \P{} are not related by definition.
+However, the analogous relationship does hold for \NC{} and a nondeterministic generalization of \NC{}.
+\begin{definition}
+  A \emph{nondeterministic gate} (or \emph{guess gate}) in a Boolean circuit is a gate with no inputs and one output.
+  A language $L$ is in $\NNC(f(n))$ if there exists an \NC{} circuit family $\left\{C_n\right\}_{n \in \mathbb{N}}$, each circuit $C_n$ augmented with $O(f(n))$ nondeterministic guess gates, such that $x \in L$ if and only if $C_n(x)$ accepts.
+
+  As an alternative definition, a language $L$ is in $\NNC(f(n))$ if there exists an \NC{} circuit family $\left\{C_N\right\}_{N \in \mathbb{N}}$ such that for all strings $x$ of length $n$, we have $x \in L$ if and only if there exists a constant $c$ and a witness $\pi$ of length $c \cdot f(n)$ such that $C_{n + c \cdot f(n)}(x, \pi)$ outputs 1.
+\end{definition}
+
+\begin{proposition}[\cite{wolf94}]\label{prop:nnc}
+  \mbox{}
+  \begin{enumerate}
+  \item $\NNC(\lg n) = \NC$.
+  \item $\NNC(\poly) = \NP$, and specifically $\NP \subseteq \NNC^1(\poly)$.
+  \end{enumerate}
+\end{proposition}
+
+The above proposition suggests that $\NNC(\polylog)$, which resides between \NC{} and \NP, may have computational power roughly comparable to that of \P.
+In \cite{wolf94}, the author conjectures that $\NNC(\polylog)$ is incomparable with $\P$, in the sense that neither is a subset of the other.
+We can get some of idea of the relationship between $\NNC(\polylog)$ and $\P$ from the following theorems.
+
+\begin{lemma}[{{\cite[Lemma~3.2.8]{wolf90}}}]\label{lem:dspace}
+  For all $k, j \in \mathbb{Q}$ with $k \geq 1$ and $j \geq 1$, we have $\NNC^k(\lg^j n) \subseteq \DSPACE(\lg^{\max(k, j)} n)$.
+\end{lemma}
+
+$\NNC^k(\lg^d n)$ has complete problems under logarithmic space many-one \cite[Theorem~3.6]{cc97}, so that part of the hypothesis in item 2 of the next proposition makes sense.
+
+\begin{proposition}
+  For all integers $k$ and $d$,
+  \begin{enumerate}
+  \item if a language $L$ is hard for $\NNC^k(\lg^d n)$ under $\leq_m^P$ reductions and $L \in \P$ then $\NNC^k(\lg^d n) \subseteq \P$, and
+  \item if a language $L$ is hard for $\P$ under $\leq_m^{NC^k}$ reductions and $L \in \NNC^k(\lg^d n)$ then $\P \subseteq \NNC^k(\lg^d n)$.
+    Furthermore $\P \subsetneq \polyL$.
+  \end{enumerate}
+\end{proposition}
+\begin{proof}
+  A standard simulation argument proves both statements.
+  Since we have $\NNC^k(\lg^d n) \subseteq \DSPACE(\lg^m)$, where $m = \max(k, d)$, by \autoref{lem:dspace} and $\P \neq \polyL$ (by the Space Hierarchy Theorem), we conclude that $\P \subsetneq \polyL$.
+\end{proof}
+
+A natural next question is whether $\NNC(\log^k n) \subsetneq \NNC(\log^{k + 1} n)$.
+One way to make progress toward such a claim is to determine whether the $\NNC(\polylog)$ hierarchy exhibits the ``upward collapse'' (or equivalently, ``downward separation'') property.
+An upward collapse property for a hierarchy of complexity classes $\mathcal{C}_1 \subseteq \mathcal{C}_2 \subseteq \dotsb \subseteq \cup_k \mathcal{C}_k$ is a theorem of the form ``if $\mathcal{C}_k = \mathcal{C}_{k + 1}$ then $\mathcal{C}_k = \cup_{j > k} \mathcal{C}_j$'', where the conclusion of the implication is some collapse which is considered unlikely.
+For example, the polynomial hierarchy exhibits this property: if $\SKP = \SKPOP$ then $\SKP = \PH$.
+Upward collapse can be seen as evidence that each of the inclusions in the hierarchy is strict.
+
+Unfortunately, there can be no relativizing proof that the $\NP[\polylog]$ hierarchy exhibits upward collapse \cite{bg94}, where $\NP[\polylog]$ is the polynomial time analog of $\NNC(\polylog)$.
+\textbf{TODO show that a similar proof gives the same property for NNC.}
+The same holds for $\NNC(\polylog)$...
+This will be important later for \autoref{thm:equiv} when we wish to provide evidence that the techniques used to construct a PCP characterization of $\NP$ likely do not translate to providing a similar characterization for $\NNC(\polylog)$.
+
 \section{Probabilistically checkable proofs for \texorpdfstring{\NP}{NP}}
 
+We begin our study of probabilistically checkable proofs for efficiently decidable languages by recalling some of the basic techniques from the study of probabilistically checkable proofs for efficiently verifiable languages.
 The celebrated ``PCP Theorem'' can be stated as follows.
-\begin{theorem}
+
+\begin{theorem}[PCP Theorem]
   $\NP = \PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$.
 \end{theorem}
+
 The proof has two parts, one easy and one hard.
 The following lemma proves the easy part.
+
 \begin{lemma}\label{lem:pcpinnp}
   $\PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)} \subseteq \NP$.
 \end{lemma}
@@ -238,52 +296,17 @@ Before proving this proposition, we provide one part of it as a separate lemma, 
 With this equivalence, we can reduce the problem of showing that $\NP \subseteq \PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$ to the problem of showing that \textsc{$\frac{1}{2}$-gap $q$-CSP} is \NP-hard.
 An almost entirely combinatoric approach can solve the latter problem \cite{dinur07}.
 
-\section{Nondeterministic \texorpdfstring{\NC}{NC} circuits for probabilistically checkable proof systems}
+The techniques from the proofs of \autoref{lem:pcpinnp} and \autoref{prop:equivalence} can be scaled-down to prove analogous results in \autoref{sec:nncinpcp} and \autoref{sec:pcpinnnc}, respectively.
 
-One of our goals is to characterize smaller complexity classes using more restrictive \PCP{} classes.
+\section{Nondeterministic \texorpdfstring{\NC}{NC} circuits for probabilistically checkable proof systems}\label{sec:nncinpcp}
+
+As stated in the introduction, our motivation is to characterize \P{} using \PCP{} classes which are more restrictive than the ones defined in the traditional way, and our first attempt at such a characterization involves the use $\NNC(\polylog)$ in place of \P.
 We hope to use such a characterization for applications to inapproximability in the realm of optimization problems whose corresponding decision problems are \P-complete, but which admit a ``good'' highly parallel approximation.
 In this work, ``highly parallel'' algorithms are implementable by \NC{} circuit families.
 A \P-complete problem, that is, a problem for which no highly parallel algorithm exists unless $\P = \NC$, is called ``inherently sequential''.
 
-In order to utilize the proof techniques from the \NP{} version of the \PCP{} Theorem, we consider a nondeterministic generalization of \NC.
-\begin{definition}
-  A \emph{nondeterministic gate} (or \emph{guess gate}) in a Boolean circuit is a gate with no inputs and one output.
-  A language $L$ is in $\NNC(f(n))$ if there exists an \NC{} circuit family $\left\{C_n\right\}_{n \in \mathbb{N}}$, each circuit $C_n$ augmented with $O(f(n))$ nondeterministic guess gates, such that $x \in L$ if and only if $C_n(x)$ accepts.
-
-  Alternatively a language $L$ is in $\NNC(f(n))$ if there exists an \NC{} circuit family $\left\{C_N\right\}_{N \in \mathbb{N}}$ such that for all strings $x$ of length $n$, we have $x \in L$ if and only if there exists a constant $c$ and a witness $\pi$ of length $c \cdot f(n)$ such that $C_{n + c \cdot f(n)}(x, \pi)$ outputs 1.
-\end{definition}
-
-\begin{proposition}[\cite{wolf94}]\label{prop:nnc}
-  \mbox{}
-  \begin{enumerate}
-  \item $\NNC^k(\lg n) = \NC^k$ for all $k \in \mathbb{N}$.
-  \item $\NNC(\lg n) = \NC$.
-  \item $\NNC(\poly) = \NP$, and specifically $\NP \subseteq \NNC^1(\poly)$.
-  \end{enumerate}
-\end{proposition}
-
-In \cite{wolf94}, the author conjectures that $\NNC(\polylog)$ is incomparable with $\P$ (but like \P, it resides between \NC{} and \NP).
-We can get some of idea of the relationship between $\NNC(\polylog)$ and $\P$ from the following lemma and proposition.
-
-\begin{lemma}[{{\cite[Lemma~3.2.8]{wolf90}}}]\label{lem:dspace}
-  For all $k, j \in \mathbb{Q}$ with $k \geq 1$ and $j \geq 1$, we have $\NNC^k(\lg^j n) \subseteq \DSPACE(\lg^{\max(k, j)} n)$.
-\end{lemma}
-
-\begin{proposition}
-  For all integers $k$ and $d$,
-  \begin{enumerate}
-  \item if a language $L$ is hard for $\NNC^k(\lg^d n)$ under $\leq_m^P$ reductions and $L \in \P$ then $\NNC^k(\lg^d n) \subseteq \P$, and
-  \item if a language $L$ is hard for $\P$ under $\leq_m^{NC^k}$ reductions and $L \in \NNC^k(\lg^d n)$ then $\P \subseteq \NNC^k(\lg^d n)$.
-    Furthermore $\P \subsetneq \polyL$.
-  \end{enumerate}
-\end{proposition}
-\begin{proof}
-  A standard simulation argument proves both statements.
-  Since we have $\NNC^k(\lg^d n) \subseteq \DSPACE(\lg^m)$, where $m = \max(k, d)$, by \autoref{lem:dspace} and $\P \neq \polyL$ (by the Space Hierarchy Theorem), we conclude that $\P \subsetneq \polyL$.
-\end{proof}
-
-Now that we have the basic notions of nondeterministic circuits, we can return to our search for a restricted $\PCP$ characterization for $\NNC$ circuits.
-Following the proof of \autoref{lem:pcpinnp}, we can show the following inclusion.
+Now that we have the basic notions of both nondeterministic circuits and PCP characterizations of nondeterministic complexity classes, we can return to our search for a restricted $\PCP$ characterization for $\NNC$ circuits.
+Following the proof of \autoref{lem:pcpinnp}, we show the following inclusion.
 \begin{proposition}\label{prop:pcpinnnc}
   For all $j \in \mathbb{N}$ with $j \geq 0$, for all $k \in \mathbb{N}$ with $k \geq 1$ (\textbf{TODO can this be k = 1?}), and for all positive rationals $q$ and $r$,
   \begin{equation*}
@@ -369,9 +392,11 @@ Since we will be interested only in the subclasses of $\NNC(\polylog)$, there mu
   \end{equation*}
 \end{corollary}
 
-\section{Probabilistically checkable proof systems for nondeterministic \texorpdfstring{\NC}{NC} circuits}
+\section{Probabilistically checkable proof systems for nondeterministic \texorpdfstring{\NC}{NC} circuits}\label{sec:pcpinnnc}
 
-We intended to show $\NNC^k(\lg^d n) = \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n}{O(1)}$, but it now seems unlikely that this is true.
+In the previous section we showed a simulation of a PCP verifier by an \NNC{} circuit.
+Our experience with the PCP Theorem and polynomial time verifiers for proabilistically checkable proofs initially led us to conjecture that there is a PCP simulation for \NNC{} circuits.
+However, we instead show evidence that such an equality seems unlikely.
 
 \begin{theorem}\label{thm:equiv}
   For all $k \in \mathbb{N}$ with $k \geq 1$ (\textbf{TODO can this be k = 1?}), and for all positive rationals $q$ and $d$, the following are equivalent.
@@ -392,6 +417,11 @@ The techniques used to prove this theorem immediately imply the following coroll
   \item \textsc{$\frac{1}{2}$-gap $c$-CSP} is hard for $\NNC(\polylog)$ under $\leq_m^{NC}$ reductions that produce instances with $O(\polylog)$ variables and $O(\polylog)$ constraints, where $c$ is some integer greater than 1.
   \end{enumerate}
 \end{corollary}
+
+\textbf{TODO expand on this.}
+We want to say that $\NNC(\polylog) = \NC$ is an unlikely collapse, but the comments at the end of \autoref{sec:nnc} state that we cannot prove an upward collapse due to this equality.
+Hence we rely only on our intuition that deterministic computation cannot simulate a polylogarithmic amount of nondeterminism.
+%% A problem hard for $\NNC(\polylog)$ under polylogarithmic size bounded reductions could also be considered unlikely because the reduction is length-decreasing (for sufficiently large instances).
 
 In order to prove this equivalence, we require the \NC{} analog of \autoref{prop:equivalence}, as well as some derandomization techniques.
 Some of the theorems below are \NC{} analogs of results from \cite{fs96}.
