@@ -411,12 +411,11 @@ The techniques used to prove this theorem immediately imply the following coroll
   \end{enumerate}
 \end{corollary}
 
-\textbf{TODO expand on this.}
-We want to say that $\NNC(\polylog) = \NC$ is an unlikely collapse, but the comments at the end of \autoref{sec:nnc} state that we cannot prove an upward collapse due to this equality.
-Hence we rely only on our intuition that deterministic computation cannot simulate a polylogarithmic amount of nondeterminism.
-%% A problem hard for $\NNC(\polylog)$ under polylogarithmic size bounded reductions could also be considered unlikely because the reduction is length-decreasing (for sufficiently large instances).
+If the $\NNC(\polylog)$ hierarchy exhibited an upward collapse property, then we could immediately improve \autoref{thm:equiv} to state that $\NNC^k(\polylog) = \NC^k$ if and only if $\NNC^k(\log^2 n) = \PCPcs{\NC^k}{1}{\frac{1}{2}}{2 \lg \lg n + t}{q}$.
+Unfortunately, following the discussion at the end of \autoref{sec:nnc}, any proof of such an upward collapse must be non-relativizing, so we cannot currently make that claim.
+\textbf{TODO check that this is true.}
 
-In order to prove this equivalence, we require the \NC{} analog of \autoref{prop:equivalence}, as well as some derandomization techniques.
+Now, in order to prove the equivalence, we require the \NC{} analog of \autoref{prop:equivalence}, as well as some derandomization techniques.
 Some of the theorems below are \NC{} analogs of results from \cite{fs96}.
 We adapt the authors' presentation of derandomization using constant degree spectral expanders.
 With this derandomization, we will show a simulation of $O(\lg \lg n)$ bits of randomness by $\lg \lg n + O(1)$ bits of randomness.
