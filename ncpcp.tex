@@ -124,36 +124,43 @@ In the following definitions, let $q$ be a fixed natural number greater than 1.
 \end{definition}
 
 \begin{definition}
-  A \emph{\PCP{} verifier} is a probabilistic Turing machine which has sequential access to an input string $x$, sequential access to a random string $\rho$, and \emph{nonadaptive random access} to a proof string $\pi$.
+  A \emph{PCP verifier} is a probabilistic Turing machine which has sequential access to an input string $x$, sequential access to a random string $\rho$, and \emph{nonadaptive random access} to a proof string $\pi$.
 \end{definition}
 
+The initialism ``PCP'' stands for ``probabilistically checkable proof''.
+
 \begin{definition}
-  For all natural numbers $a$ and $b$, a language $L$ has a $(a \cdot r(n), b \cdot q(n))$-\emph{$\PCP_{c(n), s(n)}$ verifier} if there exists a \PCP{} verifier $V$ such that $V$ uses at most $a \cdot r(n)$ bits of the random string $\rho$, $V$ makes at most $b \cdot q(n)$ \emph{nonadaptive} queries to bits of the proof $\pi$, and the following conditions hold
+  Let $r(n)$ and $q(n)$ be bounded above by polynomials in $n$, and let $c(n)$ and $s(n)$ be functions whose values are in the interval $[0, 1]$.
+  A language $L$ has a $(r(n), q(n), c(n), s(n))$-\emph{PCP verifier} if there exists a PCP verifier $V$ such that $V$ uses at most $r(n)$ bits of the random string $\rho$, makes at most $q(n)$ \emph{nonadaptive} queries to bits of the proof $\pi$, and satisfies the following conditions.
   \begin{enumerate}
-  \item if $x \in L$, then
+  \item If $x \in L$, then
     \begin{equation*}
-      \exists \pi \in \Sigma^* \colon \Pr_{\rho \in \Sigma^{a \cdot r(n)}}{\left[V(x, \pi; \rho) \textnormal{ accepts}\right]} \geq c(n),
+      \exists \pi \in \Sigma^* \colon \Pr_{\rho \in \Sigma^{r(n)}}{\left[V(x, \pi; \rho) \textnormal{ accepts}\right]} \geq c(n).
     \end{equation*}
-    and
-  \item if $x \notin L$, then
+  \item If $x \notin L$, then
     \begin{equation*}
-      \forall \pi \in \Sigma^* \colon \Pr_{\rho \in \Sigma^{a \cdot r(n)}}{\left[V(x, \pi; \rho) \textnormal{ accepts}\right]} < s(n).
+      \forall \pi \in \Sigma^* \colon \Pr_{\rho \in \Sigma^{r(n)}}{\left[V(x, \pi; \rho) \textnormal{ accepts}\right]} < s(n).
     \end{equation*}
   \end{enumerate}
+  The value $c(n)$ is the \emph{completeness} and the value $s(n)$ the \emph{soundness} of the verifier.
 \end{definition}
 
-In this work, we will consider only nonadaptive \PCP{} verifiers.
-Since a (nonadaptive) $(a \cdot r(n), b \cdot q(n))$-\PCP{} verifier can read at most $2^{a \cdot r(n)} \cdot b \cdot q(n)$ locations of the proof string with nonzero probability, we assume without loss of generality that the proof provided to the verifier is of length at most $2^{a \cdot r(n)} \cdot b \cdot q(n)$ \cite[Remark~11.6]{ab09}.
-(Note that a verifier which uses $q$ adaptive random access queries to the proof string can be simulated by a verifier which uses $2^q$ nonadaptive random access queries to the proof string, so in the adaptive case, the proof string could be of length $2^{a \cdot r(n) + b \cdot q(n)}$.)
+In this work, we will consider only nonadaptive PCP verifiers.
+Since a (nonadaptive) $(r(n), q(n), c(n), s(n))$-PCP verifier can read at most $2^{r(n)} q(n)$ locations of the proof string with nonzero probability, we assume without loss of generality that the proof provided to the verifier is of length at most $2^{r(n)} q(n)$ \cite[Remark~11.6]{ab09}.
+(Note that a verifier which uses $q(n)$ adaptive random access queries to the proof string can be simulated by a verifier which uses $2^{q(n)}$ nonadaptive random access queries to the proof string, so in the adaptive case, the proof string could be of length $2^{r(n) + q(n)}$.)
 
 \begin{definition}
-  Let $\PCPcs{\mathcal{C}}{c(n)}{s(n)}{a \cdot r(n)}{b \cdot q(n)}$ be the class of all languages $L$ such that $L$ has a $(a \cdot r(n), b \cdot q(n))$-$\PCP_{c(n), s(n)}$ verifier $V$ computable by a $\mathcal{C}$ algorithm.
+  Let $\PCPcs{\mathcal{C}}{c(n)}{s(n)}{r(n)}{q(n)}$ be the class of all languages $L$ such that $L$ has a $(r(n), q(n), c(n), s(n))$-PCP verifier $V$ computable by a $\mathcal{C}$ algorithm.
 
   More generally, if $\mathcal{F}$ and $\mathcal{G}$ are classes of functions,
   \begin{equation*}
     \PCPcs{\mathcal{C}}{c(n)}{s(n)}{\mathcal{F}}{\mathcal{G}} = \bigcup_{f \in \mathcal{C}, g \in \mathcal{G}}{\PCPcs{\mathcal{C}}{c(n)}{s(n)}{f(n)}{g(n)}},
     \end{equation*}
+
+  Since completeness 1 and soundness $\frac{1}{2}$ are common parameters, and for the sake of brevity, we write $\PCP^{\mathcal{C}}[r(n), q(n)]$ to denote $\PCPcs{\mathcal{C}}{1}{\frac{1}{2}}{r(n)}{q(n)}$, and $\PCP^{\mathcal{C}}[\mathcal{F}, \mathcal{G}]$ to denote $\PCPcs{\mathcal{C}}{1}{\frac{1}{2}}{\mathcal{F}}{\mathcal{G}}$.
 \end{definition}
+
+Please notice that the complexity class given in the superscript in the above definition does \emph{not} denote an oracle; it merely describes the computational power of the PCP verifier.
 
 From the definition, we see immediately that
 \begin{equation*}
@@ -220,17 +227,17 @@ We begin our study of probabilistically checkable proofs for efficiently decidab
 The celebrated ``PCP Theorem'' can be stated as follows.
 
 \begin{theorem}[PCP Theorem]
-  $\NP = \PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$.
+  $\NP = \PCP^\P[O(\lg n), O(1)]$.
 \end{theorem}
 
 The proof has two parts, one easy and one hard.
 The following lemma proves the easy part.
 
 \begin{lemma}\label{lem:pcpinnp}
-  $\PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)} \subseteq \NP$.
+  $\PCP^\P[O(\lg n), O(1)] \subseteq \NP$.
 \end{lemma}
 \begin{proof}
-  Let $L \in \PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$, so there exists a polynomial time \PCP{} verifier $V$ subject to the appropriate restrictions.
+  Let $L \in \PCP^\P[O(\lg n), O(1)]$, so there exists a polynomial time PCP verifier $V$ subject to the appropriate restrictions.
   Construct a nondeterministic Turing machine $N$ as follows.
 
   On input $x$, nondeterministically guess a proof string $\pi$ of length $2^{r \lg n + \lg q}$, where $q$ and $r$ are the appropriate constants for the language $L$.
@@ -245,7 +252,7 @@ The hard part uses the following ``inapproximability'' view of the PCP Theorem.
 \begin{proposition}[{{\cite[Theorem~1.3]{dinur07}}}]\label{prop:equivalence}
   The following are equivalent.
   \begin{enumerate}
-  \item $\NP \subseteq \PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$.
+  \item $\NP \subseteq \PCP^\P[O(\lg n), O(1)]$.
   \item There exists an integer $q$, with $q > 1$, such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is \NP-hard.
   \end{enumerate}
 \end{proposition}
@@ -253,11 +260,11 @@ The hard part uses the following ``inapproximability'' view of the PCP Theorem.
 Before proving this proposition, we provide one part of it as a separate lemma, because it will be of use in later theorems.
 
 \begin{lemma}\label{lem:constraintsp}
-  If $L \in \PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$ then there is a $\leq_m^P$ reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}, for some integer $q$ greater than 1.
+  If $L \in \PCP^\P[O(\lg n), O(1)]$ then there is a $\leq_m^P$ reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}, for some integer $q$ greater than 1.
 \end{lemma}
 \begin{proof}
-  Let $L$ be a language in $\PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$.
-  Let $V$ be the polynomial time \PCP{} verifier for $L$ which uses $r \lg n$ bits of randomness and queries $q$ bits of the proof string, for some constants $r$ and $q$.
+  Let $L$ be a language in $\PCP^\P[O(\lg n), O(1)]$.
+  Let $V$ be the polynomial time PCP verifier for $L$ which uses $r \lg n$ bits of randomness and queries $q$ bits of the proof string, for some constants $r$ and $q$.
   Consider the Cook-Levin transformation of the operation of $V$ into a Boolean circuit; the circuit will have input variables representing the bits of the input $x$, the bits of the random string $\rho$, and the bits of the proof string $\pi$.
   For each fixed input $x$ of length $n$ and each fixed $\rho \in \Sigma^{r \lg n}$, simplify the circuit based on the values (that is, the 0s and 1s) of the variables corresponding to $x$ and the variables corresponding to $\rho$ into a Boolean function (also called a Boolean constraint) which depends only on the bits of the proof string $\pi$.
   Let $\phi_{x, \rho}$ be that Boolean constraint; note that it depends only on $q$ Boolean variables.
@@ -271,7 +278,7 @@ Before proving this proposition, we provide one part of it as a separate lemma, 
     D & = \left\{\phi_{x, \rho}\right\}_{\rho \in \Sigma^{r \lg n}}.
   \end{align*}
   $f(x)$ is polynomial time computable (there are $qn^r$ variables in $U$ and $n^r$ constraints in $D$, both polynomials in $n$).
-  By the correctness of the Cook-Levin reduction and by the completeness and soundness of the \PCP{} verifier if $x \in L$ then there exists a $\pi$ such that for all strings $\rho$, we have $V(x, \rho; \pi)$ accepts and hence all the constraints are satisfiable.
+  By the correctness of the Cook-Levin reduction and by the completeness and soundness of the PCP verifier if $x \in L$ then there exists a $\pi$ such that for all strings $\rho$, we have $V(x, \rho; \pi)$ accepts and hence all the constraints are satisfiable.
   Furthermore, if $x \notin L$ then for all $\pi$, on less than half of the strings $\rho$ will $V(x, \pi; \rho)$ accept, so less than half of the constraints will be satisfiable.
   Therefore we have shown a correct polynomial time reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}.
 \end{proof}
@@ -282,7 +289,7 @@ Before proving this proposition, we provide one part of it as a separate lemma, 
   Suppose \textsc{$\frac{1}{2}$-gap $q$-CSP} is \NP-hard for some $q$ greater than 1.
   Let $L$ be a language in \NP.
   By hypothesis there exists a (deterministic) polynomial time computable reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}.
-  Construct the \PCP{} verifier as follows.
+  Construct the PCP verifier as follows.
   \begin{enumerate}
   \item Compute the reduction to produce a set of constraints.
   \item Use $O(\lg n)$ random bits to choose a constraint uniformly at random.
@@ -291,31 +298,31 @@ Before proving this proposition, we provide one part of it as a separate lemma, 
 
   If $x \in L$ then all constraints are satisfiable, so there exists an assignment such that the verifier will accept on all random choices of the constraint.
   If $x \notin L$ then fewer than half of the constraints are satisfiable, so for any assignment the probability that the verifier will select a satisfied constraint is less than half.
-  Therefore we have shown a correct \PCP{} verifier with the appropriate parameters for an arbitrary language in \NP.
+  Therefore we have shown a correct PCP verifier with the appropriate parameters for an arbitrary language in \NP.
 \end{proof}
-With this equivalence, we can reduce the problem of showing that $\NP \subseteq \PCPcs{\P}{1}{\frac{1}{2}}{O(\lg n)}{O(1)}$ to the problem of showing that \textsc{$\frac{1}{2}$-gap $q$-CSP} is \NP-hard.
+With this equivalence, we can reduce the problem of showing that $\NP \subseteq \PCP^\P[O(\lg n), O(1)]$ to the problem of showing that \textsc{$\frac{1}{2}$-gap $q$-CSP} is \NP-hard.
 An almost entirely combinatoric approach can solve the latter problem \cite{dinur07}.
 
 We will scale down the techniques from the proofs of \autoref{lem:pcpinnp} and \autoref{prop:equivalence} to prove analogous results in \autoref{sec:nncinpcp} and \autoref{sec:pcpinnnc}, respectively.
 
 \section{Nondeterministic \texorpdfstring{\NC}{NC} circuits for probabilistically checkable proof systems}\label{sec:nncinpcp}
 
-As stated in the introduction, our motivation is to characterize \P{} using \PCP{} classes which are more restrictive than the ones defined in the traditional way, and our first attempt at such a characterization involves the use $\NNC(\polylog)$ in place of \P.
+As stated in the introduction, our motivation is to characterize \P{} using PCP classes which are more restrictive than the ones defined in the traditional way, and our first attempt at such a characterization involves the use $\NNC(\polylog)$ in place of \P.
 We hope to use such a characterization for applications to inapproximability in the realm of optimization problems whose corresponding decision problems are \P-complete, but which admit a ``good'' highly parallel approximation.
 In this work, ``highly parallel'' algorithms are implementable by \NC{} circuit families.
 A \P-complete problem, that is, a problem for which no highly parallel algorithm exists unless $\P = \NC$, is called ``inherently sequential''.
 
-Now that we have the basic notions of both nondeterministic circuits and PCP characterizations of nondeterministic complexity classes, we can return to our search for a restricted $\PCP$ characterization for $\NNC$ circuits.
+Now that we have the basic notions of both nondeterministic circuits and PCP characterizations of nondeterministic complexity classes, we can return to our search for a restricted PCP characterization for $\NNC$ circuits.
 Following the proof of \autoref{lem:pcpinnp}, we show the following inclusion.
 \begin{proposition}\label{prop:pcpinnnc}
   For all non-negative integers $j$ and $t$, all positive integers $k$ (\textbf{TODO can this be k = 1?}), and all positive rationals $q$ and $r$,
   \begin{equation*}
-    \PCPcs{\NC^k}{1}{\frac{1}{2}}{r \lg \lg n + t}{q \lg^j n} \subseteq \NNC^k(\lg^{r + j} n).
+    \PCP^{\NC^k}[r \lg \lg n + t, q \lg^j n] \subseteq \NNC^k(\lg^{r + j} n).
   \end{equation*}
 \end{proposition}
 \begin{proof}
-  Let $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{r \lg \lg n + t}{q \lg^j n}$.
-  Let $V$ be the \PCP{} verifier for $L$ which, on input $x$ of length $n$, proof string $\pi$, and random string $\rho$, makes at most $q \lg^j n$ (nonadaptive) queries to the proof string and uses at most $r \lg \lg n + t$ random bits, and which satisfies
+  Let $L \in \PCP^{\NC^k}[r \lg \lg n + t, q \lg^j n]$.
+  Let $V$ be the PCP verifier for $L$ which, on input $x$ of length $n$, proof string $\pi$, and random string $\rho$, makes at most $q \lg^j n$ (nonadaptive) queries to the proof string and uses at most $r \lg \lg n + t$ random bits, and which satisfies
   \begin{enumerate}
   \item if $x \in L$, then there exists a $\pi$ of length $2^{r \lg \lg n + t} \cdot q \lg^j n$ such that
     \begin{equation*}
@@ -327,7 +334,7 @@ Following the proof of \autoref{lem:pcpinnp}, we show the following inclusion.
       \Pr_{\rho \in \Sigma^{r \lg \lg n + t}}{\left[V(x, \pi; \rho) \textnormal{ accepts}\right]} < \frac{1}{2}.
     \end{equation*}
   \end{enumerate}
-  Our goal is to construct a $\NNC^k(\lg^{r + j} n)$ machine which accepts $x$ if and only if $x \in L$ by simulating the \PCP{} verifier $V$.
+  Our goal is to construct a $\NNC^k(\lg^{r + j} n)$ machine which accepts $x$ if and only if $x \in L$ by simulating the PCP verifier $V$.
 
   Define the $\NNC^k(\lg^{r + j} n)$ machine $M$ as follows on input $x$ of length $n$:
   \begin{enumerate}
@@ -358,30 +365,30 @@ Since we will be interested only in the subclasses of $\NNC(\polylog)$, there mu
 \begin{corollary}
   For all $k \in \mathbb{N}$ with $k \geq 1$,
   \begin{enumerate}
-  \item $\PCPcs{\NC^k}{1}{\frac{1}{2}}{0}{O(\lg n)} = \NNC^k(\lg n) = \NC^k$,
-  \item $\PCPcs{\NC^k}{1}{\frac{1}{2}}{\lg \lg n + t}{O(1)} = \NNC^k(\lg n) = \NC^k$ for all non-negative integers $t$, and
-  \item $\PCPcs{\NC^k}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(\polylog)} \subseteq \NNC^k(\polylog)$.
+  \item $\PCP^{\NC^k}[0, O(\lg n)] = \NNC^k(\lg n) = \NC^k$,
+  \item $\PCP^{\NC^k}[\lg \lg n + t, O(1)] = \NNC^k(\lg n) = \NC^k$ for all non-negative integers $t$, and
+  \item $\PCP^{\NC^k}[O(\lg \lg n), O(\polylog)] \subseteq \NNC^k(\polylog)$.
   \end{enumerate}
 \end{corollary}
 
 \begin{corollary}\label{cor:pcpinnnc}
   \mbox{}
   \begin{enumerate}
-  \item $\PCPcs{\NC}{1}{\frac{1}{2}}{0}{O(\lg n)} = \NNC(\lg n) = \NC$,
-  \item $\PCPcs{\NC}{1}{\frac{1}{2}}{\lg \lg n + t}{O(1)} = \NNC(\lg n) = \NC$ for all non-negative integers $t$, and
-  \item $\PCPcs{\NC}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(\polylog)} \subseteq \NNC(\polylog)$.
+  \item $\PCP^{\NC}[0, O(\lg n)] = \NNC(\lg n) = \NC$,
+  \item $\PCP^{\NC}[\lg \lg n + t, O(1)] = \NNC(\lg n) = \NC$ for all non-negative integers $t$, and
+  \item $\PCP^{\NC}[O(\lg \lg n), O(\polylog)] \subseteq \NNC(\polylog)$.
   \end{enumerate}
 \end{corollary}
 
 \begin{corollary}\label{cor:pcpinnnck}
   For all $j \in \mathbb{N}$ with $j \geq 1$, for all $k \in \mathbb{N}$ with $k \geq 1$, and for all positive rationals $q$ and $r$,
   \begin{equation*}
-    \PCPcs{\NC^k}{1}{\frac{1}{2}}{r \lg \lg n}{q \lg^j n} \subseteq \DSPACE(O(\lg^{\max(k, r + j)} n)).
+    \PCP^{\NC^k}[r \lg \lg n, q \lg^j n] \subseteq \DSPACE(O(\lg^{\max(k, r + j)} n)).
   \end{equation*}
 
   Furthermore,
   \begin{equation*}
-    \PCPcs{\NC}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(\polylog)} \subseteq \polyL.
+    \PCP^{\NC}[O(\lg \lg n), O(\polylog)] \subseteq \polyL.
   \end{equation*}
 \end{corollary}
 
@@ -395,7 +402,7 @@ However, we instead show evidence that such an equality seems unlikely.
   For all $k \in \mathbb{N}$ with $k \geq 1$ (\textbf{TODO can this be k = 1?}), and for all positive rationals $q$ and $d$, the following are equivalent.
   \begin{enumerate}
   \item $\NNC^k(\lg^d n) = \NC^k$.
-  \item $\NNC^k(\lg^d n) = \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n + t}{q}$ for some non-negative integer $t$.
+  \item $\NNC^k(\lg^d n) = \PCP^{\NC^k}[d \lg \lg n + t, q]$ for some non-negative integer $t$.
   \item There is an integer $c$ with $c > 1$ such that \textsc{$\frac{1}{2}$-gap $c$-CSP} is hard for $\NNC^k(\lg^d n)$ under $\leq_m^{NC^k}$ reductions that produce instances with $O(\lg^d n)$ variables and $O(\lg^d n)$ constraints.
   \end{enumerate}
 \end{theorem}
@@ -406,12 +413,12 @@ The techniques used to prove this theorem immediately imply the following coroll
   The following are equivalent.
   \begin{enumerate}
   \item $\NNC(\polylog) = \NC$.
-  \item $\NNC(\polylog) = \PCPcs{\NC}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(1)}$.
+  \item $\NNC(\polylog) = \PCP^{\NC}[O(\lg \lg n), O(1)]$.
   \item \textsc{$\frac{1}{2}$-gap $c$-CSP} is hard for $\NNC(\polylog)$ under $\leq_m^{NC}$ reductions that produce instances with $O(\polylog)$ variables and $O(\polylog)$ constraints, where $c$ is some integer greater than 1.
   \end{enumerate}
 \end{corollary}
 
-If the $\NNC(\polylog)$ hierarchy exhibited an upward collapse property, then we could immediately improve \autoref{thm:equiv} to state that $\NNC^k(\polylog) = \NC^k$ if and only if $\NNC^k(\log^2 n) = \PCPcs{\NC^k}{1}{\frac{1}{2}}{2 \lg \lg n + t}{q}$.
+If the $\NNC(\polylog)$ hierarchy exhibited an upward collapse property, then we could immediately improve \autoref{thm:equiv} to state that $\NNC^k(\polylog) = \NC^k$ if and only if $\NNC^k(\log^2 n) = \PCP^{\NC^k}[2 \lg \lg n + t, q]$.
 Unfortunately, following the discussion at the end of \autoref{sec:nnc}, any proof of such an upward collapse must be non-relativizing, so we cannot currently make that claim.
 \textbf{TODO check that this is true.}
 
@@ -443,7 +450,7 @@ Infinite families of very explicit constant degree spectral expanders exist; for
 \end{lemma}
 
 \begin{lemma}\label{lem:badsubset}
-  Let $L \in \PCPcs{\NC^k}{1}{\frac{1}{16}}{\alpha \lg \lg n}{O(1)}$ for some integer $\alpha$ greater than 1, and let $V$ be the corresponding \PCP{} verifier.
+  Let $L \in \PCPcs{\NC^k}{1}{\frac{1}{16}}{\alpha \lg \lg n}{O(1)}$ for some integer $\alpha$ greater than 1, and let $V$ be the corresponding PCP verifier.
   Let $\ell = 2^{\lg \lg n}$.
   Let $x$ be a binary string of length $n$.
   Let $b(i)$ denote the binary representation of the non-negative integer $i$.
@@ -464,7 +471,7 @@ Infinite families of very explicit constant degree spectral expanders exist; for
   \textbf{TODO complete this proof.}
 \end{proof}
 
-By using a constant number of independent simulations of a \PCP{} verifier, we can achieve any constant soundness probability.
+By using a constant number of independent simulations of a PCP verifier, we can achieve any constant soundness probability.
 
 \begin{lemma}\label{lem:16}
   For all positive integers $k$, we have
@@ -478,17 +485,17 @@ By using a constant number of independent simulations of a \PCP{} verifier, we c
 \begin{lemma}[{\cite[Lemma~4]{fs96}}]\label{lem:derandomize}
   For all integers $k$ where $k \geq 1$, we have
   \begin{equation*}
-    \PCPcs{\NC^k}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(1)}
+    \PCP^{\NC^k}[O(\lg \lg n), O(1)]
     \subseteq
-    \PCPcs{\NC^k}{1}{\frac{1}{2}}{\lg \lg n + O(1)}{O(1)}.
+    \PCP^{\NC^k}[\lg \lg n + O(1), O(1)].
   \end{equation*}
 \end{lemma}
 \begin{proof}
   Let $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{O(\lg \lg n)}{O(1)}$.
   $L$ is also in $\PCPcs{\NC^k}{1}{\frac{1}{16}}{O(\lg \lg n)}{O(1)}$ by \autoref{lem:16}.
-  This means there exists a $(\alpha \lg \lg n, q)$-\PCP{} verifier $V$ for $L$, for some positive rational $\alpha$ and positive integer $q$, which has soundness probability $\frac{1}{16}$.
+  This means there exists a $(\alpha \lg \lg n, q, 1, \frac{1}{16})$-PCP verifier $V$ for $L$, for some positive rational $\alpha$ and positive integer $q$.
   We assume without loss of generality that $\alpha > 1$; if $\alpha \leq 1$ the statement is immediately true.
-  Our goal is to construct a $(\lg \lg n + t, O(1))$-\PCP{} verifier $V'$ for $L$, for some constant integer $t$.
+  Our goal is to construct a $(\lg \lg n + t, O(1), 1, \frac{1}{2})$-PCP verifier $V'$ for $L$, for some constant integer $t$.
   Suppose for now that $t$ has been fixed; we will define it later in the proof.
   We construct the verifier $V'$ as follows on input $x$ of length $n$, random string $\rho$ of length $\lg \lg n + t$ and proof string $\pi$ of length $2^{\lg \lg n + t} q$ (this is the maximum number of possible bits of the proof string queried by a nonadaptive verifier with $\lg \lg n$ bits of randomness).
   Interpret $\rho$ as $\rho_1 \circ \rho_2$, where $|\rho_1| = \lg \lg n$ and $|\rho_2| = t$.
@@ -538,7 +545,7 @@ By using a constant number of independent simulations of a \PCP{} verifier, we c
   This probability is at most $\frac{1}{2^\alpha}$ by \autoref{lem:expander}, which is strictly less than $\frac{1}{2}$ because $\alpha > 1$.
 
   To summarize, we have shown that $V'$ uses exactly $\lg \lg n + \alpha c \lg d$ bits of randomness, makes $O(1)$ queries to the proof string, can be implemented by an $\NC^k$ circuit, and has completeness 1 and soundness $\frac{1}{2}$.
-  Therefore, $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{\lg \lg n + O(1)}{O(1)}$.
+  Therefore, $L \in \PCP^{\NC^k}[\lg \lg n + O(1), O(1)]$.
 \end{proof}
 
 Using the derandomizations from \autoref{prop:pcpinnnc} and \autoref{lem:derandomize}, we can prove \autoref{thm:equiv}.
@@ -546,7 +553,7 @@ We divide the proof of the theorem into several lemmata.
 The first lemma shows the equivalence of the first and second statements, the second lemma provides an \NC{} analog of \autoref{lem:constraintsp}, and the third shows the equivalence of the second and third statements.
 
 \begin{lemma}\label{lem:1}
-  For all positive integers $k$ and all non-negative rationals $d$, we have $\NNC^k(\lg^d n) = \NC^k$ if and only if there is a non-negative integer $t$ such that $\NNC^k(\lg^d n) = \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n + t}{q}$.
+  For all positive integers $k$ and all non-negative rationals $d$, we have $\NNC^k(\lg^d n) = \NC^k$ if and only if there is a non-negative integer $t$ such that $\NNC^k(\lg^d n) = \PCP^{\NC^k}[d \lg \lg n + t, q]$.
 \end{lemma}
 \begin{proof}
   First, suppose $\NNC^k(\lg^d n) = \NC^k$.
@@ -554,22 +561,22 @@ The first lemma shows the equivalence of the first and second statements, the se
   \begin{equation*}
     \NNC^k(\lg^d n)
     = \NC^k
-    = \PCPcs{\NC^k}{1}{\frac{1}{2}}{0}{0}
-    \subseteq \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n}{q}.
+    = \PCP^{\NC^k}[0, 0]
+    \subseteq \PCP^{\NC^k}[d \lg \lg n, q].
   \end{equation*}
   Combine this with \autoref{prop:pcpinnnc} to achieve equality.
   In this case, we choose $t = 0$.
 
   For the converse, suppose $L$ is a language in $\NNC^k(\lg^d n)$.
-  By hypothesis, $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n + t}{q}$ for some non-negative integer $t$.
-  Since $d \lg \lg n + t$ is in $O(\lg \lg n)$, we also have that $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{d' \lg \lg n}{q}$ for some $d'$ greater than or equal to $d$.
-  By \autoref{lem:derandomize}, there exists a $t'$ such that $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{\lg \lg n + t'}{q}$.
+  By hypothesis, $L \in \PCP^{\NC^k}[d \lg \lg n + t, q]$ for some non-negative integer $t$.
+  Since $d \lg \lg n + t$ is in $O(\lg \lg n)$, we also have that $L \in \PCP^{\NC^k}[d' \lg \lg n, q]$ for some $d'$ greater than or equal to $d$.
+  By \autoref{lem:derandomize}, there exists a $t'$ such that $L \in \PCP^{\NC^k}[\lg \lg n + t', q]$.
   Apply \autoref{cor:pcpinnnck} to conclude that $L \in \NC^k$.
 \end{proof}
 
 \begin{lemma}\label{lem:constraintsnc}
   Suppose $d$ and $t$ are non-negative integers.
-  Let $L$ be a language in $\PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n + t}{O(1)}$.
+  Let $L$ be a language in $\PCP^{\NC^k}[d \lg \lg n + t, O(1)]$.
   Then there is a $\leq_m^{NC^k}$ reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}, for some integer $q$ greater than 1.
   Furthermore, the reduction yields $O(\lg^d n)$ variables and $O(\lg^d n)$ constraints on inputs of length $n$.
 \end{lemma}
@@ -580,7 +587,7 @@ The first lemma shows the equivalence of the first and second statements, the se
 \end{proof}
 
 \begin{lemma}\label{lem:2}
-  For all positive integers $k$ and all non-negative rationals $d$, $\NNC^k(\lg^d n) = \PCPcs{\NC^k}{1}{\frac{1}{2}}{d \lg \lg n + t}{q}$ for some non-negative integer $t$ if and only if there exists an integer $c$ with $c > 1$ such that \textsc{$\frac{1}{2}$-gap $c$-CSP} is hard for $\NNC^k(\lg^d n)$ under $\leq_m^{NC^k}$ reductions that produce instances with $O(\lg^d n)$ variables and $O(\lg^d n)$ constraints.
+  For all positive integers $k$ and all non-negative rationals $d$, $\NNC^k(\lg^d n) = \PCP^{\NC^k}[d \lg \lg n + t, q]$ for some non-negative integer $t$ if and only if there exists an integer $c$ with $c > 1$ such that \textsc{$\frac{1}{2}$-gap $c$-CSP} is hard for $\NNC^k(\lg^d n)$ under $\leq_m^{NC^k}$ reductions that produce instances with $O(\lg^d n)$ variables and $O(\lg^d n)$ constraints.
 \end{lemma}
 \begin{proof}
   One direction of the equivalence follows immediately \autoref{lem:constraintsnc}.
