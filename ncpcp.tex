@@ -362,7 +362,7 @@ A polylogarithmic number of simulations of $V$ are being run in parallel, but an
 The number of simulations depends on the length of the random string $\rho$.
 Since we will be interested only in the subclasses of $\NNC(\polylog)$, there must also be a polylogarithmic upper bound on the number of nondeterministic gates required, and hence the length of $\rho$ must be in $O(\lg \lg n)$.
 
-\begin{corollary}
+\begin{corollary}\label{cor:pcpinnnck}
   For all $k \in \mathbb{N}$ with $k \geq 1$,
   \begin{enumerate}
   \item $\PCP^{\NC^k}[0, O(\lg n)] = \NNC^k(\lg n) = \NC^k$,
@@ -380,7 +380,7 @@ Since we will be interested only in the subclasses of $\NNC(\polylog)$, there mu
   \end{enumerate}
 \end{corollary}
 
-\begin{corollary}\label{cor:pcpinnnck}
+\begin{corollary}
   For all $j \in \mathbb{N}$ with $j \geq 1$, for all $k \in \mathbb{N}$ with $k \geq 1$, and for all positive rationals $q$ and $r$,
   \begin{equation*}
     \PCP^{\NC^k}[r \lg \lg n, q \lg^j n] \subseteq \DSPACE(O(\lg^{\max(k, r + j)} n)).
