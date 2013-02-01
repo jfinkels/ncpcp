@@ -191,8 +191,12 @@ The above proposition suggests that $\NNC(\polylog)$, which resides between \NC{
 In \cite{wolf94}, the author conjectures that $\NNC(\polylog)$ is incomparable with $\P$, in the sense that neither is a subset of the other.
 We can get some of idea of the relationship between $\NNC(\polylog)$ and $\P$ from the following theorems.
 
-\begin{lemma}[{{\cite[Lemma~3.1]{wolf94}}}]\label{lem:dspace}
-  For all $k, j \in \mathbb{Q}$ with $k \geq 1$ and $j \geq 1$, we have $\NNC^k(\lg^j n) \subseteq \DSPACE(\lg^{\max(k, j)} n)$.
+\begin{lemma}[{\cite[Lemma~3.1 and Lemma~3.3]{wolf94}}]\label{lem:dspace}
+  For all $k, j \in \mathbb{Q}$ with $k \geq 1$ and $j \geq 1$,
+  \begin{enumerate}
+  \item $\NNC^k(\lg^j n) \subseteq \DSPACE(\lg^{\max(k, j)} n)$ and
+  \item $\NNC^k(n^j) \subseteq \DSPACE(n^j)$.
+  \end{enumerate}
 \end{lemma}
 
 $\NNC^k(\lg^d n)$ has complete problems under logarithmic space many-one reductions \cite[Theorem~3.6]{cc97}, so that part of the hypothesis in item 2 of the next proposition makes sense.
@@ -214,12 +218,60 @@ A natural next question is whether $\NNC(\log^k n) \subsetneq \NNC(\log^{k + 1} 
 One way to make progress toward such a claim is to determine whether the $\NNC(\polylog)$ hierarchy exhibits the ``upward collapse'' (or equivalently, ``downward separation'') property.
 An upward collapse property for a hierarchy of complexity classes $\mathcal{C}_1 \subseteq \mathcal{C}_2 \subseteq \dotsb \subseteq \cup_k \mathcal{C}_k$ is a theorem of the form ``if $\mathcal{C}_k = \mathcal{C}_{k + 1}$ then $\mathcal{C}_k = \cup_{j > k} \mathcal{C}_j$'', where the conclusion of the implication is some collapse which is considered unlikely.
 For example, the polynomial hierarchy exhibits this property: if $\SKP = \SKPOP$ then $\SKP = \PH$.
+In fact, the (deterministic) $\NC^d$ hierarchy itself (that is, $\NC^1 \subseteq \NC^2 \subseteq \dotsb \subseteq \NC$) has this property \cite[Corollary~5]{wilson89}.
 Upward collapse can be seen as evidence that each of the inclusions in the hierarchy is strict.
-
 Unfortunately, there can be no relativizing proof that the $\NP[\polylog]$ hierarchy exhibits upward collapse \cite{bg94}, where $\NP[\polylog]$ is the polynomial time analog of $\NNC(\polylog)$.
-\textbf{TODO show that a similar proof gives the same property for NNC.}
-The same holds for $\NNC(\polylog)$...
-This will be important later for \autoref{thm:equiv} when we wish to provide evidence that the techniques used to construct a PCP characterization of $\NP$ likely do not translate to providing a similar characterization for $\NNC(\polylog)$.
+The same likely holds for $\NNC(\polylog)$ (\textbf{TODO show that a similar proof gives the same property for NNC(polylog).}...
+
+What we can say, however, is that a collapse in the $\NNC(\polylog)$ hierarchy corresponds to a subexponential time algorithm for \textsc{Satisfiability}.
+We adapt to our setting the analagous theorem and proof for the $\NP[\polylog]$ hierarchy found in \cite[Theorem~1]{dt90} (therein attributed to Beigel).
+\begin{theorem}\label{thm:collapse}
+  For all positive integers $k$ and all positive integers $i$ and $j$ where $i < j$, if $\NNC^k(\log^i n) = \NNC^k(\log^j n)$ then $\NP \subseteq \DTIME(2^{o(n)})$.
+\end{theorem}
+\begin{proof}
+  Since \textsc{Satisfiability} is complete for $\NP$ under deterministic polynomial time many-one reductions, it suffices to show a $2^{o(n)}$ time algorithm for \textsc{Satisfiability}.
+
+  The proof uses a padding argument.
+  First we observe that there is an $\NNC^1(n)$ machine, call it $M$, that decides \textsc{Satisfiability}: given a Boolean formula $\phi$, guess a satisfying assignment to $\phi$ (of length $O(n)$) and evaluate the formula (Boolean formula evaluation is in $\NC^1$ \cite{buss87}).
+  Define $L'$, the padded version of \textsc{Satisfiability}, as
+  \begin{equation*}
+    L = \left\{ \phi \# 1^P \, \middle| \, \phi \in \textsc{Satisfiability} \text{ and } P = 2^{n^\frac{1}{j}} - (n + 1) \right\},
+  \end{equation*}
+  where $n = |\phi|$.
+  We claim $L$ is in $\NNC^k(\log^j n)$ by the following algorithm.
+  On input $\phi'$, check that $\phi'$ is in the format $\phi \# 1^P$, then accept if and only if $M$ accepts $\phi$.
+  This algorithm, call it $M_j$, is correct if $M$ is correct (and it is), so it remains to check the size and depth of the circuit for $M_j$, and the amount of nondeterminism used.
+
+  Checking that $x'$ is in the correct format can be performed (deterministically) by an $\NC^0$ circuit by computing the conjunction of all the bits after the $\#$ symbol.
+  Observe now that $|x'| = 2^{n^{\frac{1}{j}}}$, so $n = \log^j{|x'|}$.
+  The amount of nondeterminism used by $M_j$ is the same as the amount used by $M$, which is $O(n)$, or $O(\log^j |x'|)$.
+  The size of $M$ is polynomial in $n$, which is polylogarithmic in $|x'|$, and hence polynomial in the length of the input $x'$.
+  The depth of $M$ is $O(\log n)$, which is $O(\log \log^j |x'|)$, or simply $O(\log \log |x'|)$.
+  We conclude that the size of $M_j$ is polynomial in $|x'|$, the depth of $M_j$ is logarithmic in $|x'|$, and $M_j$ uses $O(\log^j |x'|)$ bits of nondeterminism.
+  Hence $L$ is in $\NNC^1(\log^j n)$, and more generally, in $\NNC^k(\log^j n)$.
+
+  By hypothesis, $L$ is also in $\NNC^k(\log^i n)$.
+  Let $M_i$ be the $\NNC^k(\log^i n)$ machine that decides it.
+  We claim that we can now construct a subexponential time algorithm for \textsc{Satisfiability} on inputs $\phi$ of length $n$.
+  \begin{enumerate}
+  \item Let $\phi' = \phi \# 1^P$, where $P = 2^{n^{\frac{1}{j}}} - (n + 1)$.
+  \item Accept if and only if $M_i$ accepts $\phi'$.
+  \end{enumerate}
+  The correctness of this algorithm follows immediately from the correctness of $M_i$.
+  The first step can be performed by a deterministic algorithm running in time $2^{n^{\frac{1}{j}}}$.
+  The second step can be performed by an $\NNC^k(\log^i n)$ algorithm on inputs of length $n$.
+  However, the length of the input to $M_i$ is actually $2^{n^{\frac{1}{j}}}$, so
+  \begin{align*}
+    \NNC^k(\log^i{2^{n^{\frac{1}{j}}}}) & = \NNC^k(n^{\frac{i}{j}}) & \\
+    & \subseteq \DSPACE(n^{\frac{i}{j}}) & \text{(by \autoref{lem:dspace})} \\
+    & \subseteq \DTIME(2^{n^{\frac{i}{j}}}) & \text{(by exhaustive search)} \\
+    & \subseteq \DTIME(2^{o(n)}) & \text{(because } i < j \text{).}
+  \end{align*}
+  Hence the second step can be performed by a deterministic algorithm running in time $2^{n^{\frac{i}{j}}}$.
+  Therefore, this algorithm for \textsc{Satisfiability} can be implemented by a deterministic algorithm running in $2^{o(n)}$ time.
+\end{proof}
+
+This theorem will be used after proving \autoref{thm:equiv} to provide evidence that the techniques used to construct a PCP characterization of $\NP$ likely do not translate to providing a similar characterization for $\NNC(\polylog)$.
 
 \section{Probabilistically checkable proofs for \texorpdfstring{\NP}{NP}}
 
@@ -315,7 +367,7 @@ A \P-complete problem, that is, a problem for which no highly parallel algorithm
 Now that we have the basic notions of both nondeterministic circuits and PCP characterizations of nondeterministic complexity classes, we can return to our search for a restricted PCP characterization for $\NNC$ circuits.
 Following the proof of \autoref{lem:pcpinnp}, we show the following inclusion.
 \begin{proposition}\label{prop:pcpinnnc}
-  For all non-negative integers $j$ and $t$, all positive integers $k$ (\textbf{TODO can this be k = 1?}), and all positive rationals $q$ and $r$,
+  For all non-negative integers $j$ and $t$, all positive integers $k$, and all positive rationals $q$ and $r$,
   \begin{equation*}
     \PCP^{\NC^k}[r \lg \lg n + t, q \lg^j n] \subseteq \NNC^k(\lg^{r + j} n).
   \end{equation*}
@@ -418,9 +470,20 @@ The techniques used to prove this theorem immediately imply the following coroll
   \end{enumerate}
 \end{corollary}
 
-If the $\NNC(\polylog)$ hierarchy exhibited an upward collapse property, then we could immediately improve \autoref{thm:equiv} to state that $\NNC^k(\polylog) = \NC^k$ if and only if $\NNC^k(\log^2 n) = \PCP^{\NC^k}[2 \lg \lg n + t, q]$.
+If the $\NNC(\polylog)$ hierarchy exhibited an upward collapse property, then we could immediately improve \autoref{thm:equiv} to state that $\NNC^k(\polylog) = \NC^k$ if and only if $\NNC^k(\log^d n) = \PCP^{\NC^k}[d \lg \lg n + t, q]$.
 Unfortunately, following the discussion at the end of \autoref{sec:nnc}, any proof of such an upward collapse must be non-relativizing, so we cannot currently make that claim.
 \textbf{TODO check that this is true.}
+Still, we can state the following consequence of this PCP characterization for $\NNC(\polylog)$.
+\begin{corollary}
+  \mbox{}
+  \begin{enumerate}
+  \item If $\NNC^k(\log^d) = \PCP^{\NC^k}[d \lg \lg n + t, q]$ for some non-negative integer $t$ and some positive integer $q$, then $\NP \subseteq \DTIME(2^{o(n)})$.
+  \item If $\NNC(\polylog) = \PCP^{\NC}[O(\lg \lg n), O(1)]$, then $\NP \subseteq \DTIME(2^{o(n)})$.
+  \end{enumerate}
+\end{corollary}
+\begin{proof}
+  Follows immediately from the previous theorem and \autoref{thm:collapse}.
+\end{proof}
 
 Now, in order to prove the equivalence, we require the \NC{} analog of \autoref{prop:equivalence}, as well as some derandomization techniques.
 Some of the theorems below are \NC{} analogs of results from \cite{fs96}.
