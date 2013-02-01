@@ -78,47 +78,10 @@ We are still, however, able to show that certain PCP classes are contained in $\
   An assignment \emph{satisfies} a constraint if $(a(v_{i_1}), a(v_{i_2}), \dotsc, a(v_{i_q})) \in C$.
 \end{definition}
 
-\begin{definition}
-  Suppose $D$ is a collection of constraints over the set of variables $V$.
-  Let $A$ represent the set of all assignments to $V$.
-  The \emph{satisfiability fraction} of a collection of constraints, denoted $SAT(D)$, is defined by
-  \begin{equation*}
-    SAT(D) = \max_{a \in A}{\frac{\left|\left\{ C_i \in D \, \middle| \, a \text{ satisfies } C_i \right\}\right|}{\left|D\right|}}.
-  \end{equation*}
-\end{definition}
-
-\begin{definition}[\textsc{Constraint Satisfaction Problem} (or \textsc{CSP})]
+\begin{definition}[\textsc{$\frac{1}{2}$-gap $q$-CSP}]
   \mbox{}
 
-  \textbf{Instance:} finite alphabet $\Gamma$ with $|\Gamma| > 1$, finite set of variables $V$, finite set of constraints $D$.
-
-  \textbf{Question:} Are all constraints in $D$ satisfiable?
-\end{definition}
-
-In the following definitions, let $q$ be a fixed natural number greater than 1.
-
-\begin{definition}[\textsc{$q$-CSP}]
-  \mbox{}
-
-  \textbf{Instance:} finite alphabet $\Gamma$ with $|\Gamma| > 1$, finite set of variables $V$, finite set of $q$-ary constraints $D$.
-
-  \textbf{Question:} Are all constraints $D$ satisfiable?
-\end{definition}
-
-\begin{definition}[\textsc{Maximum $q$-CSP}]
-  \mbox{}
-
-  \textbf{Instance:} finite alphabet $\Gamma$ with $|\Gamma| > 1$, finite set of variables $V$, finite set of $q$-ary constraints $D$.
-
-  \textbf{Solution:} An assignment $\alpha \colon V \to \Gamma$.
-
-  \textbf{Measure:} The number of constraints in $D$ satisfied by $\alpha$.
-\end{definition}
-
-\begin{definition}[\textsc{$\epsilon$-gap $q$-CSP}]
-  \mbox{}
-
-  \textbf{Instance:} finite alphabet $\Gamma$ with $|\Gamma| > 1$, finite set of variables $V$, finite set of $q$-ary constraints $D$ with the restriction that either $SAT(D) < \frac{1}{2}$ or $SAT(D) = 1$.
+  \textbf{Instance:} finite alphabet $\Gamma$ with $|\Gamma| > 1$, finite set of variables $V$, finite set of $q$-ary constraints $D$ with the restriction that for any assignment, either all constraints are satisfied or fewer than half are.
 
   \textbf{Question:} Are all constraints in $D$ satisfiable?
 \end{definition}
