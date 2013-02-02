@@ -1,4 +1,4 @@
-\documentclass[]{article}
+\documentclass{article}
 
 % Package `amsthm` and `thmtools` must come before package `hyperref`.
 \usepackage{amsthm}
@@ -189,7 +189,7 @@ The same likely holds for $\NNC(\polylog)$ (\textbf{TODO show that a similar pro
 What we can say, however, is that a collapse in the $\NNC(\polylog)$ hierarchy corresponds to a subexponential time algorithm for \textsc{Satisfiability}.
 We adapt to our setting the analagous theorem and proof for the $\NP[\polylog]$ hierarchy found in \cite[Theorem~1]{dt90} (therein attributed to Beigel).
 \begin{theorem}\label{thm:collapse}
-  For all positive integers $k$ and all positive integers $i$ and $j$ where $i < j$, if $\NNC^k(\log^i n) = \NNC^k(\log^j n)$ then $\NP \subseteq \DTIME(2^{o(n)})$.
+  For all positive integers $k$ and all positive integers $i$ and $j$ where $i < j$, if $\NNC^k(\log^i n) = \NNC^k(\log^j n)$ then $\NP \subseteq \DTIME(2^{n^{\frac{i}{j}}})$.
 \end{theorem}
 \begin{proof}
   Since \textsc{Satisfiability} is complete for $\NP$ under deterministic polynomial time many-one reductions, it suffices to show a $2^{o(n)}$ time algorithm for \textsc{Satisfiability}.
@@ -234,7 +234,19 @@ We adapt to our setting the analagous theorem and proof for the $\NP[\polylog]$ 
   Therefore, this algorithm for \textsc{Satisfiability} can be implemented by a deterministic algorithm running in $2^{o(n)}$ time.
 \end{proof}
 
-This theorem will be used after proving \autoref{thm:equiv} to provide evidence that the techniques used to construct a PCP characterization of $\NP$ likely do not translate to providing a similar characterization for $\NNC(\polylog)$.
+In the following corollary, the complexity class \SUBEXP{} is defined by
+\begin{equation*}
+  \SUBEXP = \bigcap_{\epsilon > 0}{\DTIME(2^{n^{\epsilon}})}.
+\end{equation*}
+
+\begin{corollary}\label{cor:collapse}
+  If $\NNC(\polylog) = \NC$ then $\NP \subseteq \SUBEXP$.
+\end{corollary}
+\begin{proof}
+  Since $\NNC(\polylog) = \cup_{j \in \mathbb{N}}{\NNC(\log^j n)}$ by definition, $\NC = \NNC(\log n)$ by \autoref{prop:nnc}, and $\NNC(\polylog) = \NC$ by hypothesis, the result follows immediately from the previous theorem.
+\end{proof}
+
+This theorem and corollary will be used after proving \autoref{thm:equiv} to provide evidence that the techniques used to construct a PCP characterization of $\NP$ likely do not translate to providing a similar characterization for $\NNC(\polylog)$.
 
 \section{Probabilistically checkable proofs for \texorpdfstring{\NP}{NP}}
 
@@ -422,6 +434,7 @@ However, we instead show evidence that such an equality seems unlikely.
   \end{enumerate}
 \end{theorem}
 
+We postpone the proof of this theorem and first examine the consequences of this equivalence.
 The techniques used to prove this theorem immediately imply the following corollary.
 
 \begin{corollary}
@@ -440,15 +453,15 @@ Still, we can state the following consequence of this PCP characterization for $
 \begin{corollary}
   \mbox{}
   \begin{enumerate}
-  \item If $\NNC^k(\log^d) = \PCP^{\NC^k}[d \lg \lg n + t, q]$ for some non-negative integer $t$ and some positive integer $q$, then $\NP \subseteq \DTIME(2^{o(n)})$.
-  \item If $\NNC(\polylog) = \PCP^{\NC}[O(\lg \lg n), O(1)]$, then $\NP \subseteq \DTIME(2^{o(n)})$.
+  \item If $\NNC^k(\log^d) = \PCP^{\NC^k}[d \lg \lg n + t, q]$ for some non-negative integer $t$ and some positive integer $q$, then $\NP \subseteq \DTIME(2^{n^{\frac{1}{d}}})$.
+  \item If $\NNC(\polylog) = \PCP^{\NC}[O(\lg \lg n), O(1)]$, then $\NP \subseteq \SUBEXP$.
   \end{enumerate}
 \end{corollary}
 \begin{proof}
-  Follows immediately from the previous theorem and \autoref{thm:collapse}.
+  The first implication follows immediately from the previous theorem and \autoref{thm:collapse}, and the second from \autoref{cor:collapse}.
 \end{proof}
 
-Now, in order to prove the equivalence, we require the \NC{} analog of \autoref{prop:equivalence}, as well as some derandomization techniques.
+Now, in order to prove the equivalence in \autoref{thm:equiv}, we require the \NC{} analog of \autoref{prop:equivalence}, as well as some derandomization techniques.
 Some of the theorems below are \NC{} analogs of results from \cite{fs96}.
 We adapt the authors' presentation of derandomization using constant degree spectral expanders.
 With this derandomization, we will show a simulation of $O(\lg \lg n)$ bits of randomness by $\lg \lg n + O(1)$ bits of randomness.
@@ -507,6 +520,9 @@ By using a constant number of independent simulations of a PCP verifier, we can 
     \PCPcs{\NC^k}{1}{\frac{1}{16}}{O(\lg \lg n)}{O(1)}.
   \end{equation*}
 \end{lemma}
+
+Using the soundness amplification from \autoref{lem:16} and the random walk from \autoref{lem:expander}, we can show how to simulate $O(\lg \lg n)$ bits of randomness with only $\lg \lg n + O(1)$ bits.
+%% TODO use a generic pseudorandom generator here
 
 \begin{lemma}[{\cite[Lemma~4]{fs96}}]\label{lem:derandomize}
   For all integers $k$ where $k \geq 1$, we have
