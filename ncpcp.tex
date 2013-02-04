@@ -189,11 +189,11 @@ An upward collapse property for a hierarchy of complexity classes $\mathcal{C}_1
 For example, the polynomial hierarchy exhibits this property: if $\SKP = \SKPOP$ then $\SKP = \PH$.
 In fact, the (deterministic) $\NC^d$ hierarchy itself (that is, $\NC^1 \subseteq \NC^2 \subseteq \dotsb \subseteq \NC$) has this property \cite[Corollary~5]{wilson89}.
 Upward collapse can be seen as evidence that each of the inclusions in the hierarchy is strict.
-Unfortunately, there can be no relativizing proof that the $\NP[\polylog]$ hierarchy exhibits upward collapse \cite{bg94}, where $\NP[\polylog]$ is the polynomial time analog of $\NNC(\polylog)$.
+Unfortunately, there can be no relativizing proof that the $\NP(\polylog)$ hierarchy exhibits upward collapse \cite{bg94}, where $\NP(\polylog)$ is the polynomial time analog of $\NNC(\polylog)$.
 The same likely holds for $\NNC(\polylog)$ (\textbf{TODO show that a similar proof gives the same property for NNC(polylog).}...
 
 What we can say, however, is that a collapse in the $\NNC(\polylog)$ hierarchy corresponds to a subexponential time algorithm for \textsc{Satisfiability}.
-We adapt to our setting the analagous theorem and proof for the $\NP[\polylog]$ hierarchy found in \cite[Theorem~1]{dt90} (therein attributed to Beigel).
+We adapt to our setting the analagous theorem and proof for the $\NP(\polylog)$ hierarchy found in \cite[Theorem~1]{dt90} (therein attributed to Beigel).
 \begin{theorem}\label{thm:collapse}
   For all positive integers $k$ and all positive integers $i$ and $j$ where $i < j$, if $\NNC^k(\log^i n) = \NNC^k(\log^j n)$ then $\NP \subseteq \DTIME(2^{n^{\frac{i}{j}}})$.
 \end{theorem}
@@ -650,6 +650,46 @@ The first lemma shows the equivalence of the first and second statements, the se
 \end{proof}
 
 \autoref{thm:equiv} follows immediately from \autoref{lem:1} and \autoref{lem:2}.
+
+\section{Probabilistically checkable proof systems for polynomial time machines with limited nondeterminism}
+
+The results in the previous sections can be adapted in a straightforward manner to the $\NP(\polylog)$ hierarchy, the class of languages decidable by polynomial time Turing machines augmented with a polylogarithmic amount of nondeterminism.
+More formally, $\NP(\log^k n)$ is the class of languages for which there is a Turing machine that decides it in polynomial time using $O(\log^k n)$ bits of nondeterminism on inputs of length $n$.
+The class $\NP(\polylog)$ is $\cup_{k \in \mathbb{N}}{\NP(\log^k n)}$.
+(These classes have many other names, including $\betakP$ \cite{dt90}, $\P_{\log^k n}$ \cite{kf80}, $\GC(\log^k n, \P)$ \cite{cc97}, etc.)
+Just as
+\begin{equation*}
+  \NC = \NNC(\log n) \subseteq \NNC(\polylog) \subseteq \NNC(\poly) = \NP,
+\end{equation*}
+we have
+\begin{equation*}
+  \P = \NP(\log n) \subseteq \NP(\polylog) \subseteq \NP(\poly) = \NP.
+\end{equation*}
+
+\begin{proposition}
+  For all non-negative integers $j$ and $t$, and all positive rationals $q$ and $r$,
+  \begin{equation*}
+    \PCP^{\P}[r \loglog n + t, q \log^j n] \subseteq \NP(\log^{r + j} n)
+  \end{equation*}
+\end{proposition}
+
+\begin{theorem}
+  \mbox{}
+  \begin{enumerate}
+  \item For all positive integers $k$ and $q$, we have $\NP(\log^k n) = \PCP^{\P}[k \loglog n + t, q]$ for some non-negative integer $t$ if and only if $\NP(\log^k n) = \P$.
+  \item $\NP(\polylog) = \PCP^{\P}[O(\loglog n), O(1)]$ if and only if $\NP(\polylog) = \P$.
+  \end{enumerate}
+\end{theorem}
+
+\begin{corollary}
+  \mbox{}
+  \begin{enumerate}
+  \item For all positive integers $k$ and $q$, if $\NP(\log^k n) = \PCP^{\P}[k \loglog n + t, q]$ for some non-negative integer $t$ then $\NP \subseteq \DTIME(2^{n^{\frac{1}{k}}})$.
+  \item If $\NP(\polylog) = \PCP^{\P}[O(\loglog n), O(1)]$ then $\NP \subseteq \SUBEXP$.
+  \end{enumerate}
+\end{corollary}
+
+We did not focus on this very important family of classes in this work because our motivation was progress toward probabilistically checkable proof systems for \P, and each class in the $\NP(\polylog)$ hierarchy trivially includes \P.
 
 \section{About this work}
 
