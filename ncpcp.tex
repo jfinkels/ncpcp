@@ -196,7 +196,7 @@ We adapt to our setting the analagous theorem and proof for the $\NP[\polylog]$ 
   For all positive integers $k$ and all positive integers $i$ and $j$ where $i < j$, if $\NNC^k(\log^i n) = \NNC^k(\log^j n)$ then $\NP \subseteq \DTIME(2^{n^{\frac{i}{j}}})$.
 \end{theorem}
 \begin{proof}
-  Since \textsc{Satisfiability} is complete for $\NP$ under deterministic polynomial time many-one reductions, it suffices to show a $2^{o(n)}$ time algorithm for \textsc{Satisfiability}.
+  Since \textsc{Satisfiability} is complete for $\NP$ under deterministic polynomial time many-one reductions, it suffices to show a $2^{n^{\frac{i}{j}}}$ time algorithm for \textsc{Satisfiability}.
 
   The proof uses a padding argument.
   First we observe that there is an $\NNC^1(n)$ machine, call it $M$, that decides \textsc{Satisfiability}: given a Boolean formula $\phi$, guess a satisfying assignment to $\phi$ (of length $O(n)$) and evaluate the formula (Boolean formula evaluation is in $\NC^1$ \cite{buss87}).
@@ -231,11 +231,10 @@ We adapt to our setting the analagous theorem and proof for the $\NP[\polylog]$ 
   \begin{align*}
     \NNC^k(\log^i{2^{n^{\frac{1}{j}}}}) & = \NNC^k(n^{\frac{i}{j}}) & \\
     & \subseteq \DSPACE(n^{\frac{i}{j}}) & \text{(by \autoref{lem:dspace})} \\
-    & \subseteq \DTIME(2^{n^{\frac{i}{j}}}) & \text{(by exhaustive search)} \\
-    & \subseteq \DTIME(2^{o(n)}) & \text{(because } i < j \text{).}
+    & \subseteq \DTIME(2^{n^{\frac{i}{j}}}) & \text{(by exhaustive search)}
   \end{align*}
   Hence the second step can be performed by a deterministic algorithm running in time $2^{n^{\frac{i}{j}}}$.
-  Therefore, this algorithm for \textsc{Satisfiability} can be implemented by a deterministic algorithm running in $2^{o(n)}$ time.
+  Therefore, this algorithm for \textsc{Satisfiability} can be implemented by a deterministic algorithm running in $2^{n^{\frac{i}{j}}}$ time.
 \end{proof}
 
 In the following corollary, the complexity class \SUBEXP{} is defined by
