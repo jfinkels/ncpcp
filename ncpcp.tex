@@ -615,11 +615,15 @@ The first lemma shows the equivalence of the first and second statements, the se
   Combine this with \autoref{prop:pcpinnnc} to achieve equality.
   In this case, we choose $t = 0$.
 
-  For the converse, suppose $L$ is a language in $\NNC^k(\log^d n)$.
-  By hypothesis, $L \in \PCP^{\NC^k}[d \loglog n + t, q]$ for some non-negative integer $t$.
-  Since $d \loglog n + t$ is in $O(\loglog n)$, we also have that $L \in \PCP^{\NC^k}[d' \loglog n, q]$ for some $d'$ greater than or equal to $d$.
-  By \autoref{lem:derandomize}, there exists a $t'$ such that $L \in \PCP^{\NC^k}[\loglog n + t', q]$.
-  Apply \autoref{cor:pcpinnnck} to conclude that $L \in \NC^k$.
+  For the converse, suppose $\NNC^k(\log^d n) = \PCP^{\NC^k}[d \loglog n + t, q]$.
+  Then we have
+  \begin{align*}
+    \NNC^k(\log^d n) & = \PCP^{\NC^k}[d \loglog n + t, q] \\
+    & \subseteq \PCP^{\NC^k}[d' \loglog n, q] & \text{(for some } d' \geq d \text{)} \\
+    & \subseteq \PCP^{\NC^k}[\loglog n + t', q] & \text{(by \autoref{lem:derandomize})} \\
+    & = \NC^k & \text{(by \autoref{cor:pcpinnnck})}.
+  \end{align*}
+  Thus $\NNC^k(\log^d n) = \NC^k$.
 \end{proof}
 
 \begin{lemma}\label{lem:constraintsnc}
