@@ -592,6 +592,8 @@ Using the soundness amplification from \autoref{lem:16} and the random walk from
   Therefore, $L \in \PCP^{\NC^k}[\lg \lg n + O(1), O(1)]$.
 \end{proof}
 
+Observe that we can allow less explicit expanders in the above proof, as long as the time required to compute the neighbor of each node is in $O(|V|^k)$, where $k$ is the depth of the $\NC$ circuit, but linear time certainly suffices.
+
 Using the derandomizations from \autoref{prop:pcpinnnc} and \autoref{lem:derandomize}, we can prove \autoref{thm:equiv}.
 We divide the proof of the theorem into several lemmata.
 The first lemma shows the equivalence of the first and second statements, the second lemma provides an \NC{} analog of \autoref{lem:constraintsp}, and the third shows the equivalence of the second and third statements.
