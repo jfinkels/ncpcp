@@ -73,6 +73,8 @@ We will denote by $\NC$ the union of all the $\NC^k$ classes.
 \begin{definition}
   For all functions $f, g \colon \mathbb{N} \to \mathbb{R}$, the function $f$ is in the class $O(g(n))$ if there exist real numbers $c$ and $N$ such that for all natural numbers $n$ we have $n > N$ implies $f(n) \leq c \cdot g(n)$.
   If $f(n) < c \cdot g(n)$ then $f(n)$ is in $o(g(n))$.
+  If $f(n) \geq c \cdot g(n)$ then $f(n)$ is in $\Omega(g(n))$.
+  If $f(n) > c \cdot g(n)$ then $f(n)$ is in $\omega(g(n))$.
 \end{definition}
 
 \begin{definition}[{{\cite[Definition~1.1]{dinur07}}}]
@@ -136,341 +138,80 @@ From the definition, we see immediately that
   \PCPcs{\mathcal{C}}{c(n)}{s{n}}{O(r(n))}{O(q(n))} = \bigcup_{a \in \mathbb{N}, b \in \mathbb{N}}{\PCPcs{\mathcal{C}}{c(n)}{s(n)}{a \cdot r(n)}{b \cdot q(n)}}.
 \end{equation*}
 
-\section{Nondeterministic \texorpdfstring{\NC}{NC} circuits and polynomial time}\label{sec:nnc}
+\section{Probabilistically checkable proofs for nondeterministic circuits}
 
-As stated in the introduction, we are motivated by the search for a reasonable model of a proof system for \P{} in which the verifier is an \NC{} circuit.
-Unlike \P{} and \NP{}, the classes \NC{} and \P{} are not related by definition.
-However, the analogous relationship does hold for \NC{} and a nondeterministic generalization of \NC{}.
-\begin{definition}
-  A \emph{nondeterministic gate} (or \emph{guess gate}) in a Boolean circuit is a gate with no inputs and one output.
-  A language $L$ is in $\NNC(f(n))$ if there exists an \NC{} circuit family $\left\{C_n\right\}_{n \in \mathbb{N}}$, each circuit $C_n$ augmented with $O(f(n))$ nondeterministic guess gates, such that $x \in L$ if and only if $C_n(x)$ accepts.
+First, consider the chain of inclusions
+\begin{equation*}
+  \NNC(\log n) \subseteq \NNC(\polylog) \subseteq \NNC(\poly).
+\end{equation*}
+In fact, $\NC = \NNC(\log n)$ and $\NNC(\poly) = \NP$ \cite{wolf94}, so we can rewrite this as
+\begin{equation}\label{eq:chain}
+  \NC \subseteq \NNC(\polylog) \subseteq \NP.
+\end{equation}
+In subsequent sections, we will show that $\NC = \PCP^\NC[O(\loglog n), O(1)]$ and $\PCP^\NC[O(\log n), O(1)] = \NP$, which together yield
+\begin{equation}\label{eq:pcpchain}
+  \PCP^\NC[O(\loglog n), O(1)] \subseteq \NNC(\polylog) \subseteq \PCP^\NC[O(\log n), O(1)].
+\end{equation}
+We first provide evidence that the inclusions in \autoref{eq:chain} are strict.
+From this and \autoref{eq:pcpchain}, we will infer that any restricted PCP characterization (with a constant number of proof queries) of $\NNC(\polylog)$ likely requires PCP verifiers that use $\omega(\loglog n)$ bits and $o(\log n)$ bits of randomness. Note that \P{} can replace $\NNC(\polylog)$ in any of the above inclusion chains, so the same conclusion holds for \P.
+(On the other hand, it is conjectured that \P{} and $\NNC(\polylog)$ are incomparable \cite{wolf94}.)
 
-  As an alternative definition, a language $L$ is in $\NNC(f(n))$ if there exists an \NC{} circuit family $\left\{C_N\right\}_{N \in \mathbb{N}}$ such that for all strings $x$ of length $n$, we have $x \in L$ if and only if there exists a constant $c$ and a witness $\pi$ of length $c \cdot f(n)$ such that $C_{n + c \cdot f(n)}(x, \pi)$ outputs 1.
-\end{definition}
-
-\begin{proposition}[\cite{wolf94}]\label{prop:nnc}
-  \mbox{}
-  \begin{enumerate}
-  \item $\NNC(\log n) = \NC$.
-  \item $\NNC(\poly) = \NP$, and specifically $\NP \subseteq \NNC^1(\poly)$.
-  \end{enumerate}
-\end{proposition}
-
-The above proposition suggests that $\NNC(\polylog)$, which resides between \NC{} and \NP, may have computational power roughly comparable to that of \P.
-In \cite{wolf94}, the author conjectures that $\NNC(\polylog)$ is incomparable with $\P$, in the sense that neither is a subset of the other.
-We can get some of idea of the relationship between $\NNC(\polylog)$ and $\P$ from the following theorems.
-
-\begin{lemma}[{\cite[Lemma~3.1 and Lemma~3.3]{wolf94}}]\label{lem:dspace}
-  For all $k, j \in \mathbb{Q}$ with $k \geq 1$ and $j \geq 1$,
-  \begin{enumerate}
-  \item $\NNC^k(\log^j n) \subseteq \DSPACE(\log^{\max(k, j)} n)$ and
-  \item $\NNC^k(n^j) \subseteq \DSPACE(n^j)$.
-  \end{enumerate}
-\end{lemma}
-
-$\NNC^k(\log^d n)$ has complete problems under logarithmic space many-one reductions \cite[Theorem~3.6]{cc97}, so that part of the hypothesis in item 2 of the next proposition makes sense.
-
-\begin{proposition}
-  For all integers $k$ and $d$,
-  \begin{enumerate}
-  \item if a language $L$ is hard for $\NNC^k(\log^d n)$ under $\leq_m^P$ reductions and $L \in \P$ then $\NNC^k(\log^d n) \subseteq \P$, and
-  \item if a language $L$ is hard for $\P$ under $\leq_m^{NC^k}$ reductions and $L \in \NNC^k(\log^d n)$ then $\P \subseteq \NNC^k(\log^d n)$.
-    Furthermore $\P \subsetneq \polyL$.
-  \end{enumerate}
-\end{proposition}
-\begin{proof}
-  A standard simulation argument proves both statements.
-  Since we have $\NNC^k(\log^d n) \subseteq \DSPACE(\log^m)$, where $m = \max(k, d)$, by \autoref{lem:dspace} and $\P \neq \polyL$ (by the Space Hierarchy Theorem), we conclude that $\P \subsetneq \polyL$.
-\end{proof}
-
-A natural next question is whether $\NNC(\log^k n) \subsetneq \NNC(\log^{k + 1} n)$.
-One way to make progress toward such a claim is to determine whether the $\NNC(\polylog)$ hierarchy exhibits the ``upward collapse'' (or equivalently, ``downward separation'') property.
-An upward collapse property for a hierarchy of complexity classes $\mathcal{C}_1 \subseteq \mathcal{C}_2 \subseteq \dotsb \subseteq \cup_k \mathcal{C}_k$ is a theorem of the form ``if $\mathcal{C}_k = \mathcal{C}_{k + 1}$ then $\mathcal{C}_k = \cup_{j > k} \mathcal{C}_j$'', where the conclusion of the implication is some collapse which is considered unlikely.
-For example, the polynomial hierarchy exhibits this property: if $\SKP = \SKPOP$ then $\SKP = \PH$.
-In fact, the (deterministic) $\NC^d$ hierarchy itself (that is, $\NC^1 \subseteq \NC^2 \subseteq \dotsb \subseteq \NC$) has this property \cite[Corollary~5]{wilson89}.
-Upward collapse can be seen as evidence that each of the inclusions in the hierarchy is strict.
-Unfortunately, there can be no relativizing proof that the $\NP(\polylog)$ hierarchy exhibits upward collapse \cite{bg94}, where $\NP(\polylog)$ is the polynomial time analog of $\NNC(\polylog)$.
-The same likely holds for $\NNC(\polylog)$ (\textbf{TODO show that a similar proof gives the same property for NNC(polylog).}...
-
-What we can say, however, is that a collapse in the $\NNC(\polylog)$ hierarchy corresponds to a subexponential time algorithm for \textsc{Satisfiability}.
-We adapt to our setting the analagous theorem and proof for the $\NP(\polylog)$ hierarchy found in \cite[Theorem~1]{dt90} (therein attributed to Beigel).
-\begin{theorem}\label{thm:collapse}
-  For all positive integers $k$ and all positive integers $i$ and $j$ where $i < j$, if $\NNC^k(\log^i n) = \NNC^k(\log^j n)$ then $\NP \subseteq \DTIME(2^{n^{\frac{i}{j}}})$.
+\begin{theorem}
+  If $\NC = \NNC(\polylog)$ or $\NNC(\polylog) = \NP$, then $\NP \subseteq \SUBEXP$.
 \end{theorem}
 \begin{proof}
-  Since \textsc{Satisfiability} is complete for $\NP$ under deterministic polynomial time many-one reductions, it suffices to show a $2^{n^{\frac{i}{j}}}$ time algorithm for \textsc{Satisfiability}.
+  If $\NNC(\polylog) = \NP$, then
+  \begin{align*}
+    \NP & \subseteq \NNC(\polylog) \\
+        & \subseteq \NNC(\log^k n), \text{for some } k & \text{(by definition)}\\
+        & \subseteq \DSPACE(\log^k n) & \text{(by \cite{wolf94})} \\
+        & \subseteq \DTIME(2^{\log^k n}) & \text{(by exhaustive search)} \\
+        & \subseteq \SUBEXP,
+  \end{align*}
+  where the last relation holds because $O(2^{\log^k n})$ is in $O(2^{n^\epsilon})$ for all (small) positive epsilon and for sufficiently large $n$.
+  Now suppose $\NC = \NNC(\polylog)$.
+  Since \textsc{Satisfiability} is complete for $\NP$ under deterministic polynomial time many-one reductions, it suffices to show a deterministic subexponential time algorithm for \textsc{Satisfiability}.
 
   The proof uses a padding argument.
   First we observe that there is an $\NNC^1(n)$ machine, call it $M$, that decides \textsc{Satisfiability}: given a Boolean formula $\phi$, guess a satisfying assignment to $\phi$ (of length $O(n)$) and evaluate the formula (Boolean formula evaluation is in $\NC^1$ \cite{buss87}).
-  Define $L'$, the padded version of \textsc{Satisfiability}, as
+  Let $\epsilon$ be an arbitrarily small positive constant, and define $L$, the padded version of \textsc{Satisfiability}, as
   \begin{equation*}
-    L = \left\{ \phi \# 1^P \, \middle| \, \phi \in \textsc{Satisfiability} \text{ and } P = 2^{n^\frac{1}{j}} - (n + 1) \right\},
+    L = \left\{ \phi \# 1^P \, \middle| \, \phi \in \textsc{Satisfiability} \text{ and } P = 2^{n^\epsilon} - (n + 1) \right\},
   \end{equation*}
   where $n = |\phi|$.
-  We claim $L$ is in $\NNC^k(\log^j n)$ by the following algorithm.
+  We claim $L$ is in $\NNC(\log^\frac{1}{\epsilon} n)$ by the following machine, $M_j$.
   On input $\phi'$, check that $\phi'$ is in the format $\phi \# 1^P$, then accept if and only if $M$ accepts $\phi$.
-  This algorithm, call it $M_j$, is correct if $M$ is correct (and it is), so it remains to check the size and depth of the circuit for $M_j$, and the amount of nondeterminism used.
+  The correctness of this algorithm follows from the correctness of $M$, so it remains to check the size and depth of the circuit for $M_j$, and the amount of nondeterminism used.
 
   Checking that $x'$ is in the correct format can be performed (deterministically) by an $\NC^0$ circuit by computing the conjunction of all the bits after the $\#$ symbol.
-  Observe now that $|x'| = 2^{n^{\frac{1}{j}}}$, so $n = \log^j{|x'|}$.
-  The amount of nondeterminism used by $M_j$ is the same as the amount used by $M$, which is $O(n)$, or $O(\log^j |x'|)$.
+  Observe now that $|x'| = 2^{n^\epsilon}$, so $n = \log^\frac{1}{\epsilon}{|x'|}$.
+  The amount of nondeterminism used by $M_j$ is the same as the amount used by $M$, which is $O(n)$, or $O(\log^\frac{1}{\epsilon} |x'|)$.
   The size of $M$ is polynomial in $n$, which is polylogarithmic in $|x'|$, and hence polynomial in the length of the input $x'$.
-  The depth of $M$ is $O(\log n)$, which is $O(\log \log^j |x'|)$, or simply $O(\log \log |x'|)$.
-  We conclude that the size of $M_j$ is polynomial in $|x'|$, the depth of $M_j$ is logarithmic in $|x'|$, and $M_j$ uses $O(\log^j |x'|)$ bits of nondeterminism.
-  Hence $L$ is in $\NNC^1(\log^j n)$, and more generally, in $\NNC^k(\log^j n)$.
+  The depth of $M$ is $O(\log n)$, which is $O(\log \log^\frac{1}{\epsilon} |x'|)$, or simply $O(\log \log |x'|)$.
+  We conclude that the size of $M_j$ is polynomial in $|x'|$, the depth of $M_j$ is logarithmic in $|x'|$, and $M_j$ uses $O(\log^\frac{1}{\epsilon} |x'|)$ bits of nondeterminism.
+  Hence $L$ is in $\NNC(\log^\frac{1}{\epsilon} n)$.
 
-  By hypothesis, $L$ is also in $\NNC^k(\log^i n)$.
-  Let $M_i$ be the $\NNC^k(\log^i n)$ machine that decides it.
+  By hypothesis, $L$ is also in $\NC$.
+  Let $M_i$ be the $\NC$ machine that decides it.
   We claim that we can now construct a subexponential time algorithm for \textsc{Satisfiability} on inputs $\phi$ of length $n$.
   \begin{enumerate}
-  \item Let $\phi' = \phi \# 1^P$, where $P = 2^{n^{\frac{1}{j}}} - (n + 1)$.
+  \item Let $\phi' = \phi \# 1^P$, where $P = 2^{n^\epsilon} - (n + 1)$.
   \item Accept if and only if $M_i$ accepts $\phi'$.
   \end{enumerate}
   The correctness of this algorithm follows immediately from the correctness of $M_i$.
-  The first step can be performed by a deterministic algorithm running in time $2^{n^{\frac{1}{j}}}$.
-  The second step can be performed by an $\NNC^k(\log^i n)$ algorithm on inputs of length $n$.
-  However, the length of the input to $M_i$ is actually $2^{n^{\frac{1}{j}}}$, so
-  \begin{align*}
-    \NNC^k(\log^i{2^{n^{\frac{1}{j}}}}) & = \NNC^k(n^{\frac{i}{j}}) & \\
-    & \subseteq \DSPACE(n^{\frac{i}{j}}) & \text{(by \autoref{lem:dspace})} \\
-    & \subseteq \DTIME(2^{n^{\frac{i}{j}}}) & \text{(by exhaustive search)}
-  \end{align*}
-  Hence the second step can be performed by a deterministic algorithm running in time $2^{n^{\frac{i}{j}}}$.
-  Therefore, this algorithm for \textsc{Satisfiability} can be implemented by a deterministic algorithm running in $2^{n^{\frac{i}{j}}}$ time.
+  The first step can be performed by a deterministic algorithm running in time $2^{n^\epsilon}$.
+  The second step can be performed by an $\NC$ machine.
+  Since $\NC \subseteq \P$, and $2^{n^\epsilon}$ is greater than any polynomial for sufficiently large $n$, the first step is the bottleneck in this algorithm.
+  Therefore, this algorithm for \textsc{Satisfiability} can be implemented by a deterministic algorithm running in $O(2^{n^\epsilon})$ time for arbitrarily small $\epsilon$.
 \end{proof}
 
-In the following corollary, the complexity class \SUBEXP{} is defined by
-\begin{equation*}
-  \SUBEXP = \bigcap_{\epsilon > 0}{\DTIME(2^{n^{\epsilon}})}.
-\end{equation*}
+Next we turn to the restricted PCP characterizations for \NC{} and \NP{}.
 
-\begin{corollary}\label{cor:collapse}
-  If $\NNC(\polylog) = \NC$ then $\NP \subseteq \SUBEXP$.
-\end{corollary}
-\begin{proof}
-  Since $\NNC(\polylog) = \cup_{j \in \mathbb{N}}{\NNC(\log^j n)}$ by definition, $\NC = \NNC(\log n)$ by \autoref{prop:nnc}, and $\NNC(\polylog) = \NC$ by hypothesis, the result follows immediately from the previous theorem.
-\end{proof}
+\subsection{Restricted PCP characterization of \texorpdfstring{\NC}{NC}}
 
-This theorem and corollary will be used after proving \autoref{thm:equiv} to provide evidence that the techniques used to construct a PCP characterization of $\NP$ likely do not translate to providing a similar characterization for $\NNC(\polylog)$.
-
-\section{Probabilistically checkable proofs for \texorpdfstring{\NP}{NP}}
-
-We begin our study of probabilistically checkable proofs for efficiently decidable languages by recalling some of the basic techniques from the study of probabilistically checkable proofs for efficiently verifiable languages.
-The celebrated ``PCP Theorem'' can be stated as follows.
-
-\begin{theorem}[PCP Theorem]
-  $\NP = \PCP^\P[O(\log n), O(1)]$.
-\end{theorem}
-
-The proof has two parts, one easy and one hard.
-The following lemma proves the easy part.
-
-\begin{lemma}\label{lem:pcpinnp}
-  $\PCP^\P[O(\log n), O(1)] \subseteq \NP$.
-\end{lemma}
-\begin{proof}
-  Let $L \in \PCP^\P[O(\log n), O(1)]$, so there exists a polynomial time PCP verifier $V$ subject to the appropriate restrictions.
-  Construct a nondeterministic Turing machine $N$ as follows.
-
-  On input $x$, nondeterministically guess a proof string $\pi$ of length $2^{r \log n + \log q}$, where $q$ and $r$ are the appropriate constants for the language $L$.
-  Enumerate each ``random'' string $\rho$ of length $r \log  n$, and for each $\rho$, simulate $V$ on input $x$, proof string $\pi$, and random string $\rho$.
-  If $V$ accepts in at least half of the simulations, then accept; otherwise reject.
-
-  This machine uses a polynomial amount of nondeterminism, runs in polynomial time (due to the fact that $V$ runs in polynomial time, and counting the number of accepting simulations can also be performed efficiently) and accepts exactly when at least half of the instances of $V(x, \pi; \rho)$ accept.
-  Therefore $x \in L$ if and only $N$ accepts $x$, and we have $L \in \NP$.  
-\end{proof}
-
-The hard part uses the following ``inapproximability'' view of the PCP Theorem.
-\begin{proposition}[{{\cite[Theorem~1.3]{dinur07}}}]\label{prop:equivalence}
-  The following are equivalent.
-  \begin{enumerate}
-  \item $\NP \subseteq \PCP^\P[O(\log n), O(1)]$.
-  \item There exists an integer $q$, with $q > 1$, such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is \NP-hard.
-  \end{enumerate}
-\end{proposition}
-
-Before proving this proposition, we provide one part of it as a separate lemma, because it will be of use in later theorems.
-
-\begin{lemma}\label{lem:constraintsp}
-  If $L \in \PCP^\P[O(\log n), O(1)]$ then there is a $\leq_m^P$ reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}, for some integer $q$ greater than 1.
-\end{lemma}
-\begin{proof}
-  Let $L$ be a language in $\PCP^\P[O(\log n), O(1)]$.
-  Let $V$ be the polynomial time PCP verifier for $L$ which uses $r \log n$ bits of randomness and queries $q$ bits of the proof string, for some constants $r$ and $q$.
-  Consider the Cook-Levin transformation of the operation of $V$ into a Boolean circuit; the circuit will have input variables representing the bits of the input $x$, the bits of the random string $\rho$, and the bits of the proof string $\pi$.
-  For each fixed input $x$ of length $n$ and each fixed $\rho \in \Sigma^{r \log n}$, simplify the circuit based on the values (that is, the 0s and 1s) of the variables corresponding to $x$ and the variables corresponding to $\rho$ into a Boolean function (also called a Boolean constraint) which depends only on the bits of the proof string $\pi$.
-  Let $\phi_{x, \rho}$ be that Boolean constraint; note that it depends only on $q$ Boolean variables.
-  Let $U_{x, \rho}$ be the variables corresponding to the bits of the proof string $\pi$ queried by $V$ on input $x$ and random string $\rho$.
-
-  Now we construct a reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}.
-  Define the reduction $f$ by $f(x) = (\Gamma, U, D)$, where
-  \begin{align*}
-    \Gamma & = \{0, 1\}, \\
-    U & = \bigcup_{\rho \in \Sigma^{r \log n}}{U_{x, \rho}}, \text{ and} \\
-    D & = \left\{\phi_{x, \rho}\right\}_{\rho \in \Sigma^{r \log n}}.
-  \end{align*}
-  $f(x)$ is polynomial time computable (there are $qn^r$ variables in $U$ and $n^r$ constraints in $D$, both polynomials in $n$).
-  By the correctness of the Cook-Levin reduction and by the completeness and soundness of the PCP verifier if $x \in L$ then there exists a $\pi$ such that for all strings $\rho$, we have $V(x, \rho; \pi)$ accepts and hence all the constraints are satisfiable.
-  Furthermore, if $x \notin L$ then for all $\pi$, on less than half of the strings $\rho$ will $V(x, \pi; \rho)$ accept, so less than half of the constraints will be satisfiable.
-  Therefore we have shown a correct polynomial time reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}.
-\end{proof}
-
-\begin{proof}[Proof of \autoref{prop:equivalence}]
-  One direction of the equivalence follows immediately from the inclusion in the hypothesis and from \autoref{lem:constraintsp}.
-  Thus it suffices to prove the converse implication.
-  Suppose \textsc{$\frac{1}{2}$-gap $q$-CSP} is \NP-hard for some $q$ greater than 1.
-  Let $L$ be a language in \NP.
-  By hypothesis there exists a (deterministic) polynomial time computable reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}.
-  Construct the PCP verifier as follows.
-  \begin{enumerate}
-  \item Compute the reduction to produce a set of constraints.
-  \item Use $O(\log n)$ random bits to choose a constraint uniformly at random.
-  \item Check that the constraint is satisfied by querying the proof string at the appropriate locations (the locations corresponding to the $q$ variables in the constraint).
-  \end{enumerate}
-
-  If $x \in L$ then all constraints are satisfiable, so there exists an assignment such that the verifier will accept on all random choices of the constraint.
-  If $x \notin L$ then fewer than half of the constraints are satisfiable, so for any assignment the probability that the verifier will select a satisfied constraint is less than half.
-  Therefore we have shown a correct PCP verifier with the appropriate parameters for an arbitrary language in \NP.
-\end{proof}
-With this equivalence, we can reduce the problem of showing that $\NP \subseteq \PCP^\P[O(\log n), O(1)]$ to the problem of showing that \textsc{$\frac{1}{2}$-gap $q$-CSP} is \NP-hard.
-An almost entirely combinatoric approach can solve the latter problem \cite{dinur07}.
-
-We will scale down the techniques from the proofs of \autoref{lem:pcpinnp} and \autoref{prop:equivalence} to prove analogous results in \autoref{sec:nncinpcp} and \autoref{sec:pcpinnnc}, respectively.
-
-\section{Nondeterministic \texorpdfstring{\NC}{NC} circuits for probabilistically checkable proof systems}\label{sec:nncinpcp}
-
-As stated in the introduction, our motivation is to characterize \P{} using PCP classes which are more restrictive than the ones defined in the traditional way, and our first attempt at such a characterization involves the use $\NNC(\polylog)$ in place of \P.
-We hope to use such a characterization for applications to inapproximability in the realm of optimization problems whose corresponding decision problems are \P-complete, but which admit a ``good'' highly parallel approximation.
-In this work, ``highly parallel'' algorithms are implementable by \NC{} circuit families.
-A \P-complete problem, that is, a problem for which no highly parallel algorithm exists unless $\P = \NC$, is called ``inherently sequential''.
-
-Now that we have the basic notions of both nondeterministic circuits and PCP characterizations of nondeterministic complexity classes, we can return to our search for a restricted PCP characterization for $\NNC$ circuits.
-Following the proof of \autoref{lem:pcpinnp}, we show the following inclusion.
-\begin{proposition}\label{prop:pcpinnnc}
-  For all non-negative integers $j$ and $t$, all positive integers $k$, and all positive rationals $q$ and $r$,
-  \begin{equation*}
-    \PCP^{\NC^k}[r \loglog n + t, q \log^j n] \subseteq \NNC^k(\log^{r + j} n).
-  \end{equation*}
-\end{proposition}
-\begin{proof}
-  Let $L \in \PCP^{\NC^k}[r \loglog n + t, q \log^j n]$.
-  Let $V$ be the PCP verifier for $L$ which, on input $x$ of length $n$, proof string $\pi$, and random string $\rho$, makes at most $q \log^j n$ (nonadaptive) queries to the proof string and uses at most $r \loglog n + t$ random bits, and which satisfies
-  \begin{enumerate}
-  \item if $x \in L$, then there exists a $\pi$ of length $2^{r \loglog n + t} \cdot q \log^j n$ such that
-    \begin{equation*}
-      \Pr_{\rho \in \Sigma^{r \loglog n + t}}{\left[V(x, \pi; \rho) \textnormal{ accepts}\right]} = 1,
-    \end{equation*}
-    and
-  \item if $x \notin L$, then for all $\pi$ of length $2^{r \loglog n + t} \cdot q \log^j n$,
-    \begin{equation*}
-      \Pr_{\rho \in \Sigma^{r \loglog n + t}}{\left[V(x, \pi; \rho) \textnormal{ accepts}\right]} < \frac{1}{2}.
-    \end{equation*}
-  \end{enumerate}
-  Our goal is to construct a $\NNC^k(\log^{r + j} n)$ machine which accepts $x$ if and only if $x \in L$ by simulating the PCP verifier $V$.
-
-  Define the $\NNC^k(\log^{r + j} n)$ machine $M$ as follows on input $x$ of length $n$:
-  \begin{enumerate}
-  \item Guess a proof string $\pi$ of length $2^{r \loglog n + t} \cdot q \log^j n$.
-  \item For each $\rho$ of length $r \loglog n + t$ \emph{in parallel}, simulate $V(x, \pi; \rho)$ and let $b_\rho$ be its output bit (that is, 1 if $V$ accepts and 0 if $V$ rejects).
-  \item Let $B$ equal the sum of the output bits for each of the above simulations, and let $B_0 = \frac{1}{2} 2^{r \loglog n + t}$.
-  \item Accept if and only if $B \geq B_0$.
-  \end{enumerate}
-
-  First we show that $M$ can be implemented on a polynomial number of processors with parallel running time $\log^k n$ and with at most $O(\log^{j + r} n)$ nondeterministic gates.
-  $M$ uses exactly $2^{r \loglog n + t}\cdot q \log^j n$ nondeterministic gates (all in the first step), or more simply, $\log^r n \cdot 2^t q \log^j n$, which is in $O(\log^{j + r} n)$.
-  In step 2, $M$ runs $2^{r \loglog n + t}$, or more simply $2^t \log^r n$ (which is bounded above by a polynomial in $n$), instances of $V$ in parallel; the parallel running time of $V$ itself is $O(\log^k)$, so the parallel running time of this step in $M$ is the same.
-  In step 3, $M$ computes the sum of $2^{r \loglog n + t}$ numbers, or more simply $2^t \log^r n$ numbers (each a single bit, so the total size of $B$ is $\log 2^t \log^r n$, which equals $r \loglog n + t$), and computes the value of $\frac{1}{2} 2^{r \loglog n + t}$, or $\frac{1}{2} 2^t \log^r n$.
-  The sum of $2^t \log^r n$ numbers can be computed by an \NC{} circuit of size $O(\log^r n)$ and depth $O(r \loglog n)$ \cite[Theorem~2.6.1]{savage98}.
-
-  Now we show the correctness of $M$.
-  If $x \in L$, then all instances of $V$ accept, so $B = 2^t \log^r n \geq \frac{1}{2} 2^t \log^r n = B_0$, and hence $M$ accepts.
-  If $x \notin L$, then fewer than half of the instances of $V$ accept, so $B < \frac{1}{2} 2^t \log^r n = B_0$, and hence $M$ rejects.
-  Therefore we have shown that $M$ is a correct algorithm for $L$ which uses a polynomial number of processors, has $O(\log^k n)$ running time, and uses $O(\log^{j + r} n)$ nondeterministic gates.
-  This concludes the proof.
-\end{proof}
-
-Note that there is some slack in this proof.
-A polylogarithmic number of simulations of $V$ are being run in parallel, but an \NNC{} circuit could accomodate a polynomial number of simulations.
-The number of simulations depends on the length of the random string $\rho$.
-Since we will be interested only in the subclasses of $\NNC(\polylog)$, there must also be a polylogarithmic upper bound on the number of nondeterministic gates required, and hence the length of $\rho$ must be in $O(\loglog n)$.
-
-\begin{corollary}\label{cor:pcpinnnck}
-  For all $k \in \mathbb{N}$ with $k \geq 1$,
-  \begin{enumerate}
-  \item $\PCP^{\NC^k}[0, O(\log n)] = \NNC^k(\log n) = \NC^k$,
-  \item $\PCP^{\NC^k}[\loglog n + t, O(1)] = \NNC^k(\log n) = \NC^k$ for all non-negative integers $t$, and
-  \item $\PCP^{\NC^k}[O(\loglog n), O(\polylog)] \subseteq \NNC^k(\polylog)$.
-  \end{enumerate}
-\end{corollary}
-
-\begin{corollary}\label{cor:pcpinnnc}
-  \mbox{}
-  \begin{enumerate}
-  \item $\PCP^{\NC}[0, O(\log n)] = \NNC(\log n) = \NC$,
-  \item $\PCP^{\NC}[\loglog n + t, O(1)] = \NNC(\log n) = \NC$ for all non-negative integers $t$, and
-  \item $\PCP^{\NC}[O(\loglog n), O(\polylog)] \subseteq \NNC(\polylog)$.
-  \end{enumerate}
-\end{corollary}
-
-\begin{corollary}
-  For all $j \in \mathbb{N}$ with $j \geq 1$, for all $k \in \mathbb{N}$ with $k \geq 1$, and for all positive rationals $q$ and $r$,
-  \begin{equation*}
-    \PCP^{\NC^k}[r \loglog n, q \log^j n] \subseteq \DSPACE(O(\log^{\max(k, r + j)} n)).
-  \end{equation*}
-
-  Furthermore,
-  \begin{equation*}
-    \PCP^{\NC}[O(\loglog n), O(\polylog)] \subseteq \polyL.
-  \end{equation*}
-\end{corollary}
-
-\section{Probabilistically checkable proof systems for nondeterministic \texorpdfstring{\NC}{NC} circuits}\label{sec:pcpinnnc}
-
-In the previous section we showed a simulation of a PCP verifier by an \NNC{} circuit.
-Our experience with the PCP Theorem and polynomial time verifiers for proabilistically checkable proofs initially led us to conjecture that there is a PCP simulation for \NNC{} circuits.
-However, we instead show evidence that such an equality seems unlikely.
-
-\begin{theorem}\label{thm:equiv}
-  For all $k \in \mathbb{N}$ with $k \geq 1$ (\textbf{TODO can this be k = 1?}), and for all positive rationals $q$ and $d$, the following are equivalent.
-  \begin{enumerate}
-  \item $\NNC^k(\log^d n) = \NC^k$.
-  \item $\NNC^k(\log^d n) = \PCP^{\NC^k}[d \loglog n + t, q]$ for some non-negative integer $t$.
-  \item There is a positive integer $c$ with $c > 1$ such that \textsc{$\frac{1}{2}$-gap $c$-CSP} is hard for $\NNC^k(\log^d n)$ under $\leq_m^{NC^k}$ reductions that produce instances with $O(\log^d n)$ variables and $O(\log^d n)$ constraints.
-  \end{enumerate}
-\end{theorem}
-
-We postpone the proof of this theorem and first examine the consequences of this equivalence.
-The techniques used to prove this theorem immediately imply the following corollary.
-
-\begin{corollary}
-  The following are equivalent.
-  \begin{enumerate}
-  \item $\NNC(\polylog) = \NC$.
-  \item $\NNC(\polylog) = \PCP^{\NC}[O(\loglog n), O(1)]$.
-  \item \textsc{$\frac{1}{2}$-gap $c$-CSP} is hard for $\NNC(\polylog)$ under $\leq_m^{NC}$ reductions that produce instances with $O(\polylog)$ variables and $O(\polylog)$ constraints, where $c$ is some integer greater than 1.
-  \end{enumerate}
-\end{corollary}
-
-If the $\NNC(\polylog)$ hierarchy exhibited an upward collapse property, then we could immediately improve \autoref{thm:equiv} to state that $\NNC^k(\polylog) = \NC^k$ if and only if $\NNC^k(\log^d n) = \PCP^{\NC^k}[d \loglog n + t, q]$.
-Unfortunately, following the discussion at the end of \autoref{sec:nnc}, any proof of such an upward collapse must be non-relativizing, so we cannot currently make that claim.
-\textbf{TODO check that this is true.}
-Still, we can state the following consequence of this PCP characterization for $\NNC(\polylog)$.
-\begin{corollary}
-  \mbox{}
-  \begin{enumerate}
-  \item If $\NNC^k(\log^d) = \PCP^{\NC^k}[d \loglog n + t, q]$ for some non-negative integer $t$ and some positive integer $q$, then $\NP \subseteq \DTIME(2^{n^{\frac{1}{d}}})$.
-  \item If $\NNC(\polylog) = \PCP^{\NC}[O(\loglog n), O(1)]$, then $\NP \subseteq \SUBEXP$.
-  \end{enumerate}
-\end{corollary}
-\begin{proof}
-  The first implication follows immediately from the previous theorem and \autoref{thm:collapse}, and the second from \autoref{cor:collapse}.
-\end{proof}
-
-Now, in order to prove the equivalence in \autoref{thm:equiv}, we require the \NC{} analog of \autoref{prop:equivalence}, as well as some derandomization techniques.
-Some of the theorems below are \NC{} analogs of results from \cite{fs96}.
-We adapt the authors' presentation of derandomization using constant degree spectral expanders.
-With this derandomization, we will show a simulation of $O(\loglog n)$ bits of randomness by $\loglog n + O(1)$ bits of randomness.
-The derandomization requires a very explicit constant degree spectral expander.
+The strategy for proving that $\NC = \PCP^\NC[O(\loglog n), O(1)]$ is to simulate the $O(\loglog n)$ bits of randomness using only $\loglog n + t$ bits, which can then be enumerated by an $\NC$ machine.
+We adapt to the \NC{} setting the derandomization using constant degree spectral expanders from \cite{fs96}.
+The derandomization requires a fully explicit constant degree spectral expander.
 
 \begin{definition}
   Suppose $d$ and $n$ are positive integers and $\lambda$ is a real number in the interval $(0, 1)$.
@@ -482,19 +223,20 @@ The motivation behind the above definition is that the gap between the largest a
 Since we are concerned about the computational efficiency of such a random walk, it is important that computing the step from one vertex to the next can be performed quickly.
 
 \begin{definition}
-  We say a constant degree spectral expander with vertex set $V$ is \emph{very explicit} if each neighbor of a vertex can be computed in $O(\log |V|)$ time.
-  (Compare this with the definition of a \emph{fully explicit} expander, in which the neighbor can be computed in time polynomial in $\log |V|$.)
+  We say a constant degree spectral expander with vertex set $V$ is \emph{fully explicit} if each neighbor of a vertex can be computed in time polynomial in $O(\log |V|)$.
 \end{definition}
 
-Infinite families of very explicit constant degree spectral expanders exist; for example, the construction due to Gabber and Galil \cite{gg79} satisfies the definition.
+Infinite families of fully explicit constant degree spectral expanders exist; for example, the construction due to Gabber and Galil \cite{gg79} satisfies the definition.
 
 \begin{lemma}[{\cite{aks87}}]\label{lem:expander}
   Let $\mathcal{G}$ be an infinite family of constant degree spectral expanders and let $G_n \in \mathcal{G}$.
   For each subset $C$ of $V(G_n)$ with $|C| \leq \frac{|V(G_n)|}{16}$ there exists a constant $c$ such that for all positive integers $\kappa$, the probability that each $c$th step of a random walk on $G$ of length $\kappa c$ is in $C$ is at most $\frac{1}{2^\kappa}$.
 \end{lemma}
 
+We omit the proof of the above lemma because it is not relevant to the discussion.
+
 \begin{lemma}\label{lem:badsubset}
-  Let $L \in \PCPcs{\NC^k}{1}{\frac{1}{16}}{\alpha \loglog n}{O(1)}$ for some integer $\alpha$ greater than 1, and let $V$ be the corresponding PCP verifier.
+  Let $L \in \PCPcs{\NC}{1}{\frac{1}{16}}{\alpha \loglog n}{O(1)}$ for some integer $\alpha$ greater than 1, and let $V$ be the corresponding PCP verifier.
   Let $\ell = 2^{\loglog n}$.
   Let $x$ be a binary string of length $n$.
   Let $b(i)$ denote the binary representation of the non-negative integer $i$.
@@ -518,28 +260,21 @@ Infinite families of very explicit constant degree spectral expanders exist; for
 By using a constant number of independent simulations of a PCP verifier, we can achieve any constant soundness probability.
 
 \begin{lemma}\label{lem:16}
-  For all positive integers $k$, we have
-  \begin{equation*}
-    \PCPcs{\NC^k}{1}{\frac{1}{2}}{O(\loglog n)}{O(1)}
-    \subseteq
-    \PCPcs{\NC^k}{1}{\frac{1}{16}}{O(\loglog n)}{O(1)}.
-  \end{equation*}
+  $\PCPcs{\NC}{1}{\frac{1}{2}}{O(\loglog n)}{O(1)} \subseteq \PCPcs{\NC}{1}{\frac{1}{16}}{O(\loglog n)}{O(1)}$.
 \end{lemma}
 
 Using the soundness amplification from \autoref{lem:16} and the random walk from \autoref{lem:expander}, we can show how to simulate $O(\loglog n)$ bits of randomness with only $\loglog n + O(1)$ bits.
-%% TODO use a generic pseudorandom generator here
+%% TODO use a generic pseudorandom generator here?
 
 \begin{lemma}[{\cite[Lemma~4]{fs96}}]\label{lem:derandomize}
-  For all integers $k$ where $k \geq 1$, we have
   \begin{equation*}
-    \PCP^{\NC^k}[O(\loglog n), O(1)]
-    \subseteq
-    \PCP^{\NC^k}[\loglog n + O(1), O(1)].
+    \PCP^\NC[O(\loglog n), O(1)] = \PCP^\NC[\loglog n + O(1), O(1)].
   \end{equation*}
 \end{lemma}
 \begin{proof}
-  Let $L \in \PCPcs{\NC^k}{1}{\frac{1}{2}}{O(\loglog n)}{O(1)}$.
-  By \autoref{lem:16}, we know $L$ is also in $\PCPcs{\NC^k}{1}{\frac{1}{16}}{O(\loglog n)}{O(1)}$.
+  One inclusion follows immediately from the definitions.
+  For the other, let $L \in \PCP^\NC[O(\loglog n), O(1)]$.
+  By \autoref{lem:16}, we know that $L$ is also in $\PCPcs{\NC}{1}{\frac{1}{16}}{O(\loglog n)}{O(1)}$.
   This means there exists a $(\alpha \loglog n, q, 1, \frac{1}{16})$-PCP verifier $V$ for $L$, for some positive rational $\alpha$ and positive integer $q$.
   We assume without loss of generality that $\alpha > 1$; if $\alpha \leq 1$ the statement is immediately true.
   Our goal is to construct a $(\loglog n + t, O(1), 1, \frac{1}{2})$-PCP verifier $V'$ for $L$, for some constant integer $t$.
@@ -548,7 +283,7 @@ Using the soundness amplification from \autoref{lem:16} and the random walk from
   Interpret $\rho$ as $\rho_1 \circ \rho_2$, where $|\rho_1| = \loglog n$ and $|\rho_2| = t$.
 
   Intuitively, the verifier $V'$ that we construct will simulate $\alpha \loglog n$ random bits with only $\loglog n + t$ random bits by using a random walk on an expander graph.
-  Let $\ell = 2^{\loglog n}$ and let $G_\ell$ be a $d$-regular very explicit spectral expander on $\ell$ vertices, for some positive integer $d$.
+  Let $\ell = 2^{\loglog n}$ and let $G_\ell$ be a $d$-regular fully explicit spectral expander on $\ell$ vertices, for some positive integer $d$.
   Let $C$ be the subset of vertices guaranteed by \autoref{lem:badsubset}.
   Observe that the cardinality of $C$ is less than $\frac{|V(G_\ell)|}{16}$.
   By \autoref{lem:expander} there is a constant $c$ such that the probability that a random walk of length $\alpha c$ on $G_\ell$ arrives at a vertex in $C$ on every $c$th step is at most $\frac{1}{2^\alpha}$.
@@ -567,11 +302,11 @@ Using the soundness amplification from \autoref{lem:16} and the random walk from
   Thus $V'$ uses $\loglog n + \alpha c \log d$ random bits in total; now we define $t$ to be $\alpha c \log d$, a constant independent of $n$.
   Since $V'$ only accesses the proof string $\pi$ via the simulation of $V$, the verifier $V'$ queries exactly the same number of bits of the proof string as does the verifier $V$.
 
-  Performing a single step in a very explicit expander takes $O(|V(G_\ell)|)$ time.
-  Thus, performing a random walk of length $\alpha c$ takes $O(\alpha c |V(G_\ell)|)$ time.
-  Since $G_\ell$ has exactly $2^{\loglog n}$, or more simply $\log n$, vertices, the total computation time for the random walk is $O(\alpha c \log n)$, which is in $O(\log n)$.
-  Since $V$ is an $\NC^k$ algorithm, the simulation of $V$ can be performed by a polynomial size, $O(\log^k n)$ depth circuit.
-  Therefore the overall time required by $V'$ is $O(\log n) + O(\log^k n)$, which is in $O(\log^k n)$ for all $k \geq 1$.
+  Performing a single step in a fully explicit expander takes $p(|V(G_\ell)|)$ time for some polynomial $p$.
+  Thus, performing a random walk of length $\alpha c$ takes $p(\alpha c |V(G_\ell)|)$ time.
+  Since $G_\ell$ has exactly $2^{\loglog n}$, or more simply $\log n$, vertices, the total computation time for the random walk is $O(p(\alpha c \log n))$, which is polylogarithmic in $n$.
+  Since $V$ is an $\NC$ algorithm, the simulation of $V$ can be performed by a polynomial size, polylogarithmic depth circuit.
+  Therefore the overall time required by $V'$ is polylogarithmic in $n$.
 
   Now we show that $V'$ achieves the necessary completeness and soundness error bounds.
   Let $x$ be a string of length $n$, and $\pi$ be any sufficiently long proof string.
@@ -590,106 +325,78 @@ Using the soundness amplification from \autoref{lem:16} and the random walk from
   where each $v_{i_{jc}}$ is a vertex on the random walk $(v_{i_1}, \dotsc, v_{i_{\alpha c}})$ from which $s$ is derived.
   This probability is at most $\frac{1}{2^\alpha}$ by \autoref{lem:expander}, which is strictly less than $\frac{1}{2}$ because $\alpha > 1$.
 
-  To summarize, we have shown that $V'$ uses exactly $\loglog n + \alpha c \log d$ bits of randomness, makes $O(1)$ queries to the proof string, can be implemented by an $\NC^k$ circuit, and has completeness 1 and soundness $\frac{1}{2}$.
-  Therefore, $L \in \PCP^{\NC^k}[\loglog n + O(1), O(1)]$.
+  To summarize, we have shown that $V'$ uses exactly $\loglog n + \alpha c \log d$ bits of randomness, makes $O(1)$ queries to the proof string, can be implemented by an $\NC$ circuit, and has completeness 1 and soundness $\frac{1}{2}$.
+  Therefore, $L \in \PCP^\NC[\loglog n + O(1), O(1)]$.
 \end{proof}
 
-Observe that we can allow less explicit expanders in the above proof, as long as the time required to compute the neighbor of each node is in $O(|V|^k)$, where $k$ is the depth of the $\NC$ circuit, but linear time certainly suffices.
+Now that we have a restricted PCP verifier using only $\loglog n + O(1)$ bits of randomness, we show how an \NC{} machine can enumerate all possible random strings.
 
-Using the derandomizations from \autoref{prop:pcpinnnc} and \autoref{lem:derandomize}, we can prove \autoref{thm:equiv}.
-We divide the proof of the theorem into several lemmata.
-The first lemma shows the equivalence of the first and second statements, the second lemma provides an \NC{} analog of \autoref{lem:constraintsp}, and the third shows the equivalence of the second and third statements.
-
-\begin{lemma}\label{lem:1}
-  For all positive integers $k$ and all non-negative rationals $d$, we have $\NNC^k(\log^d n) = \NC^k$ if and only if there is a non-negative integer $t$ such that $\NNC^k(\log^d n) = \PCP^{\NC^k}[d \loglog n + t, q]$.
+\begin{lemma}\label{lem:pcpinnnc}
+  $\PCP^\NC[\loglog n + O(1), O(1)] = \NC$.
 \end{lemma}
 \begin{proof}
-  First, suppose $\NNC^k(\log^d n) = \NC^k$.
-  Then we have
-  \begin{equation*}
-    \NNC^k(\log^d n)
-    = \NC^k
-    = \PCP^{\NC^k}[0, 0]
-    \subseteq \PCP^{\NC^k}[d \loglog n, q].
-  \end{equation*}
-  Combine this with \autoref{prop:pcpinnnc} to achieve equality.
-  In this case, we choose $t = 0$.
-
-  For the converse, suppose $\NNC^k(\log^d n) = \PCP^{\NC^k}[d \loglog n + t, q]$.
-  Then we have
-  \begin{align*}
-    \NNC^k(\log^d n) & = \PCP^{\NC^k}[d \loglog n + t, q] \\
-    & \subseteq \PCP^{\NC^k}[d' \loglog n, q] & \text{(for some } d' \geq d \text{)} \\
-    & \subseteq \PCP^{\NC^k}[\loglog n + t', q] & \text{(by \autoref{lem:derandomize})} \\
-    & = \NC^k & \text{(by \autoref{cor:pcpinnnck})}.
-  \end{align*}
-  Thus $\NNC^k(\log^d n) = \NC^k$.
-\end{proof}
-
-\begin{lemma}\label{lem:constraintsnc}
-  Suppose $d$ and $t$ are non-negative integers.
-  Let $L$ be a language in $\PCP^{\NC^k}[d \loglog n + t, O(1)]$.
-  Then there is a $\leq_m^{NC^k}$ reduction from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}, for some integer $q$ greater than 1.
-  Furthermore, the reduction yields $O(\log^d n)$ variables and $O(\log^d n)$ constraints on inputs of length $n$.
-\end{lemma}
-\begin{proof}
-  The proof is similar to the proof of \autoref{lem:constraintsp}; the only difference is in the length of the random string $\rho$, and hence the size of the output of the reduction.
-  Since the verifier $V$ now uses only $d \loglog n + t$ bits of randomness, the reduction enumerates (in parallel) each of the $2^{d \loglog n + t}$ possible random strings of length $d \loglog n + t$, instead of the $2^{r \log n}$ possible strings of length $r \log n$.
-  Observe that the number of variables must be $q 2^{d \loglog n + t}$, which equals $q 2^t \log^d n$, and the number of constraints is $2^t \log^d n$, both members of $O(\log^d n)$.
-\end{proof}
-
-\begin{lemma}\label{lem:2}
-  For all positive integers $k$ and all non-negative rationals $d$, $\NNC^k(\log^d n) = \PCP^{\NC^k}[d \loglog n + t, q]$ for some non-negative integer $t$ if and only if there exists an integer $c$ with $c > 1$ such that \textsc{$\frac{1}{2}$-gap $c$-CSP} is hard for $\NNC^k(\log^d n)$ under $\leq_m^{NC^k}$ reductions that produce instances with $O(\log^d n)$ variables and $O(\log^d n)$ constraints.
-\end{lemma}
-\begin{proof}
-  One direction of the equivalence follows immediately \autoref{lem:constraintsnc}.
-  Thus it suffices to prove the converse implication.
-  The proof is nearly the same as the proof of \autoref{prop:equivalence}; the only difference is in the length of the random string $\rho$, and hence the size of the output of the reduction.
-  Observe that the PCP verifier in the proof that the latter statement implies the former requires $d \loglog n + \log c$ bits of randomness to select one of the $c \log^d n$ constraints uniformly at random, where $c$ is a constant, so we choose $t = \log c$.
-  To prove the other direction of the inclusion and complete the proof, we apply \autoref{prop:pcpinnnc}.
-\end{proof}
-
-\autoref{thm:equiv} follows immediately from \autoref{lem:1} and \autoref{lem:2}.
-
-\section{Probabilistically checkable proof systems for polynomial time machines with limited nondeterminism}
-
-The results in the previous sections can be adapted in a straightforward manner to the $\NP(\polylog)$ hierarchy, the class of languages decidable by polynomial time Turing machines augmented with a polylogarithmic amount of nondeterminism.
-More formally, $\NP(\log^k n)$ is the class of languages for which there is a Turing machine that decides it in polynomial time using $O(\log^k n)$ bits of nondeterminism on inputs of length $n$.
-The class $\NP(\polylog)$ is $\cup_{k \in \mathbb{N}}{\NP(\log^k n)}$.
-(These classes have many other names, including $\betakP$ \cite{dt90}, $\P_{\log^k n}$ \cite{kf80}, $\GC(\log^k n, \P)$ \cite{cc97}, etc.)
-Just as
-\begin{equation*}
-  \NC = \NNC(\log n) \subseteq \NNC(\polylog) \subseteq \NNC(\poly) = \NP,
-\end{equation*}
-we have
-\begin{equation*}
-  \P = \NP(\log n) \subseteq \NP(\polylog) \subseteq \NP(\poly) = \NP.
-\end{equation*}
-
-\begin{proposition}
-  For all non-negative integers $j$ and $t$, and all positive rationals $q$ and $r$,
-  \begin{equation*}
-    \PCP^{\P}[r \loglog n + t, q \log^j n] \subseteq \NP(\log^{r + j} n)
-  \end{equation*}
-\end{proposition}
-
-\begin{theorem}
-  \mbox{}
+  One inclusion follows immediately from the definitions.
+  For the other, let $L \in \PCP^\NC[\loglog n + t, q]$ for some non-negative integers $t$ and $q$.
+  Let $V$ be the PCP verifier for $L$ which, on input $x$ of length $n$, proof string $\pi$, and random string $\rho$, makes at most $q$ (nonadaptive) queries to the proof string and uses at most $\loglog n + t$ random bits, and which has completeness probability 1 and soundness probability $\frac{1}{2}$.
+  Construct an \NC{} machine $M$ as follows on input $x$ of length $n$.
   \begin{enumerate}
-  \item For all positive integers $k$ and $q$, we have $\NP(\log^k n) = \PCP^{\P}[k \loglog n + t, q]$ for some non-negative integer $t$ if and only if $\NP(\log^k n) = \P$.
-  \item $\NP(\polylog) = \PCP^{\P}[O(\loglog n), O(1)]$ if and only if $\NP(\polylog) = \P$.
+  \item For each proof string $\pi$ of length $q 2^{\loglog n + t}$ \emph{in parallel}, and for each $\rho$ of length $\loglog n + t$ \emph{in parallel}, simulate $V(x, \pi; \rho)$.
+  \item Accept if and only if at least half of the simulations accept.
   \end{enumerate}
+
+  First we show that $M$ can be implemented on a circuit with a polynomial number of processors and a polylogarithmic depth.
+  The size of the proof string $\pi$ is $q 2^t \log n$, and the size of the random string $\rho$ is $\loglog n + t$.
+  The total number of possible pairs of proof string and random string is $2^{q 2^t \log n} 2^{\loglog n + t}$, which equals $2^t n^{q 2^t} \log n$, which is a polynomial in $n$.
+  Hence there are a polynomial number of simulations of $V$ running in parallel.
+  Since $V$ has polynomial size and polynomials are closed under multiplication, $M$ also has polynomial size.
+  Since each simulation of $V$ is run in parallel, the depth of $M$ in this phase equals the polylogarithmic depth of $V$.
+  Computing the majority of a polynomial number of bits can be done in polynomial size and logarithmic depth \cite[Theorem~2.6.1]{savage98}, so the overall circuit is polynomial in size and polylogarithmic in depth.
+
+  Now we show the correctness of $M$.
+  If $x \in L$, then all instances of $V$ accept, so certainly at least half of the instances of $V$ accept, and hence $M$ accepts.
+  If $x \notin L$, then fewer than half of the instances of $V$ accept, so $M$ rejects.
+  Therefore we have shown that $M$ is a correct \NC{} algorithm for $L$.
+\end{proof}
+
+From \autoref{lem:derandomize} and \autoref{lem:pcpinnnc}, we find the following.
+
+\begin{theorem}\label{thm:ncpcp}
+  $\NC = \PCP^\NC[O(\loglog n), O(1)]$.
 \end{theorem}
 
-\begin{corollary}
-  \mbox{}
-  \begin{enumerate}
-  \item For all positive integers $k$ and $q$, if $\NP(\log^k n) = \PCP^{\P}[k \loglog n + t, q]$ for some non-negative integer $t$ then $\NP \subseteq \DTIME(2^{n^{\frac{1}{k}}})$.
-  \item If $\NP(\polylog) = \PCP^{\P}[O(\loglog n), O(1)]$ then $\NP \subseteq \SUBEXP$.
-  \end{enumerate}
-\end{corollary}
+\subsection{Restricted PCP characterization of \texorpdfstring{\NP}{NP}}
 
-We did not focus on this very important family of classes in this work because our motivation was progress toward probabilistically checkable proof systems for \P, and each class in the $\NP(\polylog)$ hierarchy trivially includes \P.
+The idea for showing $\PCP^\NC[O(\log n), O(1)] = \NP$ is to revisit a proof of the PCP Theorem and ensure that all computation can be performed by an \NC{} PCP verifier without affecting the correctness of the proof.
+We will consider Dinur's proof of the PCP Theorem \cite{dinur07}, which reduces the problem of proving $\PCP^\P[O(\log n), O(1)] = \NP$ to the problem of showing \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP.
+We begin with the \NC{} version of this reduction.
+
+\begin{lemma}\label{lem:inapprox}
+  If there is a positive integer $q$ such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP{} under \NC{} many-one reductions, then $\PCP^\NC[O(\log n), O(1)] = \NP$.
+\end{lemma}
+\begin{proof}
+  One inclusion in the conclusion of the theorem is true unconditionally, following from the PCP Theorem \cite{almss98}.
+  For the other inclusion, let $L$ be a language in \NP.
+  By hypothesis there exists many-one reduction computable in \NC{} from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}.
+  We construct the PCP verifier as follows.
+  \begin{enumerate}
+  \item Compute the reduction to produce a set of constraints.
+  \item Use $O(\log n)$ random bits to choose a constraint uniformly at random.
+  \item Check that the constraint is satisfied by querying the proof string at the appropriate locations (the locations corresponding to the $q$ variables in the constraint).
+  \end{enumerate}
+
+  If $x \in L$ then all constraints are satisfiable, so there exists an assignment such that the verifier will accept on all random choices of the constraint.
+  If $x \notin L$ then fewer than half of the constraints are satisfiable, so for any assignment the probability that the verifier will select a satisfied constraint is less than half.
+  Therefore we have shown a correct PCP verifier with the appropriate parameters for an arbitrary language in \NP.
+\end{proof}
+
+Now we examine Dinur's proof that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP.
+\textbf{TODO complete the analysis...}
+
+From \autoref{lem:inapprox} and \autoref{lem:reduction}, we have the following.
+
+\begin{theorem}\label{thm:pcpnp}
+  $\PCP^\NC[O(\log n), O(1)] = \NP$.
+\end{theorem}
 
 \section{About this work}
 
