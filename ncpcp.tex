@@ -148,7 +148,7 @@ In fact, $\NC = \NNC(\log n)$ and $\NNC(\poly) = \NP$ \cite{wolf94}, so we can r
 \begin{equation}\label{eq:chain}
   \NC \subseteq \NNC(\polylog) \subseteq \NP.
 \end{equation}
-In subsequent sections, we will show that $\NC = \PCP^\NC[O(\loglog n), O(1)]$ and $\PCP^\NC[O(\log n), O(1)] = \NP$, which together yield
+We will show that $\NC = \PCP^\NC[O(\loglog n), O(1)]$ and $\PCP^\NC[O(\log n), O(1)] = \NP$, which together yield
 \begin{equation}\label{eq:pcpchain}
   \PCP^\NC[O(\loglog n), O(1)] \subseteq \NNC(\polylog) \subseteq \PCP^\NC[O(\log n), O(1)].
 \end{equation}
@@ -206,177 +206,25 @@ From this and \autoref{eq:pcpchain}, we will infer that any restricted PCP chara
 \end{proof}
 
 Next we turn to the restricted PCP characterizations for \NC{} and \NP{}.
-
-\subsection{Restricted PCP characterization of \texorpdfstring{\NC}{NC}}
-
-The strategy for proving that $\NC = \PCP^\NC[O(\loglog n), O(1)]$ is to simulate the $O(\loglog n)$ bits of randomness using only $\loglog n + t$ bits, which can then be enumerated by an $\NC$ machine.
-We adapt to the \NC{} setting the derandomization using constant degree spectral expanders from \cite{fs96}.
-The derandomization requires a fully explicit constant degree spectral expander.
-
-\begin{definition}
-  Suppose $d$ and $n$ are positive integers and $\lambda$ is a real number in the interval $(0, 1)$.
-  Suppose $G_n$ is a $d$-regular directed multigraph on $n$ vertices and $M$ is the adjacency matrix of $G_n$.
-  We say $G_n$ is a \emph{$\lambda$ spectral expander} if all but the largest eigenvalue of $\frac{1}{d}M$ are in the interval $(0, 1 - \lambda)$.
-\end{definition}
-
-The motivation behind the above definition is that the gap between the largest and second largest eigenvalues of the (normalized) adjacency matrix provides information about how quickly a random walk on the graph will approach the uniform distribution on the vertices of the graph.
-Since we are concerned about the computational efficiency of such a random walk, it is important that computing the step from one vertex to the next can be performed quickly.
-
-\begin{definition}
-  We say a constant degree spectral expander with vertex set $V$ is \emph{fully explicit} if each neighbor of a vertex can be computed in time polynomial in $O(\log |V|)$.
-\end{definition}
-
-Infinite families of fully explicit constant degree spectral expanders exist; for example, the construction due to Gabber and Galil \cite{gg79} satisfies the definition.
-
-\begin{lemma}[{\cite{aks87}}]\label{lem:expander}
-  Let $\mathcal{G}$ be an infinite family of constant degree spectral expanders and let $G_n \in \mathcal{G}$.
-  For each subset $C$ of $V(G_n)$ with $|C| \leq \frac{|V(G_n)|}{16}$ there exists a constant $c$ such that for all positive integers $\kappa$, the probability that each $c$th step of a random walk on $G$ of length $\kappa c$ is in $C$ is at most $\frac{1}{2^\kappa}$.
-\end{lemma}
-
-We omit the proof of the above lemma because it is not relevant to the discussion.
-
-\begin{lemma}\label{lem:badsubset}
-  Let $L \in \PCPcs{\NC}{1}{\frac{1}{16}}{\alpha \loglog n}{O(1)}$ for some integer $\alpha$ greater than 1, and let $V$ be the corresponding PCP verifier.
-  Let $\ell = 2^{\loglog n}$.
-  Let $x$ be a binary string of length $n$.
-  Let $b(i)$ denote the binary representation of the non-negative integer $i$.
-  Let $\mathcal{G}$ be an infinite family of constant degree spectral expanders, and let $G_\ell$ be the graph in $\mathcal{G}$ with $\ell$ nodes.
-  There is a subset $C$ of $V(G_\ell)$ such that if the string $x$ is not in $L$ then for all proof strings $\pi$, there is a bijection between
-  \begin{enumerate}
-  \item the set of all strings $b(i_{1c}) \circ b(i_{2c}) \circ \dotsb \circ b(i_{\alpha c})$ such that $(v_{i_1}, \dotsc, v_{i_{\alpha c}})$ is a walk on $G_\ell$ and $v_{i_{jc}} \in C$ for all $j \in \{1, \dotsc, \alpha\}$ and
-  \item the set of all strings $\rho \in \Sigma^{\alpha \loglog n}$ such that $V(x, \rho, \pi)$ accepts.
-  \end{enumerate}
-\end{lemma}
-\begin{proof}
-  If $x \notin L$, then for all $\pi$, the probability over all strings $\rho$ chosen uniformly at random that $V(x, \rho, \pi)$ accepts is strictly less than $\frac{1}{16}$, so there are less than $\frac{1}{16} 2^{\alpha \loglog n}$, such strings $\rho$.
-  Call these strings ``bad''.
-  Interpret each $\rho$ as $\rho_1 \circ \rho_2 \circ \dotsb \circ \rho_\alpha$, the concatenation of $\alpha$ binary strings, each of length $\loglog n$.
-  Choose the subset $C$ to be the set of all vertices $v_i$ such that there is some bad string $\rho_1 \circ \dotsb \circ \rho_\alpha$ such that $b(i) = \rho_j$ for some $j \in \{1, \dotsc, \alpha\}$.
-  In other words, the set $C$ contains all vertices whose binary representation appears in one of the substrings $\rho_j$ of some bad string.
-
-  \textbf{TODO complete this proof.}
-\end{proof}
-
-By using a constant number of independent simulations of a PCP verifier, we can achieve any constant soundness probability.
-
-\begin{lemma}\label{lem:16}
-  $\PCPcs{\NC}{1}{\frac{1}{2}}{O(\loglog n)}{O(1)} \subseteq \PCPcs{\NC}{1}{\frac{1}{16}}{O(\loglog n)}{O(1)}$.
-\end{lemma}
-
-Using the soundness amplification from \autoref{lem:16} and the random walk from \autoref{lem:expander}, we can show how to simulate $O(\loglog n)$ bits of randomness with only $\loglog n + O(1)$ bits.
-%% TODO use a generic pseudorandom generator here?
-
-\begin{lemma}[{\cite[Lemma~4]{fs96}}]\label{lem:derandomize}
-  \begin{equation*}
-    \PCP^\NC[O(\loglog n), O(1)] = \PCP^\NC[\loglog n + O(1), O(1)].
-  \end{equation*}
-\end{lemma}
-\begin{proof}
-  One inclusion follows immediately from the definitions.
-  For the other, let $L \in \PCP^\NC[O(\loglog n), O(1)]$.
-  By \autoref{lem:16}, we know that $L$ is also in $\PCPcs{\NC}{1}{\frac{1}{16}}{O(\loglog n)}{O(1)}$.
-  This means there exists a $(\alpha \loglog n, q, 1, \frac{1}{16})$-PCP verifier $V$ for $L$, for some positive rational $\alpha$ and positive integer $q$.
-  We assume without loss of generality that $\alpha > 1$; if $\alpha \leq 1$ the statement is immediately true.
-  Our goal is to construct a $(\loglog n + t, O(1), 1, \frac{1}{2})$-PCP verifier $V'$ for $L$, for some constant integer $t$.
-  Suppose for now that $t$ has been fixed; we will define it later in the proof.
-  We construct the verifier $V'$ as follows on input $x$ of length $n$, random string $\rho$ of length $\loglog n + t$ and proof string $\pi$ of length $2^{\loglog n + t} q$ (this is the maximum number of possible bits of the proof string queried by a nonadaptive verifier with $\loglog n$ bits of randomness).
-  Interpret $\rho$ as $\rho_1 \circ \rho_2$, where $|\rho_1| = \loglog n$ and $|\rho_2| = t$.
-
-  Intuitively, the verifier $V'$ that we construct will simulate $\alpha \loglog n$ random bits with only $\loglog n + t$ random bits by using a random walk on an expander graph.
-  Let $\ell = 2^{\loglog n}$ and let $G_\ell$ be a $d$-regular fully explicit spectral expander on $\ell$ vertices, for some positive integer $d$.
-  Let $C$ be the subset of vertices guaranteed by \autoref{lem:badsubset}.
-  Observe that the cardinality of $C$ is less than $\frac{|V(G_\ell)|}{16}$.
-  By \autoref{lem:expander} there is a constant $c$ such that the probability that a random walk of length $\alpha c$ on $G_\ell$ arrives at a vertex in $C$ on every $c$th step is at most $\frac{1}{2^\alpha}$.
-
-  Now we are ready to describe $V'$.
-  \begin{enumerate}
-  \item
-    Perform a random walk of length $\alpha c$ on $G_\ell$ from an initial vertex chosen uniformly at random.
-    Let $(v_{i_1}, \dotsc, v_{i_{\alpha c}})$ be the sequence of vertices that comprise this walk.
-  \item
-    Let $s = b(i_{1c}) \circ b(i_{2c}) \circ \dotsb \circ b(i_{\alpha c})$.
-    Observe that $|s| = \alpha |b(i_k)| = \alpha \log |V(G_\ell)| = \alpha \log 2^{\loglog n} = \alpha \loglog n$.
-  \item Accept if and only if $V(x, s, \pi)$ accepts.
-  \end{enumerate}
-  $V'$ requires $\loglog n$ random bits to choose an initial vertex for the walk and $\log d$ random bits at each of the $\alpha c$ steps of the walk.
-  Thus $V'$ uses $\loglog n + \alpha c \log d$ random bits in total; now we define $t$ to be $\alpha c \log d$, a constant independent of $n$.
-  Since $V'$ only accesses the proof string $\pi$ via the simulation of $V$, the verifier $V'$ queries exactly the same number of bits of the proof string as does the verifier $V$.
-
-  Performing a single step in a fully explicit expander takes $p(|V(G_\ell)|)$ time for some polynomial $p$.
-  Thus, performing a random walk of length $\alpha c$ takes $p(\alpha c |V(G_\ell)|)$ time.
-  Since $G_\ell$ has exactly $2^{\loglog n}$, or more simply $\log n$, vertices, the total computation time for the random walk is $O(p(\alpha c \log n))$, which is polylogarithmic in $n$.
-  Since $V$ is an $\NC$ algorithm, the simulation of $V$ can be performed by a polynomial size, polylogarithmic depth circuit.
-  Therefore the overall time required by $V'$ is polylogarithmic in $n$.
-
-  Now we show that $V'$ achieves the necessary completeness and soundness error bounds.
-  Let $x$ be a string of length $n$, and $\pi$ be any sufficiently long proof string.
-  By construction, we have
-  \begin{equation*}
-    \Pr_\rho[V'(x, \rho, \pi) \text{ accepts}] = \Pr_\rho[V(x, s, \pi) \text{ accepts}],
-  \end{equation*}
-  where $\rho$ is a binary string of length $\loglog n + t$ chosen uniformly at random, and $s$ is generated by the random walk on $G_\ell$ as described above.
-  If $x \in L$, then there exists a proof string $\pi$ such that for all strings $\gamma$, we have $V(x, \gamma, \pi)$ accepts, and in particular, $V(x, s, \pi)$ accepts.
-  Therefore, for all strings $\rho$, it follows that $V'(x, \rho, \pi)$ accepts.
-  If $x \notin L$, then \autoref{lem:badsubset} applies, and we have
-  \begin{align*}
-    \Pr_\rho[V'(x, \rho, \pi) \text{ accepts}] & = \Pr_\rho[V(x, s, \pi) \text{ accepts}] \\
-    & = \Pr_\rho[\forall j \in \{1, \dotsc, \alpha\} \colon v_{i_{jc}} \in C],
-  \end{align*}
-  where each $v_{i_{jc}}$ is a vertex on the random walk $(v_{i_1}, \dotsc, v_{i_{\alpha c}})$ from which $s$ is derived.
-  This probability is at most $\frac{1}{2^\alpha}$ by \autoref{lem:expander}, which is strictly less than $\frac{1}{2}$ because $\alpha > 1$.
-
-  To summarize, we have shown that $V'$ uses exactly $\loglog n + \alpha c \log d$ bits of randomness, makes $O(1)$ queries to the proof string, can be implemented by an $\NC$ circuit, and has completeness 1 and soundness $\frac{1}{2}$.
-  Therefore, $L \in \PCP^\NC[\loglog n + O(1), O(1)]$.
-\end{proof}
-
-Now that we have a restricted PCP verifier using only $\loglog n + O(1)$ bits of randomness, we show how an \NC{} machine can enumerate all possible random strings.
-
-\begin{lemma}\label{lem:pcpinnnc}
-  $\PCP^\NC[\loglog n + O(1), O(1)] = \NC$.
-\end{lemma}
-\begin{proof}
-  One inclusion follows immediately from the definitions.
-  For the other, let $L \in \PCP^\NC[\loglog n + t, q]$ for some non-negative integers $t$ and $q$.
-  Let $V$ be the PCP verifier for $L$ which, on input $x$ of length $n$, proof string $\pi$, and random string $\rho$, makes at most $q$ (nonadaptive) queries to the proof string and uses at most $\loglog n + t$ random bits, and which has completeness probability 1 and soundness probability $\frac{1}{2}$.
-  Construct an \NC{} machine $M$ as follows on input $x$ of length $n$.
-  \begin{enumerate}
-  \item For each proof string $\pi$ of length $q 2^{\loglog n + t}$ \emph{in parallel}, and for each $\rho$ of length $\loglog n + t$ \emph{in parallel}, simulate $V(x, \pi; \rho)$.
-  \item Accept if and only if at least half of the simulations accept.
-  \end{enumerate}
-
-  First we show that $M$ can be implemented on a circuit with a polynomial number of processors and a polylogarithmic depth.
-  The size of the proof string $\pi$ is $q 2^t \log n$, and the size of the random string $\rho$ is $\loglog n + t$.
-  The total number of possible pairs of proof string and random string is $2^{q 2^t \log n} 2^{\loglog n + t}$, which equals $2^t n^{q 2^t} \log n$, which is a polynomial in $n$.
-  Hence there are a polynomial number of simulations of $V$ running in parallel.
-  Since $V$ has polynomial size and polynomials are closed under multiplication, $M$ also has polynomial size.
-  Since each simulation of $V$ is run in parallel, the depth of $M$ in this phase equals the polylogarithmic depth of $V$.
-  Computing the majority of a polynomial number of bits can be done in polynomial size and logarithmic depth \cite[Theorem~2.6.1]{savage98}, so the overall circuit is polynomial in size and polylogarithmic in depth.
-
-  Now we show the correctness of $M$.
-  If $x \in L$, then all instances of $V$ accept, so certainly at least half of the instances of $V$ accept, and hence $M$ accepts.
-  If $x \notin L$, then fewer than half of the instances of $V$ accept, so $M$ rejects.
-  Therefore we have shown that $M$ is a correct \NC{} algorithm for $L$.
-\end{proof}
-
-From \autoref{lem:derandomize} and \autoref{lem:pcpinnnc}, we find the following.
+In \cite{fs96}, the authors prove that $\P = \PCP^\P[O(\loglog n), O(1)]$ (implicitly; they actually prove that $\NP = \PCP^\P[O(\loglog n), O(1)]$ if and only if $\P = \NP$).
+The same proof techniques can be used in the \NC{} setting with essentially no changes.
+(The idea of the proof is to simulate $O(\loglog n)$ bits of randomness with $\loglog n + O(1)$ bits by making a random walk of an appropriate length on a fully explicit constant degree expander graph.)
 
 \begin{theorem}\label{thm:ncpcp}
   $\NC = \PCP^\NC[O(\loglog n), O(1)]$.
 \end{theorem}
-
-\subsection{Restricted PCP characterization of \texorpdfstring{\NP}{NP}}
 
 The idea for showing $\PCP^\NC[O(\log n), O(1)] = \NP$ is to revisit a proof of the PCP Theorem and ensure that all computation can be performed by an \NC{} PCP verifier without affecting the correctness of the proof.
 We will consider Dinur's proof of the PCP Theorem \cite{dinur07}, which reduces the problem of proving $\PCP^\P[O(\log n), O(1)] = \NP$ to the problem of showing \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP.
 We begin with the \NC{} version of this reduction.
 
 \begin{lemma}\label{lem:inapprox}
-  If there is a positive integer $q$ such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP{} under \NC{} many-one reductions, then $\PCP^\NC[O(\log n), O(1)] = \NP$.
+  If there is a positive integer $q$ such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP{} under logarithmic space many-one reductions, then $\PCP^\NC[O(\log n), O(1)] = \NP$.
 \end{lemma}
 \begin{proof}
   One inclusion in the conclusion of the theorem is true unconditionally, following from the PCP Theorem \cite{almss98}.
   For the other inclusion, let $L$ be a language in \NP.
-  By hypothesis there exists many-one reduction computable in \NC{} from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}.
+  By hypothesis there exists many-one reduction computable in logarithmic space from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}.
   We construct the PCP verifier as follows.
   \begin{enumerate}
   \item Compute the reduction to produce a set of constraints.
@@ -390,6 +238,10 @@ We begin with the \NC{} version of this reduction.
 \end{proof}
 
 Now we examine Dinur's proof that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP.
+
+\begin{lemma}\label{lem:reduction}
+  There is a positive integer $q$ such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP{} under logarithmic space many-one reductions.
+\end{lemma}
 \textbf{TODO complete the analysis...}
 
 From \autoref{lem:inapprox} and \autoref{lem:reduction}, we have the following.
