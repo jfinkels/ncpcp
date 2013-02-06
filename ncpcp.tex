@@ -227,6 +227,10 @@ The same proof techniques can be used in the \NC{} setting with essentially no c
   $\NC = \PCP^\NC[O(\loglog n), O(1)]$.
 \end{theorem}
 
+The equality $\P = \PCP^\P[O(\loglog n), O(1)]$ is actually a special case of $\P = \PCP^\P[o(\log n), o(\log n)]$, which is proven (again implicitly) in \cite{as98} using a reduction from \cite{fglss91}.
+However, it is not obvious how to adapt this result to the \NC{} setting, so it remains a possibility that $\NNC(\polylog) \subseteq \PCP^\NC[o(\log n), o(\log n)]$.
+\textbf{TODO examine translating this to the NC setting...}
+
 The idea for showing $\PCP^\NC[O(\log n), O(1)] = \NP$ is to revisit a proof of the PCP Theorem and ensure that all computation can be performed by an \NC{} PCP verifier without affecting the correctness of the proof.
 We will consider Dinur's proof of the PCP Theorem \cite{dinur07}, which reduces the problem of proving $\PCP^\P[O(\log n), O(1)] = \NP$ to the problem of showing \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP.
 We begin with the \NC{} version of this reduction.
