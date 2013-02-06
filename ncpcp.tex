@@ -66,8 +66,16 @@ We are still, however, able to show that certain PCP classes are contained in $\
 
 Throughout this work, $\log n$ denotes the base 2 logarithm of $n$.
 
-We assume the reader knows the basic definitions from complexity theory, including those of \P, \NP, \DTIME, and \DSPACE.
-We will also be considering the $\NC^k$, the class of languages decidable by a family of logarithmic space uniform Boolean circuits of polynomial size, $O(\log^k n)$ depth, and unbounded fan-in.
+We assume the reader knows the basic definitions from complexity theory, including those of the complexity classes \P, \NP, \DTIME, and \DSPACE.
+We define the complexity class \SUBEXP{}, the class of languages decidable by deterministic ``subexponential'' time Turing machines, as
+\begin{equation*}
+  \SUBEXP = \cap_{\epsilon > 0} \DTIME(2^{n^\epsilon})
+\end{equation*}
+and \QP{}, the class of languages decidable by a deterministic ``quasipolynomial'' time Turing machine, as
+\begin{equation*}
+  \QP = \cup_{k \in \mathbb{N}} \DTIME(2^{\log^k n}).
+\end{equation*}
+We will also be considering $\NC^k$, the class of languages decidable by a family of logarithmic space uniform Boolean circuits of polynomial size, $O(\log^k n)$ depth, and unbounded fan-in.
 We will denote by $\NC$ the union of all the $\NC^k$ classes.
 
 \begin{definition}
@@ -157,18 +165,20 @@ From this and \autoref{eq:pcpchain}, we will infer that any restricted PCP chara
 (On the other hand, it is conjectured that \P{} and $\NNC(\polylog)$ are incomparable \cite{wolf94}.)
 
 \begin{theorem}
-  If $\NC = \NNC(\polylog)$ or $\NNC(\polylog) = \NP$, then $\NP \subseteq \SUBEXP$.
+  \mbox{}
+  \begin{enumerate}
+  \item If $\NC = \NNC(\polylog)$, then $\NP \subseteq \SUBEXP$.
+  \item If $\NNC(\polylog) = \NP$, then $\NP \subseteq \QP$.
+  \end{enumerate}
 \end{theorem}
 \begin{proof}
   If $\NNC(\polylog) = \NP$, then
   \begin{align*}
     \NP & \subseteq \NNC(\polylog) \\
-        & \subseteq \NNC(\log^k n), \text{for some } k & \text{(by definition)}\\
-        & \subseteq \DSPACE(\log^k n) & \text{(by \cite{wolf94})} \\
-        & \subseteq \DTIME(2^{\log^k n}) & \text{(by exhaustive search)} \\
-        & \subseteq \SUBEXP,
+        & \subseteq \DSPACE(\polylog) & \text{(by \cite{wolf94})} \\
+        & \subseteq \DTIME(2^{\polylog}) & \text{(by exhaustive search)} \\
+        & = \QP & \text{(by definition)}.
   \end{align*}
-  where the last relation holds because $O(2^{\log^k n})$ is in $O(2^{n^\epsilon})$ for all (small) positive epsilon and for sufficiently large $n$.
   Now suppose $\NC = \NNC(\polylog)$.
   Since \textsc{Satisfiability} is complete for $\NP$ under deterministic polynomial time many-one reductions, it suffices to show a deterministic subexponential time algorithm for \textsc{Satisfiability}.
 
@@ -204,6 +214,9 @@ From this and \autoref{eq:pcpchain}, we will infer that any restricted PCP chara
   Since $\NC \subseteq \P$, and $2^{n^\epsilon}$ is greater than any polynomial for sufficiently large $n$, the first step is the bottleneck in this algorithm.
   Therefore, this algorithm for \textsc{Satisfiability} can be implemented by a deterministic algorithm running in $O(2^{n^\epsilon})$ time for arbitrarily small $\epsilon$.
 \end{proof}
+
+Intuitively, this theorem states that the difference in complexity between languages in $\NC$ and languages in $\NNC(\polylog)$ is smaller than the difference in complexity between languages in $\NNC(\polylog)$ and languages in $\NP$.
+This makes sense: the ``difference'' between $\log n$ and a polynomial in $\log n$ is less than the ``difference'' a polynomial in $n$ and a polynomial in $\log n$.
 
 Next we turn to the restricted PCP characterizations for \NC{} and \NP{}.
 In \cite{fs96}, the authors prove that $\P = \PCP^\P[O(\loglog n), O(1)]$ (implicitly; they actually prove that $\NP = \PCP^\P[O(\loglog n), O(1)]$ if and only if $\P = \NP$).
