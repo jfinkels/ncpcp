@@ -219,7 +219,7 @@ Intuitively, this theorem states that the difference in complexity between langu
 This makes sense: the ``difference'' between $\log n$ and a polynomial in $\log n$ is less than the ``difference'' a polynomial in $n$ and a polynomial in $\log n$.
 
 Next we turn to the restricted PCP characterizations for \NC{} and \NP{}.
-In \cite{fs96}, the authors prove that $\P = \PCP^\P[O(\loglog n), O(1)]$ (implicitly; they actually prove that $\NP = \PCP^\P[O(\loglog n), O(1)]$ if and only if $\P = \NP$).
+In \cite{fs96}, the authors prove that $\P = \PCP^\P[O(\loglog n), O(1)]$ (implicitly; they state only that $\NP = \PCP^\P[O(\loglog n), O(1)]$ if and only if $\P = \NP$).
 The same proof techniques can be used in the \NC{} setting with essentially no changes.
 (The idea of the proof is to simulate $O(\loglog n)$ bits of randomness with $\loglog n + O(1)$ bits by making a random walk of an appropriate length on a fully explicit constant degree expander graph.)
 
@@ -227,9 +227,10 @@ The same proof techniques can be used in the \NC{} setting with essentially no c
   $\NC = \PCP^\NC[O(\loglog n), O(1)]$.
 \end{theorem}
 
-The equality $\P = \PCP^\P[O(\loglog n), O(1)]$ is actually a special case of $\P = \PCP^\P[o(\log n), o(\log n)]$, which is proven (again implicitly) in \cite{as98} using a reduction from \cite{fglss91}.
-However, it is not obvious how to adapt this result to the \NC{} setting, so it remains a possibility that $\NNC(\polylog) \subseteq \PCP^\NC[o(\log n), o(\log n)]$.
-\textbf{TODO examine translating this to the NC setting...}
+As a generalization of the result of \cite{fs96}, we know $\NP = \PCP^\P[o(\log n), o(\log n)]$ if and only if $\P = \NP$ \cite{as98, fglss91}.
+%The equality $\P = \PCP^\P[O(\loglog n), O(1)]$ is actually a special case of $\P = \PCP^\P[o(\log n), o(\log n)]$, which is proven (again implicitly) in \cite{as98} using a reduction from \cite{fglss91}.
+Unfortunately, the obvious strategy for translating that proof to the \NC{} setting fails.
+The proof would have shown that $\NP = \PCP^{\NC^k}[o(\frac{\loglog n}{\log^k n}), O(1)]$ if and only if $\NC = \NP$, but this is already proven by \autoref{thm:ncpcp} and the fact that $\frac{\loglog n}{\log^k n} \leq \loglog n$.
 
 The idea for showing $\PCP^\NC[O(\log n), O(1)] = \NP$ is to revisit a proof of the PCP Theorem and ensure that all computation can be performed by an \NC{} PCP verifier without affecting the correctness of the proof.
 We will consider Dinur's proof of the PCP Theorem \cite{dinur07}, which reduces the problem of proving $\PCP^\P[O(\log n), O(1)] = \NP$ to the problem of showing \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP.
@@ -266,6 +267,30 @@ From \autoref{lem:inapprox} and \autoref{lem:reduction}, we have the following.
 \begin{theorem}\label{thm:pcpnp}
   $\PCP^\NC[O(\log n), O(1)] = \NP$.
 \end{theorem}
+
+Recall now \autoref{eq:pcpchain},
+\begin{equation*}
+  \PCP^\NC[O(\loglog n), O(1)] \subseteq \NNC(\polylog) \subseteq \PCP^\NC[O(\log n), O(1)].
+\end{equation*}
+This leaves the possibility that $\NNC(\polylog) = \PCP^\NC[\poly(\loglog n), O(1)]$, or $\NNC(\polylog) = \PCP^\NC[O(\frac{\log n}{\loglog n}), O(1)]$, for example.
+There is also the possibility that $\NNC(\polylog) = \PCP^\NC[O(\loglog n), \polylog]$; a straightforward simulation proves one inclusion of the equality.
+\begin{theorem}
+  $\PCP^\NC[O(\loglog n), \polylog] \subseteq \NNC(\polylog)$.
+\end{theorem}
+\begin{proof}
+  Let $L$ be a language in $\PCP^\NC[O(\loglog n), \polylog]$, and suppose $V$ is the corresponding PCP verifier that decides it using $r \loglog n$ bits of randomness and makes $q \log^k n$ queries to the proof string.
+  Construct $\NNC$ machine $M$ as follows on input $x$.
+  \begin{enumerate}
+  \item Guess a proof string $\pi$ of length $2^{r \loglog n} q \log^k n$.
+  \item For each $\rho$ of length $r \loglog n$ \emph{in parallel} simulate $V(x, \pi; \rho)$.
+  \item Accept if and only if at least half of the simulations accept.
+  \end{enumerate}
+In the initial step, guessing a proof string requires a polylogarithmic number of bits.
+In the second step, since $V$ is an \NC{} machine, a polylogarithmic number of parallel simulations of $V$ can be executed with only a polylogarithmic factor increase in size and no increase in depth.
+In the final step, computing the majority of a polylogarithmic number of bits can be done by an \NC{} circuit.
+Therefore $M$ is an $\NNC(\polylog)$ machine.
+The correctness of $M$ follows from the completeness and soundness of $V$.
+\end{proof}
 
 \section{About this work}
 
