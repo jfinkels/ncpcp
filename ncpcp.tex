@@ -77,6 +77,8 @@ and \QP{}, the class of languages decidable by a deterministic ``quasipolynomial
 \end{equation*}
 We will also be considering $\NC^k$, the class of languages decidable by a family of logarithmic space uniform Boolean circuits of polynomial size, $O(\log^k n)$ depth, and unbounded fan-in.
 We will denote by $\NC$ the union of all the $\NC^k$ classes.
+A language in $\NC^k$ can also be described as a language which admits an algorithm which uses a polynomial number of processors running in $O(\log^k n)$ time on a parallel random-access machine (PRAM).
+In this work, we describe \NC{} algorithms using this paradigm.
 
 \begin{definition}
   For all functions $f, g \colon \mathbb{N} \to \mathbb{R}$, the function $f$ is in the class $O(g(n))$ if there exist real numbers $c$ and $N$ such that for all natural numbers $n$ we have $n > N$ implies $f(n) \leq c \cdot g(n)$.
