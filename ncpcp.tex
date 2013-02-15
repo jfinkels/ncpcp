@@ -237,12 +237,12 @@ We will consider Dinur's proof of the PCP Theorem \cite{dinur07}, which reduces 
 We begin with the \NC{} version of this reduction.
 
 \begin{lemma}\label{lem:inapprox}
-  If there is a positive integer $q$ such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP{} under logarithmic space many-one reductions, then $\PCP^\NC[O(\log n), O(1)] = \NP$.
+  If there is a positive integer $q$ such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP{} under \NC{} many-one reductions, then $\PCP^\NC[O(\log n), O(1)] = \NP$.
 \end{lemma}
 \begin{proof}
   One inclusion in the conclusion of the theorem is true unconditionally, following from the PCP Theorem \cite{almss92}.
   For the other inclusion, let $L$ be a language in \NP.
-  By hypothesis there exists many-one reduction computable in logarithmic space from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}.
+  By hypothesis there exists many-one reduction computable in \NC{} from $L$ to \textsc{$\frac{1}{2}$-gap $q$-CSP}.
   We construct the PCP verifier as follows.
   \begin{enumerate}
   \item Compute the reduction to produce a set of constraints.
@@ -255,12 +255,55 @@ We begin with the \NC{} version of this reduction.
   Therefore we have shown a correct PCP verifier with the appropriate parameters for an arbitrary language in \NP.
 \end{proof}
 
-Now we examine Dinur's proof that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP.
+Now we examine Dinur's proof that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP{} \cite{dinur07}.
+That proof shows that the problem is hard under polynomial time many-one reductions, but we show here that it is in fact hard under \NC{} many-one reductions.
+First, we claim without proof that \textsc{$q$-CSP} is hard for \NP{} under \NC{} many-one reductions (because the standard polynomial time many-one reductions showing that it is \NP-complete are in fact computable in logarithmic space).
+Next, consider (the high-level description of) the polynomial time many-one reduction from \textsc{$q$-CSP} to \textsc{$\frac{1}{2}$-gap $q$-CSP}: given as input constraint graph $G_0$, compute and output $G_{O(\log n)}$, where $G_{i + 1} = \mathcal{P}(\left(X(G_i)\right)^t)$ and $t \in O(1)$.
+Here, $X$ is a preprocessing function, the exponent $t$ denotes a constant number of constraint graph powering operations, and $\mathcal{P}$ denotes an assignment testing extension function.
+If $G_{i + 1}$ can be computed from $G_i$ by an \NC{} algorithm, then $G_{O(\log n)}$ can be computed from $G_0$ by an \NC{} algorithm.
+
+The preprocessing function $X$ requires a \emph{mildly explicit} construction of a constant degree expander.
+The standard definition of mildly explicit is that a representation of the graph (for example, its adjacency matrix) is computable in time polynomial in the number of vertices in the graph; for comparison, in a \emph{fully explicit} expander, the $i$th neighbor of vertex $v$ can be computed in time polynomial in the size of the binary representation of $v$, that is, polynomial in $\log n$ where $n$ is the number of nodes in the graph.
+We will refer to graphs which meet these definitions as \emph{polynomial time mildly explicit} and \emph{polynomial time fully explicit}.
+Since we are constructing an \NC{} algorithm, we will require the representation of the graph to be computable by an \NC{} algorithm.
+More formally, we require a \emph{\NC{} mildly explicit} graph, that is, a graph for which a representation can be computed by an \NC{} algorithm with respect to input $n$, the number of nodes of the graph.
+Fortunately, an \NC{} mildly explicit expander is equivalent to a polynomial time fully explicit expander.
+
+\begin{proposition}
+  Suppose $G$ is a $d$-regular expander graph.
+  $G$ is \NC{} mildly explicit if and only if $G$ is polynomial time fully explicit.
+\end{proposition}
+\begin{proof}
+  First suppose $G$ is \NC{} mildly explicit, so there exists an \NC{} algorithm that outputs, say, the adjacency list of the graph given $n$ as input.
+  The following algorithm computes the $i$th neighbor of vertex $v$ in time polynomial in $\log n$: construct the adjacency list of the graph, then find and output the $i$th neighbor of vertex $v$.
+  When constructing the adjacency list, we simulate each of the polynomial number of processors sequentially, each one running for $\poly(\log n)$ time, so the overall running time of this step remains $\poly(\log n)$.
+  The list corresponding to vertex $v$ can be found in $O(\log n)$ steps (by using a binary search tree), and the $i$th element of that list can be found in constant time (since $i$ is bounded above by $d$, a constant).
+  Therefore we have presented an algorithm which runs in $\poly(\log n)$ time which correctly computes the $i$th number of $v$ in the graph $G$.
+
+  Now suppose $G$ is polynomial time fully explicit, so there exists an algorithm which computes the $i$th neighbor of $v$ in time polynomial in $\log n$.
+  Let $f(v, i)$ denote this algorithm.
+  The following \NC{} algorithm computes the adjacency list of $G$ given the number of nodes $n$: for each vertex $v$ \emph{in parallel} and each index $i$ less than $d$ \emph{in parallel} add $f(v, i)$ to the list corresponding to $v$.
+  This algorithm can be computed with $dn$ processors, which is polynomial in $n$.
+  Since the $f(v, i)$ can be computed in time polynomial in $\log n$, the running time for each parallel processor is also polynomial in $\log n$.
+  Therefore we have presented an \NC{} algorithm which correctly computes a representation of the graph $G$.
+\end{proof}
+
+This proposition allows us to replace any polynomial time mildly explicit expander in Dinur's proof with a polynomial time fully explicit one.
+(Polynomial time fully explicit constant degree expander graphs exist; see \cite{rvw00}, for example.)
+
+Now, let us return to the preprocessing function $X$, which is defined in two parts, \cite[Definition~4.1]{dinur07} and \cite[Definition~4.2]{dinur07}.
+
+***********************
+
+\textbf{Complete the analysis here}
+
+***********************
+
+From the above discussion we conclude the following.
 
 \begin{lemma}\label{lem:reduction}
-  There is a positive integer $q$ such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP{} under logarithmic space many-one reductions.
+  There is a positive integer $q$ such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP{} under \NC{} many-one reductions.
 \end{lemma}
-\textbf{TODO complete the analysis...}
 
 From \autoref{lem:inapprox} and \autoref{lem:reduction}, we have the following.
 
