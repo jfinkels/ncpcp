@@ -96,6 +96,14 @@ In this work, we describe \NC{} algorithms using this paradigm.
   An assignment \emph{satisfies} a constraint if $(a(v_{i_1}), a(v_{i_2}), \dotsc, a(v_{i_q})) \in C$.
 \end{definition}
 
+\begin{definition}[\textsc{$q$-CSP}]
+  \mbox{}
+
+  \textbf{Instance:} finite alphabet $\Gamma$ with $|\Gamma| > 1$, finite set of variables $V$, finite set of $q$-ary constraints $D$.
+
+  \textbf{Question:} Are all constraints in $D$ satisfiable?
+\end{definition}
+
 \begin{definition}[\textsc{$\frac{1}{2}$-gap $q$-CSP}]
   \mbox{}
 
@@ -103,6 +111,9 @@ In this work, we describe \NC{} algorithms using this paradigm.
 
   \textbf{Question:} Are all constraints in $D$ satisfiable?
 \end{definition}
+
+In the special case in which $q = 2$, that is, all constraints are binary, we may interpret an instance of the constraint satisfaction problem as an undirected graph with vertex set $V$ and an edge labeled $C$ between vertices $v_i$ and $v_j$ for each $(C, i, j)$ in $D$.
+We call such a graph a \emph{constraint graph}.
 
 \begin{definition}
   A \emph{PCP verifier} is a probabilistic Turing machine which has sequential access to an input string $x$, sequential access to a random string $\rho$, and \emph{nonadaptive random access} to a proof string $\pi$.
@@ -262,7 +273,8 @@ That proof shows that the problem is hard under polynomial time many-one reducti
 First, we claim without proof that \textsc{$q$-CSP} is hard for \NP{} under \NC{} many-one reductions (because the standard polynomial time many-one reductions showing that it is \NP-complete are in fact computable in logarithmic space).
 Next, consider (the high-level description of) the polynomial time many-one reduction from \textsc{$q$-CSP} to \textsc{$\frac{1}{2}$-gap $q$-CSP}: given as input constraint graph $G_0$, compute and output $G_{O(\log n)}$, where $G_{i + 1} = \mathcal{P}(\left(X(G_i)\right)^t)$ and $t \in O(1)$.
 Here, $X$ is a preprocessing function, the exponent $t$ denotes a constant number of constraint graph powering operations, and $\mathcal{P}$ denotes an assignment testing extension function.
-If $G_{i + 1}$ can be computed from $G_i$ by an \NC{} algorithm, then $G_{O(\log n)}$ can be computed from $G_0$ by an \NC{} algorithm.
+If each of these three functions is computable by an \NC{} algorithm, then $G_{i + 1}$ can be computed from $G_i$ by an \NC{} algorithm, and hence so can $G_{O(\log n)}$ from $G_0$.
+We will consider each of the three functions below.
 
 The preprocessing function $X$ requires a \emph{mildly explicit} construction of a constant degree expander.
 The standard definition of mildly explicit is that a representation of the graph (for example, its adjacency matrix) is computable in time polynomial in the number of vertices in the graph; for comparison, in a \emph{fully explicit} expander, the $i$th neighbor of vertex $v$ can be computed in time polynomial in the size of the binary representation of $v$, that is, polynomial in $\log n$ where $n$ is the number of nodes in the graph.
@@ -301,7 +313,33 @@ Now, let us return to the preprocessing function $X$, which is defined in two pa
 
 ***********************
 
-From the above discussion we conclude the following.
+\begin{lemma}
+  The preprocessing function $X$ is computable by an \NC{} algorithm.
+\end{lemma}
+
+Matrix multiplication is in \NC{}, and a constant number of matrix multiplications remains in \NC{}.
+
+***********************
+
+\textbf{Complete the analysis here}
+
+***********************
+
+\begin{lemma}
+  Constraint graph powering with an exponent in $O(1)$ is computable by an \NC{} algorithm.
+\end{lemma}
+
+***********************
+
+\textbf{Complete the analysis here}
+
+***********************
+
+\begin{lemma}
+  Assignment testing composition is computable by an \NC{} algorithm.
+\end{lemma}
+
+Since the preprocessing function, constraint graph powering, and assignment testing composition are all computable by an \NC{} algorithm, we conclude the following.
 
 \begin{lemma}\label{lem:reduction}
   There is a positive integer $q$ such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP{} under \NC{} many-one reductions.
