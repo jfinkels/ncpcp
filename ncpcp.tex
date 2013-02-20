@@ -246,6 +246,8 @@ As a generalization of the result of \cite{fs96}, we know $\NP = \PCP^\P[o(\log 
 Unfortunately, the obvious strategy for translating that proof to the \NC{} setting fails.
 The proof would have shown that $\NP = \PCP^{\NC^k}[o(\frac{\loglog n}{\log^k n}), O(1)]$ if and only if $\NC = \NP$, but this is already proven by \autoref{thm:ncpcp} and the fact that $\frac{\loglog n}{\log^k n} \leq \loglog n$.
 
+%% TODO this is true only if it turns out that q(n) and r(n) have the correct
+%% values in \cite{bcgt12}
 We also know the following strengthening of the original PCP Theorem.
 
 \begin{theorem}[{\cite[Section~2.1]{bcgt12}}]\label{thm:pcpnp}
