@@ -25,6 +25,7 @@
 \newcommand{\PCPcs}[5]{\PCP^{#1}_{#2, #3}\left[#4, #5\right]}
 \newcommand{\loglog}{\log \log}
 \newcommand{\email}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
+\newcommand{\ceil}[1]{\left\lceil{#1}\right\rceil}
 
 \newenvironment{proofidea}{\begin{proof}[Proof~idea]}{\end{proof}}
 
@@ -113,7 +114,7 @@ In this work, we describe \NC{} algorithms using this paradigm.
 \end{definition}
 
 In the special case in which $q = 2$, that is, all constraints are binary, we may interpret an instance of the constraint satisfaction problem as an undirected graph with vertex set $V$ and an edge labeled $C$ between vertices $v_i$ and $v_j$ for each $(C, i, j)$ in $D$.
-We call such a graph a \emph{constraint graph}.
+We call such a graph a \emph{constraint graph} and we consider the size of this graph to be $|V| + |E|$ where $V$ is the set of vertices (equivalently, variables) and $E$ is the set of edges.
 
 \begin{definition}
   A \emph{PCP verifier} is a probabilistic Turing machine which has sequential access to an input string $x$, sequential access to a random string $\rho$, and \emph{nonadaptive random access} to a proof string $\pi$.
@@ -245,7 +246,45 @@ As a generalization of the result of \cite{fs96}, we know $\NP = \PCP^\P[o(\log 
 Unfortunately, the obvious strategy for translating that proof to the \NC{} setting fails.
 The proof would have shown that $\NP = \PCP^{\NC^k}[o(\frac{\loglog n}{\log^k n}), O(1)]$ if and only if $\NC = \NP$, but this is already proven by \autoref{thm:ncpcp} and the fact that $\frac{\loglog n}{\log^k n} \leq \loglog n$.
 
-The idea for showing $\PCP^\NC[O(\log n), O(1)] = \NP$ is to revisit a proof of the PCP Theorem and ensure that all computation can be performed by an \NC{} PCP verifier without affecting the correctness of the proof.
+We also know the following strengthening of the original PCP Theorem.
+
+\begin{theorem}[{\cite[Section~2.1]{bcgt12}}]\label{thm:pcpnp}
+  $\PCP^\NC[O(\log n), O(1)] = \NP$.
+\end{theorem}
+
+In \cite{bcgt12}, it seems that the authors actually show an \NC{} PCP verifier for the universal complete problem $U$ (also called the bounded halting problem) for random access machines (RAMs).
+For Turing machines, the problem is \NP-complete by a simple generic reduction.
+The problem remains \NP-hard for RAMs by reducing a Turing machine to a RAM in polynomial time by a straightforward simulation.
+Hence an \NC{} PCP verifier for the universal complete problem for RAMs implies the necessary inclusion of complexity classes.
+For an alternate proof of \autoref{thm:pcpnp}, see \autoref{sec:alternate}.
+
+Recall now \autoref{eq:pcpchain},
+\begin{equation*}
+  \PCP^\NC[O(\loglog n), O(1)] \subseteq \NNC(\polylog) \subseteq \PCP^\NC[O(\log n), O(1)].
+\end{equation*}
+This leaves the possibility that $\NNC(\polylog) = \PCP^\NC[\poly(\loglog n), O(1)]$, or $\NNC(\polylog) = \PCP^\NC[O(\frac{\log n}{\loglog n}), O(1)]$, for example.
+There is also the possibility that $\NNC(\polylog) = \PCP^\NC[O(\loglog n), \polylog]$; a straightforward simulation proves one inclusion of the equality.
+\begin{theorem}
+  $\PCP^\NC[O(\loglog n), \polylog] \subseteq \NNC(\polylog)$.
+\end{theorem}
+\begin{proof}
+  Let $L$ be a language in $\PCP^\NC[O(\loglog n), \polylog]$, and suppose $V$ is the corresponding PCP verifier that decides it using $r \loglog n$ bits of randomness and makes $q \log^k n$ queries to the proof string.
+  Construct $\NNC$ machine $M$ as follows on input $x$.
+  \begin{enumerate}
+  \item Guess a proof string $\pi$ of length $2^{r \loglog n} q \log^k n$.
+  \item For each $\rho$ of length $r \loglog n$ \emph{in parallel} simulate $V(x, \pi; \rho)$.
+  \item Accept if and only if at least half of the simulations accept.
+  \end{enumerate}
+In the initial step, guessing a proof string requires a polylogarithmic number of bits.
+In the second step, since $V$ is an \NC{} machine, a polylogarithmic number of parallel simulations of $V$ can be executed with only a polylogarithmic factor increase in size and no increase in depth.
+In the final step, computing the majority of a polylogarithmic number of bits can be done by an \NC{} circuit.
+Therefore $M$ is an $\NNC(\polylog)$ machine.
+The correctness of $M$ follows from the completeness and soundness of $V$.
+\end{proof}
+
+\section{Alternate proof of highly parallel probabilistically checkable proofs for \texorpdfstring{\NP}{NP}}\label{sec:alternate}
+
+One method of showing $\PCP^\NC[O(\log n), O(1)] = \NP$ is to revisit a proof of the PCP Theorem and ensure that all computation can be performed by an \NC{} PCP verifier without affecting the correctness of the proof.
 We will consider Dinur's proof of the PCP Theorem \cite{dinur07}, which reduces the problem of proving $\PCP^\P[O(\log n), O(1)] = \NP$ to the problem of showing \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP.
 We begin with the \NC{} version of this reduction.
 
@@ -272,7 +311,7 @@ Now we examine Dinur's proof that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for
 That proof shows that the problem is hard under polynomial time many-one reductions, but we show here that it is in fact hard under \NC{} many-one reductions.
 First, we claim without proof that \textsc{$q$-CSP} is hard for \NP{} under \NC{} many-one reductions (because the standard polynomial time many-one reductions showing that it is \NP-complete are in fact computable in logarithmic space).
 Next, consider (the high-level description of) the polynomial time many-one reduction from \textsc{$q$-CSP} to \textsc{$\frac{1}{2}$-gap $q$-CSP}: given as input constraint graph $G_0$, compute and output $G_{O(\log n)}$, where $G_{i + 1} = \mathcal{P}(\left(X(G_i)\right)^t)$ and $t \in O(1)$.
-Here, $X$ is a preprocessing function, the exponent $t$ denotes a constant number of constraint graph powering operations, and $\mathcal{P}$ denotes an assignment testing extension function.
+Here, $X$ is a preprocessing function, the exponent $t$ denotes a constant number of constraint graph powering operations, and $\mathcal{P}$ denotes an assignment testing composition function.
 If each of these three functions is computable by an \NC{} algorithm, then $G_{i + 1}$ can be computed from $G_i$ by an \NC{} algorithm, and hence so can $G_{O(\log n)}$ from $G_0$.
 We will consider each of the three functions below.
 
@@ -306,37 +345,33 @@ This proposition allows us to replace any polynomial time mildly explicit expand
 (Polynomial time fully explicit constant degree expander graphs exist; see \cite{rvw00}, for example.)
 
 Now, let us return to the preprocessing function $X$, which is defined in two parts, \cite[Definition~4.1]{dinur07} and \cite[Definition~4.2]{dinur07}.
-
-***********************
-
-\textbf{Complete the analysis here}
-
-***********************
+In the first part, each vertex $v$ is replaced by an \NC{} mildly explicit $d$-regular expander on $\deg(v)$ vertices in which the constraints on the edges of the expander are the equality constraint.
+In the second part, a constant number of self-loops along with the edges of a $d'$-regular \NC{} mildly explicit expander on $n$ vertices are added to the graph with null constraints on the added edges.
+Both of these parts are computable by an \NC{} algorithm; note that the size of the output graph in each case is linear in the size of the input graph, so a linear number of processors will suffice (with an additional multiplicative factor of a polynomial number of processors when constructing the expander graphs).
+We conclude the following.
 
 \begin{lemma}
   The preprocessing function $X$ is computable by an \NC{} algorithm.
 \end{lemma}
 
-Matrix multiplication is in \NC{}, and a constant number of matrix multiplications remains in \NC{}.
-
-***********************
-
-\textbf{Complete the analysis here}
-
-***********************
+Constraint graph powering, defined in \cite[Section~1.2]{dinur07}, is the standard graph powering operation with an additional operation on the alphabet and the set of constraints.
+Standard graph powering can be performed in \NC{} because matrix multiplication is in \NC{}, and a constant number of matrix multiplications remains in \NC{}.
+If the alphabet is of constant size, the power graph also has an alphabet of constant size, and each of the constraints becomes a new constraint of constant size (see \cite[Section~1.2]{dinur07} for the constraint construction).
+Each of the constraints (which is the same as the number of edges) can be written by a distinct processor in parallel constant time.
+We conclude the following.
 
 \begin{lemma}
-  Constraint graph powering with an exponent in $O(1)$ is computable by an \NC{} algorithm.
+  Computing the $k$th power of a $d$-regular constraint graph is computable by an \NC{} algorithm if both $k$ and $d$ are in $O(1)$.
 \end{lemma}
 
-***********************
-
-\textbf{Complete the analysis here}
-
-***********************
+The assignment testing composition \cite[Definition~5.1]{dinur07} consists of two parts.
+In the first part, each constraint is transformed into a Boolean circuit of constant size.
+In the second part, each circuit constructed in this way is provided as input to a computable assignment tester function (which we know exists \cite[Theorem~5.1]{dinur07}), and the output graph is the union of the output of all the assignment testers.
+Since the size of the input to the assignment tester is constant, the assignment tester need only be computable.
+Hence, each constraint can be processed this way, in parallel, in constant time with respect to the size of the input graph.
 
 \begin{lemma}
-  Assignment testing composition is computable by an \NC{} algorithm.
+  The assignment testing composition is computable by an \NC{} algorithm.
 \end{lemma}
 
 Since the preprocessing function, constraint graph powering, and assignment testing composition are all computable by an \NC{} algorithm, we conclude the following.
@@ -345,35 +380,7 @@ Since the preprocessing function, constraint graph powering, and assignment test
   There is a positive integer $q$ such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP{} under \NC{} many-one reductions.
 \end{lemma}
 
-From \autoref{lem:inapprox} and \autoref{lem:reduction}, we have the following.
-
-\begin{theorem}\label{thm:pcpnp}
-  $\PCP^\NC[O(\log n), O(1)] = \NP$.
-\end{theorem}
-
-Recall now \autoref{eq:pcpchain},
-\begin{equation*}
-  \PCP^\NC[O(\loglog n), O(1)] \subseteq \NNC(\polylog) \subseteq \PCP^\NC[O(\log n), O(1)].
-\end{equation*}
-This leaves the possibility that $\NNC(\polylog) = \PCP^\NC[\poly(\loglog n), O(1)]$, or $\NNC(\polylog) = \PCP^\NC[O(\frac{\log n}{\loglog n}), O(1)]$, for example.
-There is also the possibility that $\NNC(\polylog) = \PCP^\NC[O(\loglog n), \polylog]$; a straightforward simulation proves one inclusion of the equality.
-\begin{theorem}
-  $\PCP^\NC[O(\loglog n), \polylog] \subseteq \NNC(\polylog)$.
-\end{theorem}
-\begin{proof}
-  Let $L$ be a language in $\PCP^\NC[O(\loglog n), \polylog]$, and suppose $V$ is the corresponding PCP verifier that decides it using $r \loglog n$ bits of randomness and makes $q \log^k n$ queries to the proof string.
-  Construct $\NNC$ machine $M$ as follows on input $x$.
-  \begin{enumerate}
-  \item Guess a proof string $\pi$ of length $2^{r \loglog n} q \log^k n$.
-  \item For each $\rho$ of length $r \loglog n$ \emph{in parallel} simulate $V(x, \pi; \rho)$.
-  \item Accept if and only if at least half of the simulations accept.
-  \end{enumerate}
-In the initial step, guessing a proof string requires a polylogarithmic number of bits.
-In the second step, since $V$ is an \NC{} machine, a polylogarithmic number of parallel simulations of $V$ can be executed with only a polylogarithmic factor increase in size and no increase in depth.
-In the final step, computing the majority of a polylogarithmic number of bits can be done by an \NC{} circuit.
-Therefore $M$ is an $\NNC(\polylog)$ machine.
-The correctness of $M$ follows from the completeness and soundness of $V$.
-\end{proof}
+\autoref{thm:pcpnp} follows immediately from \autoref{lem:inapprox} and \autoref{lem:reduction}.
 
 \section{About this work}
 
