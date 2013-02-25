@@ -320,7 +320,7 @@ We begin with the \NC{} version of the necessary reduction.
 Now we examine Dinur's proof that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP{} \cite{dinur07}.
 That proof shows that the problem is hard under polynomial time many-one reductions, but we show here that it is in fact hard under \NC{} many-one reductions.
 First, we claim without proof that \textsc{$q$-CSP} is hard for \NP{} under \NC{} many-one reductions (because the standard polynomial time many-one reductions showing that it is \NP-complete are in fact computable in logarithmic space).
-Next, consider (the high-level description of) the polynomial time many-one reduction from \textsc{$q$-CSP} to \textsc{$\frac{1}{2}$-gap $q$-CSP}: given as input constraint graph $G_0$, compute and output $G_{O(\log n)}$, where $G_{i + 1} = \mathcal{P}(\left(X(G_i)\right)^t)$ and $t \in O(1)$.
+Next, consider (the high-level description of) the polynomial time many-one reduction from \textsc{$q$-CSP} to \textsc{$\frac{1}{2}$-gap $q$-CSP}: given constraint graph $G_0$ as input, compute and output $G_{O(\log n)}$, where $G_{i + 1} = \mathcal{P}(\left(X(G_i)\right)^t)$ and $t \in O(1)$.
 Here, $X$ is a preprocessing function, the exponent $t$ denotes a constant number of constraint graph powering operations, and $\mathcal{P}$ denotes an assignment testing composition function.
 If each of these three functions is computable by an \NC{} algorithm, then $G_{i + 1}$ can be computed from $G_i$ by an \NC{} algorithm, and hence so can $G_{O(\log n)}$ from $G_0$.
 We will consider each of the three functions below.
