@@ -63,6 +63,11 @@ Although our original intention was to show a result like $\NNC(\polylog) = \PCP
 This should be seen as evidence that such a result is unlikely; in fact, we show that such a simulation implies a deterministic subexponential time algorithm for \textsc{Satisfiability}!
 We are still, however, able to show that certain PCP classes are contained in $\NNC(\polylog)$.
 
+Recent work by other authors has focused on the practicality of implementing proof systems for \NP{} on real computers.
+Unlike this work, in which we completely ignore the resources required for the prover to transform the proof of membership in a language to a probabilistically checkable proof in the appropriate format, other works focus on efficient implementation of both the verifier and the prover.
+Also, some other works consider a model of proof system in which the prover and the verifier have some limited communication.
+See \cite{bcgt12, smbw12, svpbbw12, trmp12, gkr08} for more information.
+
 \section{Preliminaries}
 
 Throughout this work, $\log n$ denotes the base 2 logarithm of $n$.
