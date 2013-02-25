@@ -72,6 +72,13 @@ See \cite{bcgt12, smbw12, svpbbw12, trmp12, gkr08} for more information.
 
 Throughout this work, $\log n$ denotes the base 2 logarithm of $n$.
 
+\begin{definition}
+  For all functions $f, g \colon \mathbb{N} \to \mathbb{R}$, the function $f$ is in the class $O(g(n))$ if there exist real numbers $c$ and $N$ such that for all natural numbers $n$ we have $n > N$ implies $f(n) \leq c \cdot g(n)$.
+  If $f(n) < c \cdot g(n)$ then $f(n)$ is in $o(g(n))$.
+  If $f(n) \geq c \cdot g(n)$ then $f(n)$ is in $\Omega(g(n))$.
+  If $f(n) > c \cdot g(n)$ then $f(n)$ is in $\omega(g(n))$.
+\end{definition}
+
 We assume the reader knows the basic definitions from complexity theory, including those of the complexity classes \P, \NP, \DTIME, and \DSPACE.
 We define the complexity class \SUBEXP{}, the class of languages decidable by deterministic ``subexponential'' time Turing machines, as
 \begin{equation*}
@@ -85,13 +92,6 @@ We will also be considering $\NC^k$, the class of languages decidable by a famil
 We will denote by $\NC$ the union of all the $\NC^k$ classes.
 A language in $\NC^k$ can also be described as a language which admits an algorithm which uses a polynomial number of processors running in $O(\log^k n)$ time on a parallel random-access machine (PRAM).
 In this work, we describe \NC{} algorithms using this paradigm.
-
-\begin{definition}
-  For all functions $f, g \colon \mathbb{N} \to \mathbb{R}$, the function $f$ is in the class $O(g(n))$ if there exist real numbers $c$ and $N$ such that for all natural numbers $n$ we have $n > N$ implies $f(n) \leq c \cdot g(n)$.
-  If $f(n) < c \cdot g(n)$ then $f(n)$ is in $o(g(n))$.
-  If $f(n) \geq c \cdot g(n)$ then $f(n)$ is in $\Omega(g(n))$.
-  If $f(n) > c \cdot g(n)$ then $f(n)$ is in $\omega(g(n))$.
-\end{definition}
 
 \begin{definition}[{{\cite[Definition~1.1]{dinur07}}}]
   Let $V$ be a finite set of variables, defined by $V = \{x_1, x_2, \dotsc, x_n\}$, let $\Gamma$ be a finite alphabet, and let $q$ be a natural number.
