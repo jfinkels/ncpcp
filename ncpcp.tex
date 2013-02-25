@@ -293,7 +293,10 @@ The correctness of $M$ follows from the completeness and soundness of $V$.
 
 One method of showing $\PCP^\NC[O(\log n), O(1)] = \NP$ is to revisit a proof of the PCP Theorem and ensure that all computation can be performed by an \NC{} PCP verifier without affecting the correctness of the proof.
 We will consider Dinur's proof of the PCP Theorem \cite{dinur07}, which reduces the problem of proving $\PCP^\P[O(\log n), O(1)] = \NP$ to the problem of showing \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP.
-We begin with the \NC{} version of this reduction.
+Meir observes that although we would like a verifier running in polylogarithmic time, Dinur's proof requires $O(\log n)$ iterations of a polynomial time procedure, which yields a polynomial time procedure \cite[Section~1.2.1]{meir09}.
+We show that a closer look reveals that parallel polylogarithmic time is indeed possible without any new machinery.
+
+We begin with the \NC{} version of the necessary reduction.
 
 \begin{lemma}\label{lem:inapprox}
   If there is a positive integer $q$ such that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP{} under \NC{} many-one reductions, then $\PCP^\NC[O(\log n), O(1)] = \NP$.
