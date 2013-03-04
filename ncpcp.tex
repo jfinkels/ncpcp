@@ -223,19 +223,11 @@ As a generalization of the result of \cite{fs96}, we know $\NP = \PCP^\P[o(\log 
 Unfortunately, the obvious strategy for translating that proof to the \NC{} setting fails.
 The proof would have shown that $\NP = \PCP^{\NC^k}[o(\frac{\loglog n}{\log^k n}), O(1)]$ if and only if $\NC = \NP$, but this is already proven by \autoref{thm:ncpcp} and the fact that $\frac{\loglog n}{\log^k n} \leq \loglog n$.
 
-%% TODO this is true only if it turns out that q(n) and r(n) have the correct
-%% values in \cite{bcgt12}
-We also know the following strengthening of the original PCP Theorem. \textbf{TODO don't know if thats what BCGT12 is showing...}
-
-\begin{theorem}[{\cite[Section~2.1]{bcgt12}}]\label{thm:pcpnp}
+We also know the following strengthening of the original PCP Theorem.
+\begin{theorem}\label{thm:pcpnp}
   $\PCP^\NC[O(\log n), O(1)] = \NP$.
 \end{theorem}
-
-In \cite{bcgt12}, it seems that the authors actually show an \NC{} PCP verifier for the universal complete problem $U$ (also called the bounded halting problem) for random access machines (RAMs).
-For Turing machines, the problem is \NP-complete by a simple generic reduction.
-The problem remains \NP-hard for RAMs by reducing a Turing machine to a RAM in polynomial time by a straightforward simulation.
-Hence an \NC{} PCP verifier for the universal complete problem for RAMs implies the necessary inclusion of complexity classes.
-For an alternate proof of \autoref{thm:pcpnp}, see \autoref{sec:alternate}.
+The proof of this theorem is in \autoref{sec:dinur}.
 
 From \autoref{eq:chain}, \autoref{thm:ncpcp}, and \autoref{thm:pcpnp}, we have the two equivalent inclusion chains
 \begin{equation*}
@@ -377,7 +369,7 @@ If $\polyL \subsetneq \P$, we find that $\L \subsetneq \L^2 \subsetneq \dotsb \s
   By \autoref{lem:pneqpolyl}, we have $\P \subsetneq \polyL$.
 \end{proof}
 
-\section{Alternate proof of highly parallel probabilistically checkable proofs for \texorpdfstring{\NP}{NP}}\label{sec:alternate}
+\section{Probabilistically checkable proofs for nondeterministic polynomial time}\label{sec:dinur}
 
 One method of showing $\PCP^\NC[O(\log n), O(1)] = \NP$ is to revisit a proof of the PCP Theorem and ensure that all computation can be performed by an \NC{} PCP verifier without affecting the correctness of the proof.
 We will consider Dinur's proof of the PCP Theorem \cite{dinur07}, which reduces the problem of proving $\PCP^\P[O(\log n), O(1)] = \NP$ to the problem of showing \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP.
