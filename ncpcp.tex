@@ -169,15 +169,20 @@ From the definition, we see immediately that
 
 We first provide a PCP characterization of $\NNC(\polylog)$, then later we provide upper and lower bounds for the parameters of such a PCP verifier.
 
-\begin{theorem}
-  $\NNC(\polylog) = \PCP^{\NC}[O(\loglog n), \polylog]$.
+\begin{theorem}\label{thm:qplusr}
+  For all non-negative integers $q$ and $r$,
+  \begin{equation*}
+    \NNC(\log^q n) \subseteq \PCP^{\NC}[r \loglog n, O(\log^q n)] \subseteq \NNC(\log^{q + r} n),
+  \end{equation*}
+  and specifically
+  \begin{equation*}
+    \NNC(\log^q n) \subseteq \PCP^{\NC}[\loglog n, O(\log^q n)] \subseteq \NNC(\log^{q + 1} n).
+  \end{equation*}
 \end{theorem}
 \begin{proof}
-  One inclusion follows immediately from the definitions,
-  \begin{equation*}
-    \NNC(\polylog) \subseteq \PCP^{\NC}[0, \polylog] \subseteq \PCP^{\NC}[O(\loglog n), \polylog].
-  \end{equation*}
-  For the other direction, suppose $L \in \PCP^{\NC}[r \loglog n, c \log^q n]$ for some constants $r$, $q$, and $c$.
+  Let $q$ and $r$ be non-negative integers.
+  The inclusion $\NNC(\log^q n) \subseteq \PCP^\NC[r \loglog n, O(\log^q n)]$ follows immediately from the definitions.
+  For the other direction, suppose $L \in \PCP^{\NC}[r \loglog n, c \log^q n]$ for some constant $c$.
   Construct an $\NNC$ machine $M$ which proceeds as follows on input $x$ of length $n$.
   \begin{enumerate}
   \item Guess a proof string $\pi$ of length $2^{r \loglog n} c \log^q n$.
@@ -187,11 +192,15 @@ We first provide a PCP characterization of $\NNC(\polylog)$, then later we provi
 In the initial step, guessing a proof string requires $O(\log^{r + q} n)$ bits.
 In the second step, since $V$ is an \NC{} machine, a polylogarithmic number of parallel simulations of $V$ can be executed with only a polylogarithmic factor increase in size and no increase in depth.
 In the final step, computing the majority of a polylogarithmic number of bits can be done by an \NC{} circuit.
-Therefore $M$ is an $\NNC(\polylog)$ machine.
+Therefore $M$ is an $\NNC(\log^{q + r} n)$ machine.
 The correctness of $M$ follows from the completeness and soundness of $V$.
 \end{proof}
 
-First, consider the chain of inclusions
+\begin{corollary}
+  $\NNC(\polylog) = \PCP^{\NC}[O(\loglog n), \polylog]$.
+\end{corollary}
+
+Next, consider the chain of inclusions
 \begin{equation*}
   \NNC(\log n) \subseteq \NNC(\polylog) \subseteq \NNC(\poly).
 \end{equation*}
@@ -302,13 +311,71 @@ This makes sense: the ``difference'' between $\log n$ and a polynomial in $\log 
 \end{corollary}
 
 The first part of this corollary provides evidence that for certain classes of computational problems, an \NC{} PCP verifier cannot reduce the number of necessary queries.
-(However, it could still be the case that for some fixed $k$, we have $\PCP^\NC[O(\loglog n), O(1)] = \PCP^\NC[O(\loglog n), O(\log^k n)]$.)
+(However, it could still be the case that for some fixed positive integer $k$, we have $\PCP^\NC[O(\loglog n), O(1)] = \PCP^\NC[O(\loglog n), O(\log^k n)]$; we \textbf{CONJECTURE} that this is true for $k = 1$.)
 The second part provides evidence that for certain classes of computational problems, a verifier cannot reduce randomness in exchange for an increase in the number of necessary queries.
-\textbf{TODO add information about PCP(poly loglog n, ...)}
+Contrast this with \cite[Corollary~10]{fs96} which states that
+\begin{equation*}
+  \PCP^\NC[O(\log^k \log n), O(\log^d \log n)] \subseteq \PCP^\NC[O(\loglog n), O(\log^{d + k - 1} \log n)]
+\end{equation*}
+(they actually prove the result for polynomial time verifiers, but it holds for \NC{} ones as well).
+This yields the equality
+\begin{equation*}
+  \PCP^\NC[\poly(\loglog n), \poly(\loglog n)] = \PCP^\NC[O(\loglog n), \poly(\loglog n)],
+\end{equation*}
+which provides an even more severe collapse.
+\begin{theorem}
+  $\PCP^\NC[\poly(\loglog n), O(\log n)] = \NC$.
+\end{theorem}
+\begin{proof}
+  Using the fact that $O(\log^\alpha \log n) \subseteq O(\log n)$ for all non-negative integers $\alpha$ and the \textbf{CONJECTURE} that
+  \begin{equation*}
+    \PCP^\NC[O(\loglog n), O(\log n)] \subseteq \PCP^\NC[O(\loglog n), O(1)],
+  \end{equation*}
+  we have
+  \begin{align*}
+    \NC & \subseteq \PCP^\NC[\poly(\loglog n), \poly(\loglog n)] \\
+    & \subseteq \PCP^\NC[O(\loglog n), \poly(\loglog n)] \\
+    & \subseteq \PCP^\NC[O(\loglog n), O(\log n)] \\
+    & \subseteq \PCP^\NC[O(\loglog n), O(1)] \\
+    & \subseteq \NC.
+  \end{align*}
+\end{proof}
 
 Now we return to our original goal, finding a PCP characterization of \P.
 It is conjectured that \P{} and $\NNC(\polylog)$ are incomparable \cite{wolf94}.
-\textbf{TODO fill me in with possible consequences of PCP characterization for P}
+Using the results above, the conjecture implies that \P{} and $\PCP^\NC[O(\loglog n), \polylog]$ are incomparable.
+Can we prove any negative consequences of a \PCP{} characterization for \P?
+\autoref{thm:pinpcp} shows one such consequence.
+
+First, let us define $\L^k$ by $\L^k = \DSPACE(O(\log^k n))$ for all positive integers $k$, and $\polyL$ as $\polyL = \cup_{k} \L^k$.
+\begin{lemma}\label{lem:pneqpolyl}
+  $\P \neq \polyL$.
+\end{lemma}
+\begin{proof}
+  \P{} has complete languages under logarithmic space many-one reductions; \textsc{Boolean Formula Evaluation}, for example.
+  On the other hand, \polyL{} does not have complete languages under logarithmic space many-one reductions.
+  Assume for the sake of producing a contradiction that there were such a language, say language $A$.
+  By definition, $A$ must be in a fixed level of the \polyL{} hierarchy, say in $\L^k$ for some positive integer $k$.
+  By the Space Hierarchy Theorem, $\L^k \subsetneq \L^{k + 1}$.
+  Let $B$ be in $(\L^{k + 1} \setminus \L^k)$.
+  Since $A$ is complete for \polyL, there is a logarithmic space many-one reduction from $B$ to $A$.
+  The composition of the reduction with the $O(\log^k n)$ space algorithm that decides $L$ yields a $O(\log^k n)$ space algorithm for $B$.
+  Thus $B \in \L^k$, but this is a contradiction.
+  Therefore we conclude that \polyL{} does not have a complete problem under logarithmic space many-one reductions, and hence \P{} and \polyL{} cannot be equal.
+\end{proof}
+
+Although $\P \neq \polyL$, whether one is a strict subset of the other remains unknown.
+If $\P \subsetneq \polyL$, we find that $\P \subsetneq \QP$ (by exhaustive search).
+If $\polyL \subsetneq \P$, we find that $\L \subsetneq \L^2 \subsetneq \dotsb \subsetneq \polyL \subsetneq \P$.
+
+\begin{theorem}\label{thm:pinpcp}
+  If $\P \subseteq \PCP^\NC[O(\loglog n), \polylog]$ then $\P \subsetneq \polyL$.
+\end{theorem}
+\begin{proof}
+  By \autoref{thm:qplusr}, we have $\P \subseteq \NNC(\polylog)$.
+  By \cite[Corollary~3.2]{wolf94}, we have $\P \subseteq \polyL$.
+  By \autoref{lem:pneqpolyl}, we have $\P \subsetneq \polyL$.
+\end{proof}
 
 \section{Alternate proof of highly parallel probabilistically checkable proofs for \texorpdfstring{\NP}{NP}}\label{sec:alternate}
 
