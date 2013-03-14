@@ -73,6 +73,7 @@ See \cite{bcgt12, smbw12, svpbbw12, trmp12, gkr08} for more information.
 \section{Preliminaries}
 
 Throughout this work, $\log n$ denotes the base 2 logarithm of $n$.
+In the definitions below, $\mathbb{N}$ denotes the set of non-negative integers and $\mathbb{R}$ denotes the set of real numbers.
 
 \begin{definition}
   For all functions $f, g \colon \mathbb{N} \to \mathbb{R}$, the function $f$ is in the class $O(g(n))$ if there exist real numbers $c$ and $N$ such that for all natural numbers $n$ we have $n > N$ implies $f(n) \leq c \cdot g(n)$.
@@ -82,6 +83,8 @@ Throughout this work, $\log n$ denotes the base 2 logarithm of $n$.
 \end{definition}
 
 We assume the reader knows the basic definitions from complexity theory, including those of the complexity classes \P, \NP, \DTIME, and \DSPACE.
+We define the class $\L^k$ by $\L^k = \DSPACE(\log^k n)$ for all non-negative integers $k$ and the class \polyL{} by $\polyL = \cup_{k \in \mathbb{N}} \DSPACE(\log^k n)$.
+We denote the class $\L^1$ by simply \L.
 We define the complexity class \SUBEXP{}, the class of languages decidable by deterministic ``subexponential'' time Turing machines, as
 \begin{equation*}
   \SUBEXP = \cap_{\epsilon > 0} \DTIME(2^{n^\epsilon})
