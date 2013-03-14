@@ -10,6 +10,7 @@
 \usepackage{amssymb}
 
 \declaretheorem[numberwithin=section]{theorem}
+\declaretheorem[numberlike=theorem]{conjecture}
 \declaretheorem[numberlike=theorem]{corollary}
 \declaretheorem[numberlike=theorem]{lemma}
 \declaretheorem[numberlike=theorem]{proposition}
@@ -303,7 +304,7 @@ This makes sense: the ``difference'' between $\log n$ and a polynomial in $\log 
 \end{corollary}
 
 The first part of this corollary provides evidence that for certain classes of computational problems, an \NC{} PCP verifier cannot reduce the number of necessary queries.
-(However, it could still be the case that for some fixed positive integer $k$, we have $\PCP^\NC[O(\loglog n), O(1)] = \PCP^\NC[O(\loglog n), O(\log^k n)]$; we \textbf{CONJECTURE} that this is true for $k = 1$.)
+(However, it could still be the case that for some fixed positive integer $k$, we have $\PCP^\NC[O(\loglog n), O(1)] = \PCP^\NC[O(\loglog n), O(\log^k n)]$; see \autoref{con:smallqueries} below.)
 The second part provides evidence that for certain classes of computational problems, a verifier cannot reduce randomness in exchange for an increase in the number of necessary queries.
 Contrast this with \cite[Corollary~10]{fs96} which states that
 \begin{equation*}
@@ -314,16 +315,17 @@ This yields the equality
 \begin{equation*}
   \PCP^\NC[\poly(\loglog n), \poly(\loglog n)] = \PCP^\NC[O(\loglog n), \poly(\loglog n)],
 \end{equation*}
-which provides an even more severe collapse.
+which provides an even more severe collapse, assuming the following conjecture.
+\begin{conjecture}\label{con:smallqueries}
+  $\PCP^\NC[O(\loglog n), O(\log n)] = \PCP^\NC[O(\loglog n), O(1)]$.
+\end{conjecture}
+This is a scaled down version of some of the results of the research which led to the original PCP Theorem.
+If this conjecture holds, then $\poly(\loglog n)$ randomness and a logarithmic number of queries to the proof can be simulated deterministically.
 \begin{theorem}
-  $\PCP^\NC[\poly(\loglog n), O(\log n)] = \NC$.
+  If \autoref{con:smallqueries} holds, then $\PCP^\NC[\poly(\loglog n), O(\log n)] = \NC$.
 \end{theorem}
 \begin{proof}
-  Using the fact that $O(\log^\alpha \log n) \subseteq O(\log n)$ for all non-negative integers $\alpha$ and the \textbf{CONJECTURE} that
-  \begin{equation*}
-    \PCP^\NC[O(\loglog n), O(\log n)] \subseteq \PCP^\NC[O(\loglog n), O(1)],
-  \end{equation*}
-  we have
+  Combining \autoref{con:smallqueries} with the fact that $O(\log^\alpha \log n) \subseteq O(\log n)$ for all non-negative integers $\alpha$, we have
   \begin{align*}
     \NC & \subseteq \PCP^\NC[\poly(\loglog n), \poly(\loglog n)] \\
     & \subseteq \PCP^\NC[O(\loglog n), \poly(\loglog n)] \\
