@@ -482,26 +482,6 @@ Since the preprocessing function, constraint graph powering, and assignment test
 
 \autoref{thm:pcpnp} follows immediately from \autoref{lem:inapprox} and \autoref{lem:reduction}.
 
-\subsection{Approximability of constraint satisfaction problems}
-
-In \cite{ep06} and \cite{kmsv99} the authors discuss optimization problems which are ``canonically hard'' for classes of approximable optimization problems.
-Roughly, an optimization problem is canonically hard if there is a certain kind of reduction from all \NP{} decision problems in which an \NP{} witness can be reconstructed for the decision problem given a good enough approximate solution to the optimization problem.
-In \cite[Theorem~4]{kmsv99}, the authors state that the original PCP theorem from \cite{almss92} implies that \textsc{Maximum 3-Satisfiability} is canonically hard for \APX, the class of \NP{} optimization problems for which there is a constant factor approximation algorithm.
-Does Dinur's proof imply that \textsc{Maximum $q$-CSP}, the optimization problem corresponding to \textsc{$q$-CSP}, is canonically hard for \APX?
-In other words, can we reconstruct a satisfying assignment to the original constraint graph given an assignment satisfying at least half of the constraints of the constraint graph that results from Dinur's process described in the previous section?
-
-In \cite[Corollary~13]{trevisan98}, the author states that \textsc{Maximum $q$-CSP} has an \NC{} approximation scheme (which implies a polynomial time approximation scheme).
-If this problem were canonically hard for \APX, this would imply $\APX = \PTAS$, which is true if and only if $\P = \NP$.
-Therefore we conclude the following.
-\begin{theorem}
-  \textsc{Maximum $q$-CSP} is canonically hard for \APX if and only if $\P = \NP$.
-\end{theorem}
-What does this say about Dinur's reduction?
-It means that a satisfying assignment for the original constraint graph cannot be reconstructed from an assignment to the transformed constraint graph that satisfies most of the constraints.
-\begin{todo}
-  Is this correct?
-\end{todo}
-
 \section{About this work}
 
 Copyright 2013 Jef{}frey Finkelstein.
