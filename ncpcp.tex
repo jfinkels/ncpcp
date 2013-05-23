@@ -357,7 +357,7 @@ First, let us define $\L^k$ by $\L^k = \DSPACE(O(\log^k n))$ for all positive in
   By the Space Hierarchy Theorem, $\L^k \subsetneq \L^{k + 1}$.
   Let $B$ be in $(\L^{k + 1} \setminus \L^k)$.
   Since $A$ is complete for \polyL, there is a logarithmic space many-one reduction from $B$ to $A$.
-  The composition of the reduction with the $O(\log^k n)$ space algorithm that decides $L$ yields a $O(\log^k n)$ space algorithm for $B$.
+  The composition of the reduction with the $O(\log^k n)$ space algorithm that decides $A$ yields a $O(\log^k n)$ space algorithm for $B$.
   Thus $B \in \L^k$, but this is a contradiction.
   Therefore we conclude that \polyL{} does not have a complete problem under logarithmic space many-one reductions, and hence \P{} and \polyL{} cannot be equal.
 \end{proof}
