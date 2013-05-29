@@ -194,7 +194,7 @@ We first provide a PCP characterization of $\NNC(\polylog)$, then later we provi
   \item For each $\rho$ of length $r \loglog n$ \emph{in parallel} simulate $V(x, \pi; \rho)$.
   \item Accept if and only if at least half of the simulations accept.
   \end{enumerate}
-In the initial step, guessing a proof string requires $O(\log^{r + q} n)$ bits.
+In the initial step, guessing a proof string requires $O(\log^{q + r} n)$ bits.
 In the second step, since $V$ is an \NC{} machine, a polylogarithmic number of parallel simulations of $V$ can be executed with only a polylogarithmic factor increase in size and no increase in depth.
 In the final step, computing the majority of a polylogarithmic number of bits can be done by an \NC{} circuit.
 Therefore $M$ is an $\NNC(\log^{q + r} n)$ machine.
