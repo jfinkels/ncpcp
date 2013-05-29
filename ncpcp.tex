@@ -201,7 +201,7 @@ Therefore $M$ is an $\NNC(\log^{q + r} n)$ machine.
 The correctness of $M$ follows from the completeness and soundness of $V$.
 \end{proof}
 
-\begin{corollary}
+\begin{corollary}\label{cor:polylogeq}
   $\NNC(\polylog) = \PCP^{\NC}[O(\loglog n), \polylog]$.
 \end{corollary}
 
@@ -256,9 +256,9 @@ If we can provide evidence that $\NC \neq \NNC(\polylog)$ and that $\NNC(\polylo
   If $\NNC(\polylog) = \NP$, then
   \begin{align*}
     \NP & \subseteq \NNC(\polylog) \\
-        & \subseteq \DSPACE(\polylog) & \text{(by \cite{wolf94})} \\
-        & \subseteq \DTIME(2^{\polylog}) & \text{(by exhaustive search)} \\
-        & = \QP & \text{(by definition)}.
+        & \subseteq \DSPACE(\polylog) && \text{by \cite{wolf94}} \\
+        & \subseteq \DTIME(2^{\polylog}) && \text{by exhaustive search} \\
+        & = \QP && \text{by definition}.
   \end{align*}
   Now suppose $\NC = \NNC(\polylog)$.
   Since \textsc{Satisfiability} is complete for $\NP$ under deterministic polynomial time many-one reductions, it suffices to show a deterministic subexponential time algorithm for \textsc{Satisfiability}.
@@ -367,16 +367,23 @@ If $\P \subsetneq \polyL$, we find that $\P \subsetneq \QP$ (by exhaustive searc
 If $\polyL \subsetneq \P$, we find that $\L \subsetneq \L^2 \subsetneq \dotsb \subsetneq \polyL \subsetneq \P$.
 
 \begin{theorem}\label{thm:pinpcp}
-  If $\P \subseteq \PCP^\NC[O(\loglog n), \polylog]$ then $\P \subsetneq \polyL$.
+  \mbox{}
+  \begin{enumerate}
+  \item If $\P \subseteq \PCP^\NC[O(\loglog n), \polylog]$ then $\P \subsetneq \polyL$.
+  \item If $\polyL \subsetneq \P$ then $\PCP^\NC[O(\loglog n), \polylog] \subsetneq \P$.
+  \end{enumerate}
 \end{theorem}
 \begin{proof}
-  By \autoref{thm:qplusr}, we have $\P \subseteq \NNC(\polylog)$.
-  By \cite[Corollary~3.2]{wolf94}, we have $\P \subseteq \polyL$.
-  By \autoref{lem:pneqpolyl}, we have $\P \subsetneq \polyL$.
+  These implications are a consequence of the three facts
+  \begin{enumerate}
+  \item $\PCP^\NC[O(\loglog n), \polylog] \subseteq \NNC(\polylog)$ (\autoref{cor:polylogeq}),
+  \item $\NNC(\polylog) \subseteq \polyL$ (\cite[Corollary~3.2]{wolf94}), and
+  \item $\P \neq \polyL$ (\autoref{lem:pneqpolyl}). \qedhere
+  \end{enumerate}
 \end{proof}
 
 \begin{todo}
-  Provide evidence that $\P \subsetneq \polyL$ is unlikely.
+  Provide evidence that $\P$ and $\polyL$ are incomparable, or at least $\P \subsetneq \polyL$ is unlikely, for example.
 \end{todo}
 
 \section{Probabilistically checkable proofs for nondeterministic polynomial time}\label{sec:dinur}
