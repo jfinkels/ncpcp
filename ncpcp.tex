@@ -342,29 +342,7 @@ If this conjecture holds, then $\poly(\loglog n)$ randomness and a logarithmic n
 Now we return to our original goal, finding a PCP characterization of \P.
 It is conjectured that \P{} and $\NNC(\polylog)$ are incomparable \cite{wolf94}.
 Using the results above, the conjecture implies that \P{} and $\PCP^\NC[O(\loglog n), \polylog]$ are incomparable.
-Can we prove any negative consequences of a \PCP{} characterization for \P?
-\autoref{thm:pinpcp} shows one such consequence.
-
-First, let us define $\L^k$ by $\L^k = \DSPACE(O(\log^k n))$ for all positive integers $k$, and $\polyL$ as $\polyL = \cup_{k} \L^k$.
-\begin{lemma}\label{lem:pneqpolyl}
-  $\P \neq \polyL$.
-\end{lemma}
-\begin{proof}
-  \P{} has complete languages under logarithmic space many-one reductions; \textsc{Boolean Circuit Evaluation}, for example.
-  On the other hand, \polyL{} does not have complete languages under logarithmic space many-one reductions.
-  Assume for the sake of producing a contradiction that there were such a language, say language $A$.
-  By definition, $A$ must be in a fixed level of the \polyL{} hierarchy, say in $\L^k$ for some positive integer $k$.
-  By the Space Hierarchy Theorem, $\L^k \subsetneq \L^{k + 1}$.
-  Let $B$ be in $(\L^{k + 1} \setminus \L^k)$.
-  Since $A$ is complete for \polyL, there is a logarithmic space many-one reduction from $B$ to $A$.
-  The composition of the reduction with the $O(\log^k n)$ space algorithm that decides $A$ yields a $O(\log^k n)$ space algorithm for $B$.
-  Thus $B \in \L^k$, but this is a contradiction.
-  Therefore we conclude that \polyL{} does not have a complete problem under logarithmic space many-one reductions, and hence \P{} and \polyL{} cannot be equal.
-\end{proof}
-
-Although $\P \neq \polyL$, whether one is a strict subset of the other remains unknown.
-If $\P \subsetneq \polyL$, we find that $\P \subsetneq \QP$ (by exhaustive search).
-If $\polyL \subsetneq \P$, we find that $\L \subsetneq \L^2 \subsetneq \dotsb \subsetneq \polyL \subsetneq \P$.
+\autoref{thm:pinpcp} shows negative consequences of a \PCP{} characterization for \P.
 
 \begin{theorem}\label{thm:pinpcp}
   \mbox{}
@@ -374,13 +352,17 @@ If $\polyL \subsetneq \P$, we find that $\L \subsetneq \L^2 \subsetneq \dotsb \s
   \end{enumerate}
 \end{theorem}
 \begin{proof}
-  These implications are a consequence of the three facts
+  These implications are a consequence of three facts.
   \begin{enumerate}
-  \item $\PCP^\NC[O(\loglog n), \polylog] \subseteq \NNC(\polylog)$ (\autoref{cor:polylogeq}),
-  \item $\NNC(\polylog) \subseteq \polyL$ (\cite[Corollary~3.2]{wolf94}), and
-  \item $\P \neq \polyL$ (\autoref{lem:pneqpolyl}). \qedhere
+  \item $\PCP^\NC[O(\loglog n), \polylog] \subseteq \NNC(\polylog)$ (\autoref{cor:polylogeq}).
+  \item $\NNC(\polylog) \subseteq \polyL$ (\cite[Corollary~3.2]{wolf94}).
+  \item $\P \neq \polyL$ (\cite[Theorem~3.10]{book76}). \qedhere
   \end{enumerate}
 \end{proof}
+
+Although $\P \neq \polyL$, whether one is a strict subset of the other remains unknown.
+If $\P \subsetneq \polyL$, then $\P \subsetneq \QP$ (by exhaustive search).
+If $\polyL \subsetneq \P$, then $\L \subsetneq \L^2 \subsetneq \dotsb \subsetneq \polyL \subsetneq \P$.
 
 \begin{todo}
   Provide evidence that $\P$ and $\polyL$ are incomparable, or at least $\P \subsetneq \polyL$ is unlikely, for example.
