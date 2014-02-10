@@ -3,7 +3,7 @@ PCPs for NC
 
 Restricted probabilistically checkable proofs for NC.
 
-This file was last updated on 25 October 2012.
+This file was last updated on 10 February 2014.
 
 Downloading
 -----------
@@ -17,8 +17,8 @@ To download the paper using [Git][1], run
 [1]: http://git-scm.com
 
 A somewhat recent version of this work should be available at
-https://github.com/jfinkels/ncpcp/downloads, but I can't guarantee that that
-will always be up to date, since I compile and upload it manually.
+https://cs-people.bu.edu/jeffreyf/static/pdf/ncpcp.pdf, but I can't guarantee
+that that will always be up to date, since I compile and upload it manually.
 
 Compilation dependencies
 ------------------------
@@ -33,8 +33,8 @@ packages:
 * `hyperref`
 * `thmtools`
 
-On Ubuntu 11.04, 11.10, 12.04, or 12.10, the necessary system packages which
-contain these LaTeX packages are:
+On Ubuntu 11.04 through 13.10, the necessary system packages which contain
+these LaTeX packages are:
 
 * `texlive-base`
 * `texlive-latex-base`
@@ -61,12 +61,12 @@ The output is `ncpcp.pdf`, and can be viewed with any PDF reader.
 Copyright
 ---------
 
-Copyright 2012 Jeffrey Finkelstein.
+Copyright 2012, 2013, 2014 Jeffrey Finkelstein.
 
-Except where otherwise noted, both the LaTeX markup and the content of both the
-article and the poster are made available under the terms of the Creative
-Commons Attribution-ShareAlike 3.0 license,
-https://creativecommons.org/licenses/by-sa/3.0/.
+Except where otherwise noted, both the LaTeX markup and the content of this
+article are made available under the terms of the Creative Commons
+Attribution-ShareAlike 4.0 International license,
+https://creativecommons.org/licenses/by-sa/4.0/.
 
 Contact
 -------
