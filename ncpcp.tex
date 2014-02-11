@@ -397,6 +397,14 @@ If $\polyL \subsetneq \P$, then $\L \subsetneq \L^2 \subsetneq \dotsb \subsetneq
 
 The following theorem is a generalization of \cite[Theorem~18]{trevisan98} that uses approximability of problems for which an exact solution is infeasible to construct an efficient deterministic simulation of PCP verifiers.
 
+\begin{todo}
+  There is a problem with the following theorem.
+  The way we have defined the acceptance problem has the existential quantification for $\pi$ after the random string $\rho$ has been chosen.
+  This means that the we could have a different proof string $\pi$ for each random string $\rho$.
+  This does not correspond to the PCP model, in which a single $\pi$ exists that works for many random strings $\rho$.
+  We need to somehow ensure that the reduction ensures that all the reduced instances have parts that are consistent with a single proof string.
+\end{todo}
+
 \begin{theorem}
   Suppose $P$ is an optimization problem in \NPO, and suppose $c$ and $s$ are real numbers with $0 \leq s \leq 0.5 < c \leq 1$.
   If
