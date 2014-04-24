@@ -1,13 +1,21 @@
 \documentclass{article}
 
-% Package `amsthm` and `thmtools` must come before package `hyperref`.
-\usepackage{amsthm}
-\usepackage{thmtools}
-% Package `hyperref` must come before package `complexity`.
-\usepackage[pdftitle={Restricted probabilistically checkable proofs}, pdfauthor={Jeffrey Finkelstein}]{hyperref}
-\usepackage{complexity}
 \usepackage{amsmath}
 \usepackage{amssymb}
+% This must come before hyperref.
+\usepackage{amsthm}
+% This must come before hyperref.
+\usepackage{thmtools}
+% This must come before complexity.
+\usepackage[pdftitle={Restricted probabilistically checkable proofs}, pdfauthor={Jeffrey Finkelstein}]{hyperref}
+%% This is strongly recommended by biblatex.
+\usepackage[english]{babel}
+%% This is strongly recommended by biblatex.
+\usepackage{csquotes}
+\usepackage[backend=biber]{biblatex}
+\usepackage{complexity}
+
+\addbibresource{references.bib}
 
 \declaretheorem[numberwithin=section]{theorem}
 \declaretheorem[numberlike=theorem]{conjecture}
@@ -32,8 +40,8 @@
 \newenvironment{proofidea}{\begin{proof}[Proof~idea]}{\end{proof}}
 
 \title{Restricted probabilistically checkable proofs}
-\author{Jef{}frey~Finkelstein}
-\date{\today}
+\author{Jeffrey~Finkelstein}
+%%\date{\today}
 
 \begin{document}
 \maketitle
@@ -68,7 +76,7 @@ We are still, however, able to show that certain PCP classes are contained in $\
 Recent work by other authors has focused on the practicality of implementing proof systems for \NP{} on real computers.
 Unlike this work, in which we completely ignore the resources required for the prover to transform the proof of membership in a language to a probabilistically checkable proof in the appropriate format, other works focus on efficient implementation of both the verifier and the prover.
 Also, some other works consider a model of proof system in which the prover and the verifier have some limited communication.
-See \cite{bcgt12, smbw12, svpbbw12, trmp12, gkr08} for more information.
+See \cite{bcgt13, smbw12, svpbbw12, trmp12, gkr08} for more information.
 
 \section{Preliminaries}
 
@@ -574,7 +582,6 @@ It is also licensed under the Creative Commons Attribution-ShareAlike 4.0 Intern
 
 The author can be contacted via email at \email{jeffreyf@bu.edu}.
 
-\bibliographystyle{plain}
-\bibliography{references}
+\printbibliography
 
 \end{document}

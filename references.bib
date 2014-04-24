@@ -21,7 +21,7 @@
  year = {2007},
  issn = {0004-5411},
  articleno = {12},
- url = {http://doi.acm.org/10.1145/1236457.1236459},
+% url = {http://doi.acm.org/10.1145/1236457.1236459},
  doi = {10.1145/1236457.1236459},
  acmid = {1236459},
  publisher = {ACM},
@@ -31,11 +31,15 @@
 
 @article{wolf94,
   title = {Nondeterministic circuits, space complexity and quasigroups},
-  author = {Marty J. Wolf},
   journal = {Theoretical Computer Science},
-  volume = {125},
-  year = {1994},
-  pages = {295--313}
+  volume = 125,
+  number = 2,
+  pages = {295--313},
+  year = 1994,
+  issn = {0304-3975},
+  doi = {10.1016/0304-3975(92)00014-I},
+  %url = "http://www.sciencedirect.com/science/article/pii/030439759200014I",
+  author = {Marty J. Wolf}
 }
 
 @book{savage98,
@@ -63,7 +67,7 @@
  editor={{Penczek, Wojciech and Sza\l{}as, Andrzej}},
  doi={10.1007/3-540-61550-4_162},
  title={{(poly(log log n), poly(log log n))--Restricted Verifiers are Unlikely to Exist for Languages in NP}},
- url={http://dx.doi.org/10.1007/3-540-61550-4_162},
+% url={http://dx.doi.org/10.1007/3-540-61550-4_162},
  doi={10.1007/3-540-61550-4_162},
  publisher={Springer Berlin Heidelberg},
  author={Fotakis, Dimitris and Spirakis, Paul},
@@ -105,7 +109,7 @@
   year = 1981,
   issn = "0022-0000",
   doi = "10.1016/0022-0000(81)90038-6",
-  url = "http://www.sciencedirect.com/science/article/pii/0022000081900386",
+%  url = "http://www.sciencedirect.com/science/article/pii/0022000081900386",
   author = "Walter L. Ruzzo"
 }
 
@@ -126,8 +130,7 @@
   issue={1},
   doi={10.1007/BF02090764},
   title={Classes of bounded nondeterminism},
-  doi={10.1007/BF02090764},
-  url={http://dx.doi.org/10.1007/BF02090764},
+%  url={http://dx.doi.org/10.1007/BF02090764},
   publisher={Springer-Verlag},
   author={{D\'{i}az, Josep and Tor\'{a}n, Jacobo}},
   pages={21-32},
@@ -154,7 +157,7 @@
   pages = {46--53},
   year = {1980},
   doi = {10.1137/0209003},
-  URL = {http://epubs.siam.org/doi/abs/10.1137/0209003},
+%  URL = {http://epubs.siam.org/doi/abs/10.1137/0209003},
   eprint = {http://epubs.siam.org/doi/pdf/10.1137/0209003}
 }
 
@@ -185,6 +188,7 @@
   booktitle={Foundations of Computer Science, 1991. Proceedings., 32nd Annual Symposium on},
   pages={2--12},
   year={1991},
+  doi = {10.1109/SFCS.1991.185341},
   organization={IEEE}
 }
 
@@ -194,17 +198,28 @@
   booktitle={Foundations of Computer Science, 2000. Proceedings. 41st Annual Symposium on},
   pages={3--13},
   year={2000},
+  isbn = {0-7695-0850-2},
+  doi = {10.1109/SFCS.2000.892006},
   organization={IEEE}
 }
 
-@techreport{bcgt12,
-  title = {{On the Concrete-Efficiency Threshold of Probabilistically-Checkable Proofs}},
-  author = {Eli Ben-Sasson and Alessandro Chiesa and Daniel Genkin and Eran Tromer},
-  year = {2012},
-  month = {December},
-  url = {http://eccc.hpi-web.de/report/2012/045/},
-  institution = {{ECCC}}
-}
+@inproceedings{bcgt13,
+ author = {Ben-Sasson, Eli and Chiesa, Alessandro and Genkin, Daniel and Tromer, Eran},
+ title = {On the Concrete Efficiency of Probabilistically-checkable Proofs},
+ booktitle = {Proceedings of the Forty-fifth Annual ACM Symposium on Theory of Computing},
+ series = {STOC '13},
+ year = 2013,
+% isbn = {978-1-4503-2029-0},
+ location = {Palo Alto, California, USA},
+ pages = {585--594},
+ numpages = 10,
+% url = {http://doi.acm.org/10.1145/2488608.2488681},
+ doi = {10.1145/2488608.2488681},
+ acmid = 2488681,
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {PCPs, low-degree tests, reed-solomon code},
+} 
 
 @inproceedings{smbw12,
   title={Making argument systems for outsourced computation practical (sometimes)},
@@ -221,12 +236,21 @@
 }
 
 @inproceedings{gkr08,
-  title={Delegating computation: interactive proofs for muggles},
-  author={Goldwasser, Shafi and Kalai, Yael Tauman and Rothblum, Guy N},
-  booktitle={Proceedings of the 40th annual ACM symposium on Theory of computing},
-  pages={113--122},
-  year={2008},
-  organization={ACM}
+ author = {Goldwasser, Shafi and Kalai, Yael Tauman and Rothblum, Guy N.},
+ title = {Delegating Computation: Interactive Proofs for Muggles},
+ booktitle = {Proceedings of the Fortieth Annual ACM Symposium on Theory of Computing},
+ series = {STOC '08},
+ year = {2008},
+ isbn = {978-1-60558-047-0},
+ location = {Victoria, British Columbia, Canada},
+ pages = {113--122},
+ numpages = {10},
+ %url = {http://doi.acm.org/10.1145/1374376.1374396},
+ doi = {10.1145/1374376.1374396},
+ acmid = {1374396},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {delegation, interactive proofs, muggles},
 }
 
 @inproceedings{svpbbw12,
@@ -242,6 +266,9 @@
   booktitle={Foundations of Computer Science, 2009. FOCS'09. 50th Annual IEEE Symposium on},
   pages={463--471},
   year={2009},
+  issn = {0272-5428},
+  isbn = {978-1-4244-5116-6},
+  doi = {10.1109/FOCS.2009.10},
   organization={IEEE}
 }
 
@@ -257,7 +284,7 @@
   issn = {0304-3975},
   pages = {369--377},
   numpages = {9},
-  url = {http://dx.doi.org/10.1016/j.tcs.2006.05.023},
+%  url = {http://dx.doi.org/10.1016/j.tcs.2006.05.023},
   doi = {10.1016/j.tcs.2006.05.023},
   acmid = {1167098},
   publisher = {Elsevier Science Publishers Ltd.},
@@ -283,7 +310,7 @@
   pages = {72--88},
   volume = {21},
   issue = {1},
-  url = {http://dx.doi.org/10.1007/PL00009209},
+%  url = {http://dx.doi.org/10.1007/PL00009209},
   doi = {10.1007/PL00009209},
   year = {1998}
 }
@@ -292,7 +319,7 @@
 	title = {{Translational lemmas, polynomial time, and $(log n)^j$-space}},
 	volume = 1,
 	issn = 03043975,
-	url = {http://linkinghub.elsevier.com/retrieve/pii/0304397576900578},
+%	url = {http://linkinghub.elsevier.com/retrieve/pii/0304397576900578},
 	doi = {10.1016/0304-3975(76)90057-8},
 	number = 3,
 	journal = {{Theoretical Computer Science}},

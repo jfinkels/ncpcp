@@ -1,5 +1,7 @@
 *~
 ncpcp.pdf
+*.bcf
+*.xml
 
 *.aux
 *.bbl
