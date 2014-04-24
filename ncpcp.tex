@@ -236,11 +236,10 @@ As a generalization of the result of \cite{fs96}, we know $\NP = \PCP^\P[o(\log 
 Unfortunately, the obvious strategy for translating that proof to the \NC{} setting fails.
 The proof would have shown that $\NP = \PCP^{\NC^k}[o(\frac{\loglog n}{\log^k n}), O(1)]$ if and only if $\NC = \NP$, but this is already proven by \autoref{thm:ncpcp} and the fact that $\frac{\loglog n}{\log^k n} \leq \loglog n$.
 
-We also know the following strengthening of the original PCP Theorem.
+We also know the following strengthening of the original PCP Theorem; the proof of this theorem is in \autoref{sec:dinur}.
 \begin{theorem}\label{thm:pcpnp}
   $\PCP^\NC[O(\log n), O(1)] = \NP$.
 \end{theorem}
-The proof of this theorem is in \autoref{sec:dinur}.
 
 From \autoref{eq:chain}, \autoref{thm:ncpcp}, and \autoref{thm:pcpnp}, we have the two equivalent inclusion chains
 \begin{equation*}
@@ -376,97 +375,95 @@ If $\polyL \subsetneq \P$, then $\L \subsetneq \L^2 \subsetneq \dotsb \subsetneq
   Provide evidence that $\P$ and $\polyL$ are incomparable, or at least $\P \subsetneq \polyL$ is unlikely, for example.
 \end{todo}
 
-\section{Approximability implies simulation of PCP}
+%% \section{Approximability implies simulation of PCP}
 
-\begin{definition}
-  Suppose $P$ is an optimization problem with $P = (I, S, m, t)$ and $\mathcal{C}$ is a complexity class.
-  $P$ is \emph{$\mathcal{C}$-additive} if there is a binary operation $\oplus$ on $I$ such that for all $x_1$ and $x_2$ in $I$,
-  \begin{enumerate}
-    %% TODO should this first condition allow O()?
-  \item $m^*(x_1 \oplus x_2) = m^*(x_1) + m^*(x_2)$,
-  \item $|x_1 \oplus x_2| = O(|x_1| + |x_2|)$, and
-  \item $\oplus$ is computable by a $\mathcal{C}$ algorithm.
-  \end{enumerate}
-\end{definition}
+%% \begin{definition}
+%%   Suppose $P$ is an optimization problem with $P = (I, S, m, t)$ and $\mathcal{C}$ is a complexity class.
+%%   $P$ is \emph{$\mathcal{C}$-additive} if there is a binary operation $\oplus$ on $I$ such that for all $x_1$ and $x_2$ in $I$,
+%%   \begin{enumerate}
+%%     %% TODO should this first condition allow O()?
+%%   \item $m^*(x_1 \oplus x_2) = m^*(x_1) + m^*(x_2)$,
+%%   \item $|x_1 \oplus x_2| = O(|x_1| + |x_2|)$, and
+%%   \item $\oplus$ is computable by a $\mathcal{C}$ algorithm.
+%%   \end{enumerate}
+%% \end{definition}
 
-\begin{definition}
-  Suppose $P$ is an optimization problem with $P = (I, S, m, t)$.
-  For any instance $x$ in $I$, the \emph{parameterized solution set of $x$}, denoted $S_{\geq k}(x)$, is defined by $S_{\geq k}(x) = \{ y \in S(x) \,|\, m(x, y) \geq k \}$.
-  The \emph{parameterized existence problem} for $P$, denoted $P_{\exists \geq k}$, is defined by $P_{\exists \geq k} = \{ x \in I \,|\, S_{\geq k}(x) \neq \emptyset \}$.
-\end{definition}
+%% \begin{definition}
+%%   Suppose $P$ is an optimization problem with $P = (I, S, m, t)$.
+%%   For any instance $x$ in $I$, the \emph{parameterized solution set of $x$}, denoted $S_{\geq k}(x)$, is defined by $S_{\geq k}(x) = \{ y \in S(x) \,|\, m(x, y) \geq k \}$.
+%%   The \emph{parameterized existence problem} for $P$, denoted $P_{\exists \geq k}$, is defined by $P_{\exists \geq k} = \{ x \in I \,|\, S_{\geq k}(x) \neq \emptyset \}$.
+%% \end{definition}
 
-\begin{definition}
-  Suppose $\mathcal{C}$ is a complexity class and $c$ and $s$ are real numbers in $[0, 1]$.
-  The \emph{acceptance problem for $\PCP^\mathcal{C}_{c, s}$ verifiers} is defined as
-  \begin{equation*}
-    \left\{(V, x, \rho) \, \middle| \, V \text{ is a $\PCP^\mathcal{C}_{c, s}$ verifier and } \, \exists \pi \colon V(x, \pi; \rho) \text{ accepts}\right\}.
-  \end{equation*}
-\end{definition}
+%% \begin{definition}
+%%   Suppose $\mathcal{C}$ is a complexity class and $c$ and $s$ are real numbers in $[0, 1]$.
+%%   The \emph{acceptance problem for $\PCP^\mathcal{C}_{c, s}$ verifiers} is defined as
+%%   \begin{equation*}
+%%     \left\{(V, x, \rho) \, \middle| \, V \text{ is a $\PCP^\mathcal{C}_{c, s}$ verifier and } \, \exists \pi \colon V(x, \pi; \rho) \text{ accepts}\right\}.
+%%   \end{equation*}
+%% \end{definition}
 
-The following theorem is a generalization of \cite[Theorem~18]{trevisan98} that uses approximability of problems for which an exact solution is infeasible to construct an efficient deterministic simulation of PCP verifiers.
+%% The following theorem is a generalization of \cite[Theorem~18]{trevisan98} that uses approximability of problems for which an exact solution is infeasible to construct an efficient deterministic simulation of PCP verifiers.
 
-\begin{todo}
-  There is a problem with the following theorem.
-  The way we have defined the acceptance problem has the existential quantification for $\pi$ after the random string $\rho$ has been chosen.
-  This means that the we could have a different proof string $\pi$ for each random string $\rho$.
-  This does not correspond to the PCP model, in which a single $\pi$ exists that works for many random strings $\rho$.
-  We need to somehow ensure that the reduction ensures that all the reduced instances have parts that are consistent with a single proof string.
-\end{todo}
+%% \begin{todo}
+%%   There is a problem with the following theorem.
+%%   The way we have defined the acceptance problem has the existential quantification for $\pi$ after the random string $\rho$ has been chosen.
+%%   This means that the we could have a different proof string $\pi$ for each random string $\rho$.
+%%   This does not correspond to the PCP model, in which a single $\pi$ exists that works for many random strings $\rho$.
+%%   We need to somehow ensure that the reduction ensures that all the reduced instances have parts that are consistent with a single proof string.
+%% \end{todo}
 
-\begin{theorem}
-  Suppose $P$ is an optimization problem in \NPO, and suppose $c$ and $s$ are real numbers with $0 \leq s \leq 0.5 < c \leq 1$.
-  If
-  \begin{enumerate}
-  \item $P$ is \P-additive,
-    %% TODO can we allow just the budget problem here?
-  \item for some positive integer $k$, there is a polynomial time many-one reduction from the acceptance problem for $\PCP^\P_{c, s}$ verifiers to $P_{\exists \geq k}$, and
-  \item $P$ has a polynomial time $\frac{c}{s}$-approximator,
-  \end{enumerate}
-  then $\PCP^\P_{c, s}[r \log n, q] \subseteq \P$.
-\end{theorem}
-\begin{proof}
-  Suppose $L \in \PCP^\P_{c, s}[r \log n, q]$, and let $V$ be the PCP verifier that decides $L$.
-  Let $\oplus$ be the operation guaranteed by the first condition of the hypothesis, $T$ the reduction guaranteed by the second, and $A$ the approximator guaranteed by the third.
-  Let $m$ be the measure function of the optimization problem $P$.
+%% \begin{theorem}
+%%   Suppose $P$ is an optimization problem in \NPO, and suppose $c$ and $s$ are real numbers with $0 \leq s \leq 0.5 < c \leq 1$.
+%%   If
+%%   \begin{enumerate}
+%%   \item $P$ is \P-additive,
+%%     %% TODO can we allow just the budget problem here?
+%%   \item for some positive integer $k$, there is a polynomial time many-one reduction from the acceptance problem for $\PCP^\P_{c, s}$ verifiers to $P_{\exists \geq k}$, and
+%%   \item $P$ has a polynomial time $\frac{c}{s}$-approximator,
+%%   \end{enumerate}
+%%   then $\PCP^\P_{c, s}[r \log n, q] \subseteq \P$.
+%% \end{theorem}
+%% \begin{proof}
+%%   Suppose $L \in \PCP^\P_{c, s}[r \log n, q]$, and let $V$ be the PCP verifier that decides $L$.
+%%   Let $\oplus$ be the operation guaranteed by the first condition of the hypothesis, $T$ the reduction guaranteed by the second, and $A$ the approximator guaranteed by the third.
+%%   Let $m$ be the measure function of the optimization problem $P$.
 
-  Construct deterministic Turing machine $M$ that proceeds as follows on inputs $x$ of length $n$.
-  \begin{enumerate}
-  \item For each string $\rho$ of length $r \log n$, let $z_i = T(V, x, \rho)$.
-  \item Let $Z = \bigoplus_{i = 1}^{n^r} z_i$.
-  \item Accept if and only if $m(Z, A(Z)) \geq k s n^r$.
-  \end{enumerate}
+%%   Construct deterministic Turing machine $M$ that proceeds as follows on inputs $x$ of length $n$.
+%%   \begin{enumerate}
+%%   \item For each string $\rho$ of length $r \log n$, let $z_i = T(V, x, \rho)$.
+%%   \item Let $Z = \bigoplus_{i = 1}^{n^r} z_i$.
+%%   \item Accept if and only if $m(Z, A(Z)) \geq k s n^r$.
+%%   \end{enumerate}
 
-  This algorithm halts in polynomial time (note that $|Z|$ is in $O(n^r \max_i |z_i|)$, polynomial in $n$ since the size of each $z_i$ is).
-  If $x \in L$ then at least $c n^r$ of the $(V, x, \rho)$ correspond to accepting computations, so the same number of the $z_i$ have $m^*(z_i) \geq k$.
-  By the additivity of $P$ we have
-  \begin{equation*}
-    m^*(Z) = \sum_{i = 1}^{n^r} m^*(z_i) \geq k c n^r.
-  \end{equation*}
-  By the $\frac{c}{s}$-approximability of $P$, we have
-  \begin{equation*}
-    \frac{c}{s} \geq \frac{m^*(Z)}{m(Z, A(Z))} \geq \frac{k c n^r}{m(Z, A(Z))}.
-  \end{equation*}
-  By rearranging this inequality, we find $m(Z, A(Z)) \geq k s n^r$, and hence the machine $M$ accepts $x$.
-  On the other hand, if $x \notin L$ then by similar reasoning, $m(Z, A(Z)) \leq m^*(Z) < k s n^r$, and thus $M$ rejects $x$.
-  We conclude that $M$ is a correct deterministic polynomial time Turing machine that decides $L$, and therefore $\PCP^\P_{c, s}[r \log n, q] \subseteq \P$
-\end{proof}
+%%   This algorithm halts in polynomial time (note that $|Z|$ is in $O(n^r \max_i |z_i|)$, polynomial in $n$ since the size of each $z_i$ is).
+%%   If $x \in L$ then at least $c n^r$ of the $(V, x, \rho)$ correspond to accepting computations, so the same number of the $z_i$ have $m^*(z_i) \geq k$.
+%%   By the additivity of $P$ we have
+%%   \begin{equation*}
+%%     m^*(Z) = \sum_{i = 1}^{n^r} m^*(z_i) \geq k c n^r.
+%%   \end{equation*}
+%%   By the $\frac{c}{s}$-approximability of $P$, we have
+%%   \begin{equation*}
+%%     \frac{c}{s} \geq \frac{m^*(Z)}{m(Z, A(Z))} \geq \frac{k c n^r}{m(Z, A(Z))}.
+%%   \end{equation*}
+%%   By rearranging this inequality, we find $m(Z, A(Z)) \geq k s n^r$, and hence the machine $M$ accepts $x$.
+%%   On the other hand, if $x \notin L$ then by similar reasoning, $m(Z, A(Z)) \leq m^*(Z) < k s n^r$, and thus $M$ rejects $x$.
+%%   We conclude that $M$ is a correct deterministic polynomial time Turing machine that decides $L$, and therefore $\PCP^\P_{c, s}[r \log n, q] \subseteq \P$
+%% \end{proof}
 
-%% We can translate this result first to the setting of somewhat parallel approximations for infeasible problems, then to highly parallel approximations for somewhat parallel problems, and finally to highly parallel approximations for inherently sequential problems.
-A similar proof applies for \NC{} simulation of restricted PCP verifiers.
+%% %% We can translate this result first to the setting of somewhat parallel approximations for infeasible problems, then to highly parallel approximations for somewhat parallel problems, and finally to highly parallel approximations for inherently sequential problems.
+%% A similar proof applies for \NC{} simulation of restricted PCP verifiers.
 
-\begin{corollary}
-  Suppose $P$ is an optimization problem in $\NNCO(\polylog)$, and suppose $c$ and $s$ are real numbers with $0 \leq s \leq 0.5 < c \leq 1$.
-  If
-  \begin{enumerate}
-  \item $P$ is $\NC$-additive,
-    %% TODO can we allow just the budget problem here?
-  \item for some positive integer $k$, there is an $\NC$ many-one reduction from the acceptance problem for $\PCP^\NC_{c, s}$ verifiers to $P_{\exists \geq k}$, and
-  \item $P$ has an \NC{} $\frac{c}{s}$-approximator,
-  \end{enumerate}
-  then $\PCP^\NC_{c, s}[r \log n, q] \subseteq \NC$.
-\end{corollary}
-
-
+%% \begin{corollary}
+%%   Suppose $P$ is an optimization problem in $\NNCO(\polylog)$, and suppose $c$ and $s$ are real numbers with $0 \leq s \leq 0.5 < c \leq 1$.
+%%   If
+%%   \begin{enumerate}
+%%   \item $P$ is $\NC$-additive,
+%%     %% TODO can we allow just the budget problem here?
+%%   \item for some positive integer $k$, there is an $\NC$ many-one reduction from the acceptance problem for $\PCP^\NC_{c, s}$ verifiers to $P_{\exists \geq k}$, and
+%%   \item $P$ has an \NC{} $\frac{c}{s}$-approximator,
+%%   \end{enumerate}
+%%   then $\PCP^\NC_{c, s}[r \log n, q] \subseteq \NC$.
+%% \end{corollary}
 
 \section{Probabilistically checkable proofs for nondeterministic polynomial time}\label{sec:dinur}
 
