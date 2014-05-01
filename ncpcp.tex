@@ -251,15 +251,19 @@ and
 \end{equation*}
 where the PCP verifier is an \NC{} machine.
 If we can provide evidence that $\NC \neq \NNC(\polylog)$ and that $\NNC(\polylog) \neq \NP$, we can conclude that the corresponding PCP classes are also likely distinct.
+This theorem provides that evidence.
 
-\begin{theorem}
+\begin{theorem}\label{thm:npinqp}
   \mbox{}
   \begin{enumerate}
   \item If $\NC = \NNC(\polylog)$, then $\NP \subseteq \SUBEXP$.
   \item If $\NNC(\polylog) = \NP$, then $\NP \subseteq \QP$.
   \end{enumerate}
 \end{theorem}
-\begin{proof}
+%% TODO link to explanation of ETH, link to NP in QP implies EXP = NEXP
+Each of the two conclusions in this theorem implies that the exponential time hypothesis is false.
+Furthermore, in the latter case, the conclusion implies that $\EXP = \NEXP$.
+\begin{proof}[Proof of \autoref{thm:npinqp}]
   If $\NNC(\polylog) = \NP$, then
   \begin{align*}
     \NP & = \NNC(\polylog) \\
@@ -281,7 +285,7 @@ If we can provide evidence that $\NC \neq \NNC(\polylog)$ and that $\NNC(\polylo
   On input $\phi'$, check that $\phi'$ is in the format $\phi \# 1^P$, then accept if and only if $M$ accepts $\phi$.
   The correctness of this algorithm follows from the correctness of $M$, so it remains to check the size and depth of the circuit for $M_j$, and the amount of nondeterminism used.
 
-  Checking that $x'$ is in the correct format can be performed (deterministically) by an $\NC^0$ circuit by computing the conjunction of all the bits after the $\#$ symbol.
+  Checking that $x'$ is in the correct format can be performed (deterministically) by an $\NC^1$ circuit by computing the conjunction of all the bits after the $\#$ symbol.
   Observe now that $|x'| = 2^{n^\epsilon}$, so $n = \log^\frac{1}{\epsilon}{|x'|}$.
   The amount of nondeterminism used by $M_j$ is the same as the amount used by $M$, which is $O(n)$, or $O(\log^\frac{1}{\epsilon} |x'|)$.
   The size of $M$ is polynomial in $n$, which is polylogarithmic in $|x'|$, and hence polynomial in the length of the input $x'$.
@@ -303,7 +307,7 @@ If we can provide evidence that $\NC \neq \NNC(\polylog)$ and that $\NNC(\polylo
   Therefore, this algorithm for \textsc{Satisfiability} can be implemented by a deterministic algorithm running in $O(2^{n^\epsilon})$ time for arbitrarily small $\epsilon$.
 \end{proof}
 
-Intuitively, this theorem states that the difference in complexity between languages in $\NC$ and languages in $\NNC(\polylog)$ is smaller than the difference in complexity between languages in $\NNC(\polylog)$ and languages in $\NP$.
+One interpretation of this theorem is that the difference in complexity between languages in $\NC$ and languages in $\NNC(\polylog)$ is smaller than the difference in complexity between languages in $\NNC(\polylog)$ and languages in $\NP$.
 This makes sense: the ratio of a polynomial in $\log n$ to $\log n$ is smaller than the ratio of a polynomial in $n$ to a polynomial in $\log n$.
 
 \begin{corollary}
@@ -330,7 +334,7 @@ which provides an even more severe collapse, assuming the following conjecture.
 \begin{conjecture}\label{con:smallqueries}
   $\PCP^\NC[O(\loglog n), O(\log n)] = \PCP^\NC[O(\loglog n), O(1)]$.
 \end{conjecture}
-This is a scaled down version of some of the results of the research which led to the original PCP Theorem.
+This is a scaled down version (that is, scaled from a \P{} verifier down to an \NC{} verifier) of some of the results of the research which led to the original PCP Theorem.
 If this conjecture holds, then $\poly(\loglog n)$ randomness and a logarithmic number of queries to the proof can be simulated deterministically.
 \begin{theorem}
   If \autoref{con:smallqueries} holds, then $\PCP^\NC[\poly(\loglog n), O(\log n)] = \NC$.
