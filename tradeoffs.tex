@@ -1,0 +1,145 @@
+%% tradeoffs.tex - Resource tradeoffs for limited nondeterminism
+%%
+%% Copyright 2014 Jeffrey Finkelstein.
+%%
+%% This LaTeX markup document is made available under the terms of the Creative
+%% Commons Attribution-ShareAlike 4.0 International License,
+%% https://creativecommons.org/licenses/by-sa/4.0/.
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+%% This must come before hyperref.
+\usepackage{amsthm}
+%% This must come before hyperref.
+\usepackage{thmtools}
+%% This must come before complexity.
+\usepackage{hyperref}
+%% This is strongly recommended by biblatex.
+\usepackage[english]{babel}
+%% This is strongly recommended by biblatex.
+\usepackage{csquotes}
+\usepackage[backend=biber]{biblatex}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{complexity}
+
+%\hypersetup{pdftitle={Tradeoffs in limited nondeterminism}, pdfauthor={Jeffrey Finkelstein}}
+
+\addbibresource{tradeoffs.bib}
+
+\declaretheorem[]{theorem}
+\declaretheorem[numberlike=theorem, style=definition]{definition}
+
+\newcommand{\quant}{\mathsf{Q}}
+\newcommand{\notquant}{\overline{\mathsf{Q}}}
+
+\title{Tradeoffs in limited nondeterminism}
+\author{Jeffrey Finkelstein}
+
+\begin{document}
+
+\maketitle
+
+\begin{definition}
+  A set of circuits $\{C_n\}_{n \in \mathbb{N}}$ is $\L$-uniform if there is a Turing machine $M$ that outputs $C_n$ on input $1^n$ while using at most $O(\log n)$ space.
+\end{definition}
+
+\begin{definition}
+  An \emph{$\NC$ circuit family} is an $\L$-uniform set of circuits $\{C_n\}_{n \in \mathbb{N}}$ such that for each $n \in \mathbb{N}$, the circuit $C_n$ is composed of \textsc{and}, \textsc{or}, and \textsc{not} gates of fan-in at most two
+\end{definition}
+
+\begin{definition}
+  A language $L$ is in $\NNC(\log^k n)$ if there is an $\NC$ circuit family $\{C_{n, m}\}_{n, m \in \mathbb{N}}$ such that $m \in O(\log^k n)$ and
+  \begin{itemize}
+  \item if $x \in L$, then there is a string $w$ such that $C_{n, m}(x, w) = 1$
+  \item if $x \notin L$, then for all strings $w$, we have $C_{n, m}(x, w) = 0$
+  \end{itemize}
+\end{definition}
+
+\begin{definition}[Probabilistic definition of $\NNC(\log^k n)$]
+  A language $L$ is in $\NNC(\log^k n)$ if there is an $\NC$ circuit family $\{C_{n, m}\}_{n \in \mathbb{N}}$ such that $m \in O(\log^k n)$ and
+  \begin{itemize}
+  \item if $x \in L$, then $\Pr[C_{n, m}(x, r) = 1] > 0$
+  \item if $x \notin L$, then $\Pr[C_{n, m}(x, r) = 1] = 0$
+  \end{itemize}
+  where the probability is over all strings $r$ of length $m$.
+\end{definition}
+
+\begin{definition}
+  A language $L$ is in $\coRNC(\log^k n)$ if there is an $\NC$ circuit family $\{C_{n, m}\}_{n, m \in \mathbb{N}}$ such that for all strings $x$ of length $n$,
+  \begin{itemize}
+  \item if $x \in L$, then $\Pr[C_{n, m}(x, r) = 1] > \frac{1}{2}$
+  \item if $x \notin L$, then $\Pr[C_{n, m}(x, r) = 1] = 0$
+  \end{itemize}
+  where the probability is over all strings $r$ of length $m$.
+\end{definition}
+
+\begin{definition}
+  A language $L$ is in $\BPNC(\log^k n)$ if there is an $\NC$ circuit family $\{C_{n, m}\}_{n, m \in \mathbb{N}}$ such that for all strings $x$ of length $n$,
+  \begin{itemize}
+  \item if $x \in L$, then $\Pr[C_{n, m}(x, r) = 1] \geq \frac{2}{3}$
+  \item if $x \notin L$, then $\Pr[C_{n, m}(x, r) = 1] < \frac{1}{3}$
+  \end{itemize}
+  where the probability is over all strings $r$ of length $m$.
+\end{definition}
+
+\begin{definition}
+  A language $L$ is in $\betakSigmadNC$ if there is an $\NC$ circuit family $\{C_{n_0, \dotsc, n_d}\}_{n_0, \dotsc, n_d \in \mathbb{N}}$ such that for each $i \in \{1, \dotsc, d\}$, the value of $n_i$ is in $O(\log^k n_0)$, and for all strings $x$ of length $n_0$
+  \begin{itemize}
+  \item if $x \in L$, then $\exists w_1 \forall w_2 \dotsb \quant_d w_d \colon C_{n_0, \dotsc, n_d}(x, w_1, \dotsc, w_d) = 1$
+  \item if $x \notin L$, then $\forall w_1 \exists w_2 \dotsb \notquant_d w_d \colon C_{n_0, \dotsc, n_d}(x, w_1, \dotsc, w_d) = 0$
+  \end{itemize}
+  where $\quant$ is $\forall$ if $d$ is even and $\exists$ if $d$ is odd, and $\notquant$ is the opposite.
+\end{definition}
+
+\begin{definition}
+  $\betaH = \bigcup_{d \in \mathbb{N}} \betakSigmadNC$.
+\end{definition}
+
+\begin{theorem}
+  $\coRNC(\log^k n) \subseteq \NNC(\log^k n)$ for all $k \in \mathbb{N}$.
+\end{theorem}
+\begin{proof}
+  This inclusion follows immediately from the definitions.
+\end{proof}
+
+\begin{theorem}[Sipser--Gács--Lautemann]
+  $\BPNC(\log^k n) \subseteq \betakSigmaTNC \cap \betakPiTNC$ for all $k \in \mathbb{N}$.
+\end{theorem}
+\begin{proof}[Proof sketch]
+  The proof of this theorem is analagous to the proof that $\BPP \subseteq \SigmaTP \cap \PiTP$.
+  The only difference is that the quantifiers need only quantify over strings of polylogarithmic length instead of strings of polynomial length.
+
+  First, let $L$ be a language in $\BPNC(\log^k n)$.
+  Use randomness-efficient error reduction to transform the algorithm with error $\frac{1}{3}$ to one with error $2^{-\log^k n}$, while still using $O(\log^k n)$ bits of randomness \autocite[Corollary~1.4]{healy08}.
+  Next, construct a language $L'$ such that
+  \begin{itemize}
+  \item if $x \in L$, then $\exists s \forall r \colon (x, s, r) \in L'$
+  \item if $x \notin L$, then $\forall s \exists r \colon (x, s, r) \notin L'$
+  \end{itemize}
+  where $t$ is a constant and the lengths of $s$ and $r$ are in $O(\log^k n)$.
+  The string $s$ is the composition of a constant number of strings $s_i$ of length $O(\log^k n)$, each of which denotes a shift of the ``random'' string $r$.
+  The language $L'$ is an $\NC$ language that encodes the problem of deciding whether the ``random'' string $r \oplus s_i$ causes the original $\BPNC(\log^k n)$ machine to accept $x$.
+  This shows $\BPNC(\log^k n) \subseteq \betakSigmaTNC$.
+  Since $\BPNC(\log^k n)$ is closed under complement, the result follows.
+\end{proof}
+
+%% \begin{lemma}
+%%   For each $k \in \mathbb{N}$, if there is a $d \in \mathbb{N}^+$ such that $\betakSigmadNC \subseteq \betakPidNC$, then $\betakSigmadNC = \betakPidNC = \betaH$.
+%% \end{lemma}
+%% \begin{proof}
+%%   This is a proof by induction on $d$.
+%%   Let $k$ be an arbitrary integer.
+%%   If $d = 1$, then 
+%% \end{proof}
+
+\begin{theorem}[Karp--Lipton]
+  If $\beta_k \NC \subseteq \Ppoly$, then $\betakSigmaTNC = \betaH$.
+\end{theorem}
+\begin{proof}
+  Everything works out as it should.
+\end{proof}
+
+\printbibliography
+
+\end{document}
