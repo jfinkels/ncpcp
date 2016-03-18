@@ -426,6 +426,26 @@ Although $\P \neq \polyL$, whether one is a strict subset of the other remains u
 If $\P \subsetneq \polyL$, then $\P \subsetneq \QP$ (by exhaustive search over the quasipolynomial number of configurations of the $\polyL$ machine).
 If $\polyL \subsetneq \P$, then $\L \subsetneq \L^2 \subsetneq \dotsb \subsetneq \polyL \subsetneq \P$.
 
+\section{Inapproximability from PCPs}
+
+Consider the \emph{maximum high degree subgraph problem}.
+
+\begin{definition}[\textsc{Maximum High Degree Subgraph}]
+  \mbox{} \\
+  \begin{tabular}{r p{9.2cm}}
+    \textbf{Instance:} & undirected graph $G$, integer $d$. \\
+    \textbf{Solution:} & subset $S$ of vertices whose induced subgraph has minimum degree at least $d$. \\
+    \textbf{Measure:} & $|S|$. \\
+    \textbf{Type:} & maximization.
+  \end{tabular}
+\end{definition}
+
+This problem is a relaxation of the maximum clique problem, in which we require that the minimum degree of the induced subgraph is at least $|S| - 1$.
+There is a simple polynomial time algorithm that outputs optimal solutions for this problem: repeatedly remove vertices of degree less than $d$ from the graph.
+
+We know that the clique problem is inapproximable via a gap-introducing reduction from an arbitrary probabilistically checkable proof system \autocite{fglss91}.
+Can we use a similar reduction to provide a gap-introducing reduction from our restricted PCPs to the maximum high degree subgraph problem?
+
 %% \section{Approximability implies simulation of PCP}
 
 %% \begin{definition}
