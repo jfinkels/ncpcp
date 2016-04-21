@@ -60,12 +60,12 @@
 \declaretheorem[numberlike=theorem]{corollary}
 \declaretheorem[numberlike=theorem]{lemma}
 \declaretheorem[numberlike=theorem]{proposition}
-\declaretheorem[numberlike=theorem]{todo}
 \declaretheorem[numberlike=theorem, style=definition]{construction}
 \declaretheorem[numberlike=theorem, style=definition]{definition}
 
 %% Custom commands are declared here.
 \newcommand{\email}[1]{\textlangle\href{mailto:#1}{\nolinkurl{#1}}\textrangle}
+\newcommand{\todo}[1]{\textbf{TODO #1}}
 %% Arguments:
 %%  1. Complexity class of the verifier
 %%  2. Completeness probability
@@ -99,7 +99,7 @@
 \section{Introduction}
 
 In this work we provide some initial structural complexity results for classes of probabilistically checkable proof systems (PCPs) for nondeterministic \NC{} (\NNC) circuit families, as a first step towards characterizing probabilistic proof systems for \P.
-One of the major successes of the characterization of \NP{} as a class of PCPs (with polynomial time verifiers) is that it provides a route to proving that approximating certain computationally intractable optimization problems is as difficult as solving them exactly.
+One of the major successes of the characterization of \NP{} as a class of PCPs (with polynomial-time verifiers) is that it provides a route to proving that approximating certain computationally intractable optimization problems is as difficult as solving them exactly.
 The growth of multiprocessor systems in general purpose personal computers highlights the urgency of proving the analagous inapproximability (or approximability) of \emph{inherently sequential} optimization problems by \emph{highly parallel} algorithms.
 The \P-complete problems are generally considered to be inherently sequential, whereas problems in \NC{} are considered highly parallel.
 Our guiding question is now, ``For which \P-complete problems are there \NC{} approximation algorithms, and for which are there none?''
@@ -303,7 +303,7 @@ where the PCP verifier is an \NC{} machine.
 If we can provide evidence that $\NC \neq \NNC(\polylog)$ and that $\NNC(\polylog) \neq \NP$, we can conclude that the corresponding PCP classes are also likely distinct.
 This theorem, adapted from \autocite[Theorem~1]{dt90} (therein attributed to R. Beigel), provides that evidence.
 
-\todo{Further evidence that $\NC \neq \NNC(\polylog)$ is that $\NNC(\polylog) = \NC \subseteq \P$ implies $\W[P]$ collapses to $\FPT$}
+\todo{There is further evidence that $\NC \neq \NNC(\polylog)$: the fact that $\NNC(\polylog) = \NC \subseteq \P$ implies $\W[P]$ collapses to $\FPT$}
 
 \begin{theorem}\label{thm:npinqp}
   \mbox{}
@@ -324,7 +324,7 @@ Furthermore, in the latter case, the conclusion implies that $\EXP = \NEXP$.
         & = \QP && \text{by definition}.
   \end{align*}
   Now suppose $\NC = \NNC(\polylog)$.
-  Since \textsc{Satisfiability} is complete for $\NP$ under deterministic polynomial time many-one reductions, it suffices to show a deterministic subexponential time algorithm for \textsc{Satisfiability}.
+  Since \textsc{Satisfiability} is complete for $\NP$ under deterministic polynomial-time many-one reductions, it suffices to show a deterministic subexponential time algorithm for \textsc{Satisfiability}.
 
   The proof uses a padding argument.
   First we observe that there is an $\NNC^1(n)$ machine, call it $M$, that decides \textsc{Satisfiability}: given a Boolean formula $\phi$, guess a satisfying assignment to $\phi$ (of length $O(n)$) and evaluate the formula (Boolean formula evaluation is in $\NC^1$ \autocite{buss87}).
@@ -377,7 +377,7 @@ Contrast this with \autocite[Corollary~10]{fs96} which states that
 \begin{equation*}
   \PCP^\NC[O(\log^k \log n), O(\log^d \log n)] \subseteq \PCP^\NC[O(\loglog n), O(\log^{d + k - 1} \log n)]
 \end{equation*}
-(they actually prove the result for polynomial time verifiers, but it holds for \NC{} ones as well).
+(they actually prove the result for polynomial-time verifiers, but it holds for \NC{} ones as well).
 This yields the equality
 \begin{equation*}
   \PCP^\NC[\poly(\loglog n), \poly(\loglog n)] = \PCP^\NC[O(\loglog n), \poly(\loglog n)],
@@ -443,7 +443,7 @@ Consider the \emph{maximum high degree subgraph problem}.
 \end{definition}
 
 This problem is a relaxation of the maximum clique problem, in which we require that the minimum degree of the induced subgraph is at least $|S| - 1$.
-There is a simple polynomial time algorithm that outputs optimal solutions for this problem: repeatedly remove vertices of degree less than $d$ from the graph.
+There is a simple polynomial-time algorithm that outputs optimal solutions for this problem: repeatedly remove vertices of degree less than $d$ from the graph.
 
 We know that the clique problem is inapproximable via a gap-introducing reduction from an arbitrary probabilistically checkable proof system \autocite{fglss91}.
 Can we use a similar reduction to provide a gap-introducing reduction from our restricted PCPs to the maximum high degree subgraph problem?
@@ -542,7 +542,7 @@ Can we use a similar reduction to provide a gap-introducing reduction from our r
 
 One method of showing $\PCP^\NC[O(\log n), O(1)] = \NP$ is to revisit a proof of the PCP Theorem and ensure that all computation can be performed by an \NC{} PCP verifier without affecting the correctness of the proof.
 We will consider Dinur's proof of the PCP Theorem \autocite{dinur07}, which reduces the problem of proving $\PCP^\P[O(\log n), O(1)] = \NP$ to the problem of showing \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP{}.
-Meir observes that although we would like a verifier running in polylogarithmic time, Dinur's proof requires $O(\log n)$ iterations of a polynomial time procedure, which yields a polynomial time procedure \autocite[Section~1.2.1]{meir09}.
+Meir observes that although we would like a verifier running in polylogarithmic time, Dinur's proof requires $O(\log n)$ iterations of a polynomial-time procedure, which yields a polynomial-time procedure \autocite[Section~1.2.1]{meir09}.
 We show that a closer look reveals that parallel polylogarithmic time is indeed possible without any new machinery.
 
 We begin with the \NC{} version of the necessary reduction.
@@ -567,23 +567,23 @@ We begin with the \NC{} version of the necessary reduction.
 \end{proof}
 
 Now we examine Dinur's proof that \textsc{$\frac{1}{2}$-gap $q$-CSP} is hard for \NP{} \autocite{dinur07}.
-That proof shows that the problem is hard under polynomial time many-one reductions, but we show here that it is in fact hard under \NC{} many-one reductions.
-First, we claim without proof that \textsc{$q$-CSP} is hard for \NP{} under \NC{} many-one reductions (because the standard polynomial time many-one reductions showing that it is \NP-complete are in fact computable in logarithmic space).
-Next, consider (the high-level description of) the polynomial time many-one reduction from \textsc{$q$-CSP} to \textsc{$\frac{1}{2}$-gap $q$-CSP}: given constraint graph $G_0$ as input, compute and output $G_{O(\log n)}$, where $G_{i + 1} = \mathcal{P}({\left(X(G_i)\right)}^t)$ and $t \in O(1)$.
+That proof shows that the problem is hard under polynomial-time many-one reductions, but we show here that it is in fact hard under \NC{} many-one reductions.
+First, we claim without proof that \textsc{$q$-CSP} is hard for \NP{} under \NC{} many-one reductions (because the standard polynomial-time many-one reductions showing that it is \NP-complete are in fact computable in logarithmic space).
+Next, consider (the high-level description of) the polynomial-time many-one reduction from \textsc{$q$-CSP} to \textsc{$\frac{1}{2}$-gap $q$-CSP}: given constraint graph $G_0$ as input, compute and output $G_{O(\log n)}$, where $G_{i + 1} = \mathcal{P}({\left(X(G_i)\right)}^t)$ and $t \in O(1)$.
 Here, $X$ is a preprocessing function, the exponent $t$ denotes a constant number of constraint graph powering operations, and $\mathcal{P}$ denotes an assignment testing composition function.
 If each of these three functions is computable by an \NC{} algorithm, then $G_{i + 1}$ can be computed from $G_i$ by an \NC{} algorithm, and hence so can $G_{O(\log n)}$ from $G_0$.
 We will consider each of the three functions below.
 
 The preprocessing function $X$ requires a \emph{mildly explicit} construction of a constant degree expander.
 The standard definition of mildly explicit is that a representation of the graph (for example, its adjacency matrix) is computable in time polynomial in the number of vertices in the graph; for comparison, in a \emph{fully explicit} expander, the $i$th neighbor of vertex $v$ can be computed in time polynomial in the size of the binary representation of $v$, that is, polynomial in $\log n$ where $n$ is the number of nodes in the graph.
-We will refer to graphs which meet these definitions as \emph{polynomial time mildly explicit} and \emph{polynomial time fully explicit}.
+We will refer to graphs which meet these definitions as \emph{polynomial-time mildly explicit} and \emph{polynomial-time fully explicit}.
 Since we are constructing an \NC{} algorithm, we will require the representation of the graph to be computable by an \NC{} algorithm.
 More formally, we require an \emph{\NC{} mildly explicit} graph, that is, a graph for which a representation can be computed by an \NC{} algorithm with respect to input $n$, the number of nodes of the graph.
-Fortunately, an \NC{} mildly explicit expander is equivalent to a polynomial time fully explicit expander.
+Fortunately, an \NC{} mildly explicit expander is equivalent to a polynomial-time fully explicit expander.
 
 \begin{proposition}
   Suppose $G$ is a $d$-regular expander graph.
-  $G$ is \NC{} mildly explicit if and only if $G$ is polynomial time fully explicit.
+  $G$ is \NC{} mildly explicit if and only if $G$ is polynomial-time fully explicit.
 \end{proposition}
 \begin{proof}
   First suppose $G$ is \NC{} mildly explicit, so there exists an \NC{} algorithm that outputs, say, the adjacency list of the graph given $n$ as input.
@@ -592,7 +592,7 @@ Fortunately, an \NC{} mildly explicit expander is equivalent to a polynomial tim
   The list corresponding to vertex $v$ can be found in $O(\log n)$ steps (by using a binary search tree), and the $i$th element of that list can be found in constant time (since $i$ is bounded above by $d$, a constant).
   Therefore we have presented an algorithm which runs in $\poly(\log n)$ time which correctly computes the $i$th number of $v$ in the graph $G$.
 
-  Now suppose $G$ is polynomial time fully explicit, so there exists an algorithm which computes the $i$th neighbor of $v$ in time polynomial in $\log n$.
+  Now suppose $G$ is polynomial-time fully explicit, so there exists an algorithm which computes the $i$th neighbor of $v$ in time polynomial in $\log n$.
   Let $f(v, i)$ denote this algorithm.
   The following \NC{} algorithm computes the adjacency list of $G$ given the number of nodes $n$: for each vertex $v$ \emph{in parallel} and each index $i$ less than $d$ \emph{in parallel} add $f(v, i)$ to the list corresponding to $v$.
   This algorithm can be computed with $dn$ processors, which is polynomial in $n$.
@@ -600,8 +600,8 @@ Fortunately, an \NC{} mildly explicit expander is equivalent to a polynomial tim
   Therefore we have presented an \NC{} algorithm which correctly computes a representation of the graph $G$.
 \end{proof}
 
-This proposition allows us to replace any polynomial time mildly explicit expander in Dinur's proof with a polynomial time fully explicit one.
-(Polynomial time fully explicit constant degree expander graphs exist; see \autocite{rvw00}, for example.)
+This proposition allows us to replace any polynomial-time mildly explicit expander in Dinur's proof with a polynomial-time fully explicit one.
+(polynomial-time fully explicit constant degree expander graphs exist; see \autocite{rvw00}, for example.)
 
 Now, let us return to the preprocessing function $X$, which is defined in two parts, \autocite[Definition~4.1]{dinur07} and \autocite[Definition~4.2]{dinur07}.
 In the first part, each vertex $v$ is replaced by an \NC{} mildly explicit $d$-regular expander on $\deg(v)$ vertices in which the constraints on the edges of the expander are the equality constraint.
