@@ -1,6 +1,6 @@
 %% ncpcp.tex - probabilistically checkable proofs for NC verifiers
 %%
-%% Copyright 2012, 2013, 2014 Jeffrey Finkelstein.
+%% Copyright 2012, 2013, 2014, 2016 Jeffrey Finkelstein.
 %%
 %% This LaTeX markup document is made available under the terms of the Creative
 %% Commons Attribution-ShareAlike 4.0 International License,
@@ -89,7 +89,7 @@
 \maketitle
 
 \symbolfootnote{%
-  Copyright 2012, 2013, 2014 Jeffrey~Finkelstein \email{jeffreyf@bu.edu}.
+  Copyright 2012, 2013, 2014, 2016 Jeffrey~Finkelstein \email{jeffreyf@bu.edu}.
 
   This document is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License, which is available at \mbox{\url{https://creativecommons.org/licenses/by-sa/4.0/}}.
   The \LaTeX{} markup that generated this document can be downloaded from its website at \mbox{\url{https://github.com/jfinkels/ncpcp}}.
@@ -104,17 +104,21 @@ The growth of multiprocessor systems in general purpose personal computers highl
 The \P-complete problems are generally considered to be inherently sequential, whereas problems in \NC{} are considered highly parallel.
 Our guiding question is now, ``For which \P-complete problems are there \NC{} approximation algorithms, and for which are there none?''
 
-Unfortunately, the techniques used to prove the original PCP Theorem rely on the fact that \NP{} can be interpreted as the class of languages for which there is an efficient verification procedure given a brief witness to language membership; no such obvious interpretation of \P{} exists.
+Unfortunately, the techniques used to prove the original PCP Theorem rely on the fact that $\NP$ can be interpreted as the class of languages for which there is an efficient verification procedure given a brief witness to language membership; no such obvious interpretation of $\P$ exists.
 Indeed, this question was already on the minds of researchers soon after the original proof of the PCP Theorem.
 \begin{quote}
   An intriguing question is whether the known non-approximability results for sequential algorithms can be improved when we restrict to \NC{} algorithms (under the assumption that $\P \neq \NC$).
   A possible way may be to devise \emph{probabilistic proof systems for \P} more efficient that the currently known proof systems for \NP{}.
   Such a result would have a great independent interest.
-  However, it is not clear why proofs for \P{} should be \emph{easier to check} than proofs for \NP{} (they only appear to be \emph{easier to generate}).~\cite{trevisan98}
+  However, it is not clear why proofs for \P{} should be \emph{easier to check} than proofs for \NP{} (they only appear to be \emph{easier to generate}).~\autocite{trevisan98}
 \end{quote}
-Perhaps \P{} has proof systems which are easy to check in \NC, but this remains unclear.
-Instead, we consider proof systems for the class $\NNC(\polylog)$, the class of languages decidable by \NC{} circuit families augmented with a polylogarithmic number of nondeterministic gates.
-We hope that this will be a valuable first step toward understanding proof systems for \P.
+Perhaps $\P$ has proof systems that are easy to check in $\NC$, but this remains unclear.
+Instead, we consider proof systems for the class $\NNC(\polylog)$, the class of languages decidable by $\NC$ circuit families augmented with a polylogarithmic number of nondeterministic gates.
+We hope that this will be a valuable first step toward understanding proof systems for $\P$.
+Other researchers have had similar questions about classes like this.
+\begin{quote}
+  The fundamental question remains whether there are problems in $\P$ that can be computed more quickly with limited nondeterminism than without it.~\autocite{bg93}
+\end{quote}
 We consider $\NNC(\polylog)$ for two reasons.
 First, it is defined in such a way that it explicitly has short proof systems which are easy to verify in parallel, just as \NP{} is defined in such a way that it explicitly has short proof systems which are easy to verify efficiently.
 Second, it, like \P, lies between \NC{} and \NP{}.

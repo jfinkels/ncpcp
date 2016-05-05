@@ -3,7 +3,7 @@ PCPs for NC
 
 Restricted probabilistically checkable proofs for NC.
 
-This file was last updated on 10 February 2014.
+This file was last updated on 5 May 2016.
 
 Downloading
 -----------
@@ -61,7 +61,7 @@ The output is `ncpcp.pdf`, and can be viewed with any PDF reader.
 Copyright
 ---------
 
-Copyright 2012, 2013, 2014 Jeffrey Finkelstein.
+Copyright 2012, 2013, 2014, 2016 Jeffrey Finkelstein.
 
 Except where otherwise noted, both the LaTeX markup and the content of this
 article are made available under the terms of the Creative Commons
